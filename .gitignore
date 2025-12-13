@@ -3,7 +3,7 @@
 # /public/build
 /public/build.zip
 /public/hot
-/public/storage
+# /public/storage
 /storage/*.key
 /storage/pail
 /vendor
