@@ -1,0 +1,141 @@
+/* Fix spacing and font size for Navbar Dropdowns on Desktop */
+.nav-link,
+.dropdown-toggle {
+    font-size: 1rem !important; /* Force consistency with other links */
+    font-weight: 500;
+    align-items: center;
+    display: flex;
+    gap: 0.25rem;
+}
+
+/* Mouse Scroll Indicator Fix */
+.hero {
+    position: relative; /* Ensure hero is positioning context */
+}
+
+.scroll-indicator {
+    position: absolute; /* Take out of flow to avoid pushing content or being pushed */
+    bottom: 5px; /* Lower position as requested */
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    margin-top: 0;
+    z-index: 10;
+    pointer-events: none; /* Let clicks pass through if needed */
+}
+
+/* Ensure buttons have space */
+.hero-content {
+    padding-bottom: 80px; /* Ensure space for the scroll indicator */
+}
+
+
+/* Mobile Menu Fixes */
+@media (max-width: 1023px) {
+    /* Ensure the nav container renders correctly when open */
+    .nav.active,
+    .nav.mobile-open {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        z-index: 1000;
+        height: auto;
+        gap: 1.5rem; /* Space between items */
+    }
+
+    /* Hide normally */
+    .nav {
+        display: none;
+    }
+
+    /* Larger touch targets for links */
+    .nav-link {
+        font-size: 1.25rem !important;
+        padding: 10px 0;
+        color: #333 !important; /* Ensure visibility on white bg */
+        width: 100%;
+        justify-content: space-between; /* Align dropdown arrows */
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+         width: 100%;
+         text-align: center;
+         justify-content: center;
+         display: flex; /* Ensure flex centering works if they are flex containers */
+         align-items: center;
+    }
+    
+    /* Hero Buttons Spacing */
+    .hero-cta {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1rem !important; /* Space between buttons */
+        width: 100% !important;
+        align-items: center !important;
+    }
+    
+    .hero-cta .btn {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* Mobile Dropdowns - High Specificity Fix */
+    #header .nav .dropdown {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important; /* Changed from flex-start to stretch for full width */
+        width: 100% !important;
+        border-bottom: 1px solid #eee; /* Optional: clear separation */
+    }
+
+    #header .nav .dropdown-menu {
+        position: static !important;
+        float: none !important;
+        width: 100% !important;
+        box-shadow: none !important;
+        background: #f8f9fa !important; /* Slight contrast */
+        transform: none !important;
+        padding: 0.5rem 0 0.5rem 1.5rem !important; /* Indent subitems */
+        margin: 0 !important;
+        display: none;
+        border: none !important;
+        opacity: 1 !important; /* Ensure visibility */
+        visibility: visible !important;
+        inset: auto !important; /* Reset any top/left/right/bottom */
+    }
+    
+    #header .nav .dropdown.active .dropdown-menu {
+        display: block !important;
+    }
+    
+    #header .nav .dropdown-toggle,
+    #header .nav .custom-dropdown-toggle {
+        font-size: 1.25rem !important;
+        padding: 10px 0 !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        align-items: center !important;
+        white-space: normal !important; /* Allow wrapping */
+        
+        /* Nav Link Styles Copy */
+        font-family: inherit !important; /* Button defaults are different, force inherit */
+        font-weight: 500 !important; /* Match links */
+        color: #333 !important;
+        background: none;
+        border: none;
+        text-align: left !important; /* Ensure text aligns left like links */
+    }
+    
+    #header .nav .dropdown-toggle::after,
+    #header .nav .custom-dropdown-toggle::after {
+        margin-left: auto !important;
+    }
+}

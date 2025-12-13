@@ -1,0 +1,22 @@
+{
+  "menu": [
+    {
+      "url": "user/dashboard",
+      "name": "Dashboard",
+      "icon": "menu-icon icon-base ti tabler-smart-home",
+      "slug": "user.dashboard"
+    },
+    {
+      "url": "#",
+      "name": "My Bookings",
+      "icon": "menu-icon icon-base ti tabler-ticket",
+      "slug": "user-bookings"
+    },
+    {
+      "url": "#",
+      "name": "My Profile",
+      "icon": "menu-icon icon-base ti tabler-user",
+      "slug": "user-profile"
+    }
+  ]
+}
