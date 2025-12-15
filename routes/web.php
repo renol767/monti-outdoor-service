@@ -161,8 +161,13 @@ use App\Http\Controllers\charts\ChartJs;
 use App\Http\Controllers\maps\Leaflet;
 use App\Http\Controllers\SessionAuthController;
 
-// Landing Page (Public)
+// Coming Soon Page (Public - Root)
 Route::get('/', function () {
+    return view('coming-soon');
+})->name('home');
+
+// Original Landing Page (moved to /index-page)
+Route::get('/index-page', function () {
     $settings = \App\Models\LandingSetting::all()->pluck('value', 'key');
     $features = \App\Models\LandingFeature::orderBy('order')->get();
     $trips = \App\Models\LandingTrip::orderBy('order')->limit(6)->get();
