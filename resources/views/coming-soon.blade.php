@@ -66,7 +66,7 @@
 
     .particle {
       position: absolute;
-      background: rgba(233, 117, 67, 0.1);
+      background: rgba(206, 148, 100, 0.1);
       border-radius: 50%;
       animation: float 20s infinite;
     }
@@ -134,7 +134,7 @@
     .logo img {
       width: 100%;
       height: auto;
-      filter: drop-shadow(0 4px 20px rgba(233, 117, 67, 0.4));
+      filter: drop-shadow(0 4px 20px rgba(206, 148, 100, 0.4));
     }
 
     h1 {
@@ -142,7 +142,7 @@
       font-weight: 900;
       line-height: 1.1;
       margin-bottom: 1.5rem;
-      background: linear-gradient(135deg, #e97543 0%, #ff9966 100%);
+      background: linear-gradient(135deg, #ce9464 0%, #e0b080 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -171,7 +171,7 @@
 
     .services-highlight {
       font-size: clamp(0.9rem, 2.5vw, 1.05rem);
-      color: #e97543;
+      color: #ce9464;
       font-weight: 600;
       margin-bottom: 1rem;
       animation: fadeIn 1.5s ease-out 0.5s both;
@@ -206,7 +206,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.75rem;
-      background: linear-gradient(135deg, #e97543 0%, #ff7f50 100%);
+      background: linear-gradient(135deg, #ce9464 0%, #daa76d 100%);
       color: #ffffff;
       padding: 1.25rem 2.5rem;
       font-size: 1.125rem;
@@ -214,7 +214,7 @@
       border-radius: 50px;
       text-decoration: none;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 10px 40px rgba(233, 117, 67, 0.3);
+      box-shadow: 0 10px 40px rgba(206, 148, 100, 0.3);
       position: relative;
       overflow: hidden;
     }
@@ -236,7 +236,7 @@
 
     .whatsapp-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 15px 50px rgba(233, 117, 67, 0.5);
+      box-shadow: 0 15px 50px rgba(206, 148, 100, 0.5);
     }
 
     .whatsapp-btn:active {
