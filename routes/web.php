@@ -178,6 +178,116 @@ Route::get('/index-page', function () {
     return view('welcome', compact('settings', 'features', 'trips', 'services', 'gallery', 'testimonials'));
 })->name('landing');
 
+
+// Open Trip Page
+Route::get('/open-trip', function () {
+    $settings = \App\Models\LandingSetting::all()->pluck('value', 'key');
+    
+    // Get published trips from new TripTemplate system
+    $trips = \App\Models\TripTemplate::where('status', 'published')
+        ->with(['departures' => function($q) {
+            $q->whereIn('status', ['available', 'limited'])
+              ->where('start_date', '>=', now()->toDateString())
+              ->orderBy('start_date')
+              ->with('variants');
+        }])
+        ->orderBy('created_at', 'desc')
+        ->get()
+        ->map(function($trip) {
+            // Get next departure info
+            $nextDeparture = $trip->departures->first();
+            
+            // Calculate from_price
+            $fromPrice = null;
+            if ($nextDeparture) {
+                $minVariant = $nextDeparture->variants->where('is_active', true)->sortBy('base_price')->first();
+                $fromPrice = $minVariant ? $minVariant->base_price : null;
+            }
+            
+            // Get all departure months for filtering
+            $departureMonths = $trip->departures->pluck('start_date')->map(fn($d) => $d->format('Y-m'))->unique()->values()->toArray();
+            
+            return (object) [
+                'id' => $trip->id,
+                'title' => $trip->title,
+                'slug' => $trip->slug,
+                'destination' => $trip->destination,
+                'category' => $trip->category,
+                'duration' => $trip->duration_days . 'D' . $trip->duration_nights . 'N',
+                'difficulty' => $trip->difficulty,
+                'image' => $trip->thumbnail,
+                'price' => $fromPrice ? 'IDR ' . number_format($fromPrice, 0, ',', '.') : 'Contact us',
+                'from_price' => $fromPrice,
+                'rating' => $trip->rating_avg,
+                'rating_count' => $trip->rating_count,
+                'next_departure' => $nextDeparture ? $nextDeparture->start_date->format('d M Y') : null,
+                'departure_date' => $nextDeparture ? $nextDeparture->start_date->format('d M Y') : 'TBD',
+                'available_pax' => $nextDeparture ? ($nextDeparture->capacity - $nextDeparture->booked_count) : 0,
+                'capacity' => $nextDeparture ? $nextDeparture->capacity : null,
+                'booked_count' => $nextDeparture ? $nextDeparture->booked_count : 0,
+                'includes' => $trip->includes ?? [],
+                'highlights' => $trip->highlights ?? [],
+                'departure_months' => $departureMonths,
+            ];
+        });
+
+    // Also get categories for filter
+    $categories = \App\Models\TripTemplate::where('status', 'published')
+        ->distinct()
+        ->pluck('category')
+        ->filter();
+
+    return view('open-trip', compact('settings', 'trips', 'categories'));
+})->name('open-trip');
+
+// Trip Detail Page
+Route::get('/trip/{slug}', function ($slug) {
+    $settings = \App\Models\LandingSetting::all()->pluck('value', 'key');
+    
+    $trip = \App\Models\TripTemplate::where('slug', $slug)
+        ->where('status', 'published')
+        ->with([
+            'departures' => function($q) {
+                $q->whereIn('status', ['available', 'limited'])
+                  ->where('start_date', '>=', now()->toDateString())
+                  ->orderBy('start_date')
+                  ->with([
+                      'variants' => function($vq) {
+                          $vq->where('is_active', true)->orderBy('base_price');
+                      },
+                      'addons' => function($aq) {
+                          $aq->where('is_active', true)->with('addon');
+                      }
+                  ]);
+            },
+            'contents',
+            'media' => function($q) {
+                $q->orderBy('sort_order');
+            }
+        ])
+        ->firstOrFail();
+
+    // Get content by tab
+    $contents = $trip->contents->keyBy('tab_type');
+    
+    // Get gallery and tracking map
+    $gallery = $trip->media->where('media_type', 'gallery');
+    $trackingMap = $trip->media->where('media_type', 'tracking_map')->first();
+    
+    // Get all available departures
+    $departures = $trip->departures;
+    
+    // Get selected departure from query param, or default to first
+    $selectedDepartureId = request('departure');
+    if ($selectedDepartureId) {
+        $nextDeparture = $departures->firstWhere('id', $selectedDepartureId) ?? $departures->first();
+    } else {
+        $nextDeparture = $departures->first();
+    }
+    
+    return view('trip-detail', compact('settings', 'trip', 'contents', 'gallery', 'trackingMap', 'departures', 'nextDeparture'));
+})->name('trip.detail');
+
 // Session Auth Routes
 Route::post('/login-session', [SessionAuthController::class, 'login'])->name('login.session');
 Route::match(['GET', 'POST'], '/logout-session', [SessionAuthController::class, 'logout'])->name('logout.session');
@@ -217,6 +327,46 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     
     // Testimonials Resource
     Route::resource('/testimonials', App\Http\Controllers\Admin\LandingTestimonialController::class, ['as' => 'admin']);
+
+    // ===== TRIP MANAGEMENT =====
+    // Trip Templates
+    Route::resource('/trip-management', App\Http\Controllers\Admin\TripTemplateController::class, ['as' => 'admin']);
+    Route::post('/trip-management/{tripManagement}/toggle-publish', [App\Http\Controllers\Admin\TripTemplateController::class, 'togglePublish'])->name('admin.trip-management.toggle-publish');
+    Route::post('/trip-management/{tripManagement}/duplicate', [App\Http\Controllers\Admin\TripTemplateController::class, 'duplicate'])->name('admin.trip-management.duplicate');
+
+    // Departures (nested under trip)
+    Route::post('/trip-management/{trip}/departures', [App\Http\Controllers\Admin\TripDepartureController::class, 'store'])->name('admin.departures.store');
+    Route::put('/departures/{departure}', [App\Http\Controllers\Admin\TripDepartureController::class, 'update'])->name('admin.departures.update');
+    Route::delete('/departures/{departure}', [App\Http\Controllers\Admin\TripDepartureController::class, 'destroy'])->name('admin.departures.destroy');
+    Route::post('/departures/{departure}/sold-out', [App\Http\Controllers\Admin\TripDepartureController::class, 'markSoldOut'])->name('admin.departures.sold-out');
+    Route::post('/departures/{departure}/close', [App\Http\Controllers\Admin\TripDepartureController::class, 'close'])->name('admin.departures.close');
+    Route::post('/departures/{departure}/update-capacity', [App\Http\Controllers\Admin\TripDepartureController::class, 'updateCapacity'])->name('admin.departures.update-capacity');
+    Route::post('/departures/{departure}/duplicate', [App\Http\Controllers\Admin\TripDepartureController::class, 'duplicate'])->name('admin.departures.duplicate');
+
+    // Variants (nested under departure)
+    Route::post('/departures/{departure}/variants', [App\Http\Controllers\Admin\TripDepartureController::class, 'storeVariant'])->name('admin.variants.store');
+    Route::put('/variants/{variant}', [App\Http\Controllers\Admin\TripDepartureController::class, 'updateVariant'])->name('admin.variants.update');
+    Route::delete('/variants/{variant}', [App\Http\Controllers\Admin\TripDepartureController::class, 'destroyVariant'])->name('admin.variants.destroy');
+
+    // Departure Addons
+    Route::post('/departures/{departure}/addons', [App\Http\Controllers\Admin\TripDepartureController::class, 'storeAddon'])->name('admin.departure-addons.store');
+    Route::put('/departure-addons/{departureAddon}', [App\Http\Controllers\Admin\TripDepartureController::class, 'updateAddon'])->name('admin.departure-addons.update');
+    Route::delete('/departure-addons/{departureAddon}', [App\Http\Controllers\Admin\TripDepartureController::class, 'destroyAddon'])->name('admin.departure-addons.destroy');
+
+    // Master Addons
+    Route::resource('/addons', App\Http\Controllers\Admin\AddonController::class, ['as' => 'admin'])->except(['show', 'create', 'edit']);
+
+    // Trip Content (AJAX)
+    Route::get('/trip-management/{trip}/content/{tabType}', [App\Http\Controllers\Admin\TripContentController::class, 'show'])->name('admin.trip-content.show');
+    Route::post('/trip-management/{trip}/content/{tabType}', [App\Http\Controllers\Admin\TripContentController::class, 'store'])->name('admin.trip-content.store');
+    Route::get('/trip-management/{trip}/content', [App\Http\Controllers\Admin\TripContentController::class, 'all'])->name('admin.trip-content.all');
+
+    // Trip Media (AJAX)
+    Route::get('/trip-management/{trip}/media', [App\Http\Controllers\Admin\TripMediaController::class, 'index'])->name('admin.trip-media.index');
+    Route::post('/trip-management/{trip}/media', [App\Http\Controllers\Admin\TripMediaController::class, 'store'])->name('admin.trip-media.store');
+    Route::put('/trip-media/{media}', [App\Http\Controllers\Admin\TripMediaController::class, 'update'])->name('admin.trip-media.update');
+    Route::post('/trip-management/{trip}/media/reorder', [App\Http\Controllers\Admin\TripMediaController::class, 'reorder'])->name('admin.trip-media.reorder');
+    Route::delete('/trip-media/{media}', [App\Http\Controllers\Admin\TripMediaController::class, 'destroy'])->name('admin.trip-media.destroy');
 });
 
 // User Dashboard Routes (Requires session auth and role:user)

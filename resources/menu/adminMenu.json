@@ -8,9 +8,31 @@
     },
     {
       "url": "admin/landing-customization",
-      "name": "Landing Page Customization",
+      "name": "Landing Page",
       "icon": "menu-icon icon-base ti tabler-palette",
       "slug": "landing-customization"
+    },
+    {
+      "name": "Trip Management",
+      "icon": "menu-icon icon-base ti tabler-map-2",
+      "slug": "trip-management",
+      "submenu": [
+        {
+          "url": "admin/trip-management",
+          "name": "All Trips",
+          "slug": "admin.trip-management.index"
+        },
+        {
+          "url": "admin/trip-management/create",
+          "name": "Create New Trip",
+          "slug": "admin.trip-management.create"
+        },
+        {
+          "url": "admin/addons",
+          "name": "Master Addons",
+          "slug": "admin.addons.index"
+        }
+      ]
     }
   ]
 }

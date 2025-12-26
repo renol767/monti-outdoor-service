@@ -31,8 +31,24 @@
         </button>
 
         <nav class="nav">
-          <a href="#home" class="nav-link">Home</a>
+          <!-- MOS Menu with submenu -->
+          <div class="dropdown">
+            <button class="custom-dropdown-toggle dropdown-toggle">
+              MOS
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M4 6L8 10L12 6H4Z"/>
+              </svg>
+            </button>
+            <div class="dropdown-menu">
+              <a href="#about" class="dropdown-item">About Us</a>
+              <a href="#about" class="dropdown-item">Our Team</a>
+            </div>
+          </div>
+
+          <!-- Open Trip - no submenu -->
+          <a href="{{ route('open-trip') }}" class="nav-link">Open Trip</a>
           
+          <!-- Mountain Trip with submenu -->
           <div class="dropdown">
             <button class="custom-dropdown-toggle dropdown-toggle">
               Mountain Trip
@@ -41,41 +57,54 @@
               </svg>
             </button>
             <div class="dropdown-menu">
-              <a href="#trips" class="dropdown-item">Summit Expedition</a>
               <a href="#trips" class="dropdown-item">Open Trip</a>
-              <a href="#trips" class="dropdown-item">Multi-Day Trek</a>
+              <a href="#trips" class="dropdown-item">Private Trip</a>
+              <a href="#trips" class="dropdown-item">One Day Trip</a>
+              <a href="#trips" class="dropdown-item">Expedition Trip</a>
+              <a href="#trips" class="dropdown-item">International Trip</a>
+              <a href="#trips" class="dropdown-item">Custom Trip</a>
             </div>
           </div>
 
+          <!-- Outdoor Activity Trip with submenu -->
           <div class="dropdown">
             <button class="custom-dropdown-toggle dropdown-toggle">
-              Outdoor Activity
+              Outdoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
             </button>
             <div class="dropdown-menu">
-              <a href="#trips" class="dropdown-item">Island Exploration</a>
-              <a href="#trips" class="dropdown-item">Wilderness Camping</a>
-              <a href="#trips" class="dropdown-item">Team Building</a>
+              <a href="#trips" class="dropdown-item">Cultural Trip</a>
+              <a href="#trips" class="dropdown-item">One Day Trip</a>
+              <a href="#trips" class="dropdown-item">Island Trip</a>
+              <a href="#trips" class="dropdown-item">Camping</a>
+              <a href="#trips" class="dropdown-item">Outdoor Team Building</a>
+              <a href="#trips" class="dropdown-item">Outdoor Custom Trip</a>
             </div>
           </div>
 
+          <!-- Indoor Activity Trip with submenu -->
           <div class="dropdown">
             <button class="custom-dropdown-toggle dropdown-toggle">
-              Indoor Activity
+              Indoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
             </button>
             <div class="dropdown-menu">
-              <a href="#trips" class="dropdown-item">Cultural City Tour</a>
-              <a href="#trips" class="dropdown-item">Workshop & Training</a>
+              <a href="#trips" class="dropdown-item">City Tour</a>
+              <a href="#trips" class="dropdown-item">Company Gathering</a>
+              <a href="#trips" class="dropdown-item">Outing, Tour & Travel</a>
+              <a href="#trips" class="dropdown-item">MICE Organizer</a>
+              <a href="#trips" class="dropdown-item">Indoor Team Building</a>
+              <a href="#trips" class="dropdown-item">Indoor Custom Trip</a>
             </div>
           </div>
 
-          <a href="#about" class="nav-link">About</a>
+          <!-- Contact -->
           <a href="#contact" class="nav-link">Contact</a>
+          
           <a href="{{ route('login') }}" class="btn btn-primary">Book Now</a>
         </nav>
       </div>
@@ -642,10 +671,10 @@
         <div class="footer-col">
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
+            <li><a href="#trips">Open Trip</a></li>
             <li><a href="#trips">Mountain Trip</a></li>
-            <li><a href="#trips">Outdoor Activity</a></li>
-            <li><a href="#trips">Indoor Activity</a></li>
-            <li><a href="#contact">Custom Packages</a></li>
+            <li><a href="#trips">Outdoor Activity Trip</a></li>
+            <li><a href="#trips">Indoor Activity Trip</a></li>
           </ul>
         </div>
 
