@@ -1150,13 +1150,14 @@
         <div class="footer-col">
           <div class="footer-logo">
             @if(isset($settings['global_footer_logo']))
-              <img src="{{ asset($settings['global_footer_logo']) }}" alt="Monti Outdoor" width="80">
+              <img src="{{ asset($settings['global_footer_logo']) }}" alt="Monti Outdoor" width="32" height="32">
             @else
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M16 2L4 14L8 18L16 10L24 18L28 14L16 2Z" fill="#e97543"/>
               <path d="M8 18L4 22V30H12V24H20V30H28V22L24 18L16 26L8 18Z" fill="#e97543"/>
             </svg>
             @endif
+            <span>Monti Outdoor</span>
           </div>
           <p class="footer-description">{{ $settings['global_footer_text'] ?? 'Your trusted partner for outdoor adventures and mountain expeditions across Indonesia.' }}</p>
         </div>
