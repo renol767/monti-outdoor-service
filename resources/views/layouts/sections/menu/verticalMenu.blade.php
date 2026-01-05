@@ -37,24 +37,38 @@ $configData = Helper::appClasses();
     @php
     $activeClass = null;
     $currentRouteName = Route::currentRouteName();
+    $currentFullUrl = request()->fullUrl();
+    $menuUrl = isset($menu->url) ? url($menu->url) : '';
 
-    if ($currentRouteName === $menu->slug) {
-    $activeClass = 'active';
-    } elseif (isset($menu->submenu)) {
-    if (gettype($menu->slug) === 'array') {
-    foreach ($menu->slug as $slug) {
-    if (str_contains($currentRouteName, $slug) and strpos($currentRouteName, $slug) === 0) {
-    $activeClass = 'active open';
+    // For menus with URL, check full URL match first (handles query params)
+    if ($menuUrl && $currentFullUrl === $menuUrl) {
+        $activeClass = 'active';
+    } 
+    // For menus without URL but with slug (and no submenu), check route name
+    elseif (!isset($menu->submenu) && !$menuUrl && $currentRouteName === $menu->slug) {
+        $activeClass = 'active';
     }
-    }
-    } else {
-    if (
-    str_contains($currentRouteName, $menu->slug) and
-    strpos($currentRouteName, $menu->slug) === 0
-    ) {
-    $activeClass = 'active open';
-    }
-    }
+    // For submenus, check if any child is active to add 'open' class
+    elseif (isset($menu->submenu)) {
+        $hasActiveChild = false;
+        foreach ($menu->submenu as $sub) {
+            $subUrl = isset($sub->url) ? url($sub->url) : '';
+            if (($subUrl && $currentFullUrl === $subUrl) || $currentRouteName === $sub->slug) {
+                $hasActiveChild = true;
+                break;
+            }
+        }
+        if ($hasActiveChild) {
+            $activeClass = 'active open';
+        } elseif (gettype($menu->slug) === 'array') {
+            foreach ($menu->slug as $slug) {
+                if (str_contains($currentRouteName, $slug) && strpos($currentRouteName, $slug) === 0) {
+                    $activeClass = 'active open';
+                }
+            }
+        } elseif (str_contains($currentRouteName, $menu->slug) && strpos($currentRouteName, $menu->slug) === 0) {
+            $activeClass = 'active open';
+        }
     }
     @endphp
 

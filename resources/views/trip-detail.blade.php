@@ -1,10 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Primary Meta Tags -->
   <title>{{ $trip->title }} - Monti Outdoor Service</title>
-  <meta name="description" content="{{ $trip->meta_description ?? '' }}">
+  <meta name="title" content="{{ $trip->title }} - Monti Outdoor Service">
+  <meta name="description" content="{{ $trip->meta_description ?? \Illuminate\Support\Str::limit(strip_tags($trip->description ?? ''), 160) }}">
+  <meta name="author" content="Monti Outdoor Service">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{{ url()->current() }}">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon/favicon.ico') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon/favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon/favicon-16x16.png') }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/favicon/apple-touch-icon.png') }}">
+  <link rel="manifest" href="{{ asset('images/favicon/site.webmanifest') }}">
+  <meta name="theme-color" content="#e97543">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ url()->current() }}">
+  <meta property="og:title" content="{{ $trip->title }} - Monti Outdoor Service">
+  <meta property="og:description" content="{{ $trip->meta_description ?? \Illuminate\Support\Str::limit(strip_tags($trip->description ?? ''), 160) }}">
+  <meta property="og:image" content="{{ asset($trip->thumbnail ?? $settings['global_logo'] ?? 'images/logo/Untitled-4.png') }}">
+  <meta property="og:locale" content="id_ID">
+  <meta property="og:site_name" content="Monti Outdoor Service">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="{{ url()->current() }}">
+  <meta property="twitter:title" content="{{ $trip->title }} - Monti Outdoor Service">
+  <meta property="twitter:description" content="{{ $trip->meta_description ?? \Illuminate\Support\Str::limit(strip_tags($trip->description ?? ''), 160) }}">
+  <meta property="twitter:image" content="{{ asset($trip->thumbnail ?? $settings['global_logo'] ?? 'images/logo/Untitled-4.png') }}">
+
   <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
   @vite(['resources/css/landing-ui-fixes.css'])
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -119,19 +150,8 @@
         </button>
 
         <nav class="nav">
-          <!-- MOS Menu with submenu -->
-          <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
-              MOS
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M4 6L8 10L12 6H4Z"/>
-              </svg>
-            </button>
-            <div class="dropdown-menu">
-              <a href="{{ route('landing') }}#about" class="dropdown-item">About Us</a>
-              <a href="{{ route('landing') }}#about" class="dropdown-item">Our Team</a>
-            </div>
-          </div>
+          <!-- About Us - direct link -->
+          <a href="{{ route('about-us') }}" class="nav-link">About Us</a>
 
           <!-- Open Trip - no submenu -->
           <a href="{{ route('open-trip') }}" class="nav-link">Open Trip</a>
@@ -146,11 +166,11 @@
             </button>
             <div class="dropdown-menu">
               <a href="{{ route('open-trip') }}" class="dropdown-item">Open Trip</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">Private Trip</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">One Day Trip</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">Expedition Trip</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">International Trip</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">Custom Trip</a>
+              <a href="{{ route('mountain-trip') }}#private-trip" class="dropdown-item">Private Trip</a>
+              <a href="{{ route('mountain-trip') }}#one-day-trip" class="dropdown-item">One Day Trip</a>
+              <a href="{{ route('mountain-trip') }}#expedition-trip" class="dropdown-item">Expedition Trip</a>
+              <a href="{{ route('mountain-trip') }}#international-trip" class="dropdown-item">International Trip</a>
+              <a href="{{ route('mountain-trip') }}#custom-trip" class="dropdown-item">Custom Trip</a>
             </div>
           </div>
 
@@ -163,12 +183,12 @@
               </svg>
             </button>
             <div class="dropdown-menu">
-              <a href="{{ route('open-trip') }}" class="dropdown-item">Cultural Trip</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">One Day Trip</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">Island Trip</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">Camping</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">Outdoor Team Building</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">Outdoor Custom Trip</a>
+              <a href="{{ route('outdoor-trip') }}#cultural-trip" class="dropdown-item">Cultural Trip</a>
+              <a href="{{ route('outdoor-trip') }}#one-day-outdoor-trip" class="dropdown-item">One Day Trip</a>
+              <a href="{{ route('outdoor-trip') }}#island-trip" class="dropdown-item">Island Trip</a>
+              <a href="{{ route('outdoor-trip') }}#camping-trip" class="dropdown-item">Camping</a>
+              <a href="{{ route('outdoor-trip') }}#outdoor-team-building" class="dropdown-item">Outdoor Team Building</a>
+              <a href="{{ route('outdoor-trip') }}#outdoor-custom-trip" class="dropdown-item">Outdoor Custom Trip</a>
             </div>
           </div>
 
@@ -181,12 +201,12 @@
               </svg>
             </button>
             <div class="dropdown-menu">
-              <a href="{{ route('open-trip') }}" class="dropdown-item">City Tour</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">Company Gathering</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">Outing, Tour & Travel</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">MICE Organizer</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">Indoor Team Building</a>
-              <a href="{{ route('open-trip') }}" class="dropdown-item">Indoor Custom Trip</a>
+              <a href="{{ route('indoor-trip') }}#city-tour" class="dropdown-item">City Tour</a>
+              <a href="{{ route('indoor-trip') }}#company-gathering" class="dropdown-item">Company Gathering</a>
+              <a href="{{ route('indoor-trip') }}#outing-tour-travel" class="dropdown-item">Outing, Tour & Travel</a>
+              <a href="{{ route('indoor-trip') }}#mice-organizer" class="dropdown-item">MICE Organizer</a>
+              <a href="{{ route('indoor-trip') }}#indoor-team-building" class="dropdown-item">Indoor Team Building</a>
+              <a href="{{ route('indoor-trip') }}#indoor-custom-trip" class="dropdown-item">Indoor Custom Trip</a>
             </div>
           </div>
 
@@ -389,7 +409,6 @@
           <button class="active" data-tab="overview">Overview</button>
           <button data-tab="itinerary">Itinerary</button>
           <button data-tab="include_exclude">Include/Exclude</button>
-          <button data-tab="terms">Terms</button>
           @if($gallery->isNotEmpty())
           <button data-tab="gallery">Gallery</button>
           @endif
@@ -423,14 +442,6 @@
           @endif
         </div>
 
-        <div class="content-panel" id="panel-terms">
-          @if(isset($contents['terms']))
-          {!! $contents['terms']->content_html !!}
-          @else
-          <p style="color: #6b7280;">Terms and conditions will be added soon.</p>
-          @endif
-        </div>
-
         <div class="content-panel" id="panel-gallery">
           <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
             @foreach($gallery as $image)
@@ -447,6 +458,17 @@
           @endif
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Terms & Conditions Notice -->
+  <section style="background: #f8fafc; padding: 2rem 0; border-top: 1px solid #e5e7eb;">
+    <div class="container" style="text-align: center;">
+      <p style="color: #6b7280; margin: 0; font-size: 0.9rem;">
+        Dengan melakukan pemesanan, Anda dianggap telah membaca dan menyetujui 
+        <a href="{{ route('terms-conditions') }}" style="color: var(--color-primary); font-weight: 600; text-decoration: underline;">Syarat & Ketentuan</a> 
+        yang berlaku.
+      </p>
     </div>
   </section>
 
@@ -505,9 +527,9 @@
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
             <li><a href="{{ route('open-trip') }}">Open Trip</a></li>
-            <li><a href="{{ route('open-trip') }}">Mountain Trip</a></li>
-            <li><a href="{{ route('open-trip') }}">Outdoor Activity Trip</a></li>
-            <li><a href="{{ route('open-trip') }}">Indoor Activity Trip</a></li>
+            <li><a href="{{ route('mountain-trip') }}">Mountain Trip</a></li>
+            <li><a href="{{ route('outdoor-trip') }}">Outdoor Activity Trip</a></li>
+            <li><a href="{{ route('indoor-trip') }}">Indoor Activity Trip</a></li>
           </ul>
         </div>
 
@@ -530,7 +552,7 @@
         <p>&copy; 2026 Monti Outdoor Service. All rights reserved.</p>
         <div class="footer-bottom-links">
           <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
+          <a href="{{ route('terms-conditions') }}">Terms of Service</a>
         </div>
       </div>
     </div>

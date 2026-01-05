@@ -488,9 +488,6 @@
               <li class="nav-item">
                 <button class="nav-link" data-content-tab="itinerary">Itinerary</button>
               </li>
-              <li class="nav-item">
-                <button class="nav-link" data-content-tab="terms">Terms & Conditions</button>
-              </li>
             </ul>
 
             <div id="currentTabName" class="text-muted small mb-2">Editing: <strong>Overview</strong></div>

@@ -59,6 +59,54 @@ class LandingPageSeeder extends Seeder
             ['key' => 'contact_email', 'value' => 'hello@montioutdoor.com', 'type' => 'text', 'label' => 'Contact Email'],
             ['key' => 'contact_phone', 'value' => '+62 812-3456-7890', 'type' => 'text', 'label' => 'Contact Phone'],
             ['key' => 'contact_address', 'value' => 'Jl. Adventure No. 1, Bogor, Indonesia', 'type' => 'textarea', 'label' => 'Contact Address'],
+
+            // Terms & Conditions
+            ['key' => 'terms_conditions_content', 'value' => '<h2>Syarat dan Ketentuan Monti Outdoor Service</h2>
+
+<h3>1. Pendaftaran dan Pembayaran</h3>
+<ul>
+<li>Pendaftaran trip dianggap sah setelah melakukan pembayaran DP minimal 50%</li>
+<li>Pelunasan maksimal H-7 sebelum keberangkatan</li>
+<li>Pembayaran dapat dilakukan via transfer bank atau e-wallet</li>
+</ul>
+
+<h3>2. Pembatalan</h3>
+<ul>
+<li>Pembatalan H-14: Pengembalian 75% dari total pembayaran</li>
+<li>Pembatalan H-7: Pengembalian 50% dari total pembayaran</li>
+<li>Pembatalan H-3: Tidak ada pengembalian</li>
+<li>Reschedule dapat dilakukan maksimal 1x dengan biaya administrasi</li>
+</ul>
+
+<h3>3. Perlengkapan Peserta</h3>
+<ul>
+<li>Peserta wajib membawa perlengkapan pribadi sesuai checklist yang diberikan</li>
+<li>Perlengkapan teknis disediakan oleh Monti (tenda, matras, peralatan masak grup)</li>
+<li>Peserta bertanggung jawab atas barang bawaan masing-masing</li>
+</ul>
+
+<h3>4. Kesehatan dan Keselamatan</h3>
+<ul>
+<li>Peserta wajib dalam kondisi sehat jasmani dan rohani</li>
+<li>Mohon informasikan kondisi kesehatan khusus sebelum keberangkatan</li>
+<li>Peserta wajib mengikuti instruksi guide demi keselamatan bersama</li>
+<li>Keputusan guide untuk membatalkan atau mengubah rute bersifat final demi keselamatan</li>
+</ul>
+
+<h3>5. Force Majeure</h3>
+<p>Dalam kondisi force majeure (bencana alam, cuaca ekstrem, kebijakan pemerintah), Monti berhak membatalkan atau menunda trip dengan opsi:</p>
+<ul>
+<li>Reschedule ke tanggal yang tersedia</li>
+<li>Pengembalian dana setelah dikurangi biaya operasional yang sudah dikeluarkan</li>
+</ul>
+
+<h3>6. Asuransi</h3>
+<p>Semua peserta dicakup dalam asuransi perjalanan dasar. Untuk perlindungan tambahan, peserta dianjurkan menggunakan asuransi pribadi.</p>
+
+<h3>7. Dokumentasi</h3>
+<p>Dengan mengikuti trip, peserta menyetujui penggunaan foto/video untuk keperluan promosi Monti Outdoor Service.</p>
+
+<p><strong>Dengan mendaftar, peserta dianggap telah membaca dan menyetujui seluruh syarat dan ketentuan di atas.</strong></p>', 'type' => 'textarea', 'label' => 'Terms & Conditions Content (HTML)'],
         ];
 
         foreach ($settings as $setting) {

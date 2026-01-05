@@ -68,6 +68,11 @@
             </button>
           </li>
            <li class="nav-item">
+            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-terms" aria-controls="navs-terms" aria-selected="false">
+              <i class="ti tabler-file-text me-1"></i> Terms & Conditions
+            </button>
+          </li>
+           <li class="nav-item">
             <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-global" aria-controls="navs-global" aria-selected="false">
               <i class="ti tabler-settings me-1"></i> Global
             </button>
@@ -451,6 +456,31 @@
              </form>
           </div>
           
+           <!-- Terms & Conditions Tab -->
+          <div class="tab-pane fade" id="navs-terms" role="tabpanel">
+             <form action="{{ route('admin.landing.settings.update') }}" method="POST" id="termsForm">
+              @csrf
+              <div class="row">
+                  <div class="col-12 mb-3">
+                      <h5 class="fw-semibold">Syarat & Ketentuan</h5>
+                      <p class="text-muted">Konten ini akan ditampilkan di halaman /terms-conditions dan dapat diakses dari footer semua halaman.</p>
+                      <hr>
+                  </div>
+                  <div class="col-md-12 mb-3">
+                      <label class="form-label">Konten Terms & Conditions</label>
+                      <div id="termsQuillEditor" style="height: 400px; background: #fff; border-radius: 0.375rem;"></div>
+                      <input type="hidden" name="terms_conditions_content" id="terms_conditions_content">
+                  </div>
+              </div>
+              <button type="submit" class="btn btn-primary" id="saveTermsBtn">
+                <i class="ti tabler-check me-1"></i> Save Changes
+              </button>
+              <a href="{{ route('terms-conditions') }}" target="_blank" class="btn btn-outline-secondary ms-2">
+                <i class="ti tabler-external-link me-1"></i> Preview Page
+              </a>
+             </form>
+          </div>
+
            <!-- Global Tab -->
           <div class="tab-pane fade" id="navs-global" role="tabpanel">
              <form action="{{ route('admin.landing.settings.update') }}" method="POST" enctype="multipart/form-data">
@@ -536,11 +566,53 @@
 </div>
 
 @section('page-script')
+<!-- Quill CSS -->
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<!-- Quill JS -->
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+
 @vite(['resources/js/admin-preview-handler.js'])
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const previewFrame = document.getElementById('previewFrame');
     const previewModal = document.getElementById('previewModal');
+
+    // ============ TERMS & CONDITIONS QUILL EDITOR ============
+    let termsQuill = null;
+    const termsEditorEl = document.getElementById('termsQuillEditor');
+    const termsHiddenInput = document.getElementById('terms_conditions_content');
+    const termsForm = document.getElementById('termsForm');
+    
+    if (termsEditorEl) {
+        // Initialize Quill for Terms & Conditions
+        termsQuill = new Quill('#termsQuillEditor', {
+            theme: 'snow',
+            placeholder: 'Tulis syarat dan ketentuan di sini...',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link'],
+                    ['clean']
+                ]
+            }
+        });
+        
+        // Load existing content
+        const existingContent = @json($settings->where('key', 'terms_conditions_content')->first()->value ?? '');
+        if (existingContent) {
+            termsQuill.clipboard.dangerouslyPasteHTML(existingContent);
+        }
+        
+        // On form submit, copy Quill HTML content to hidden input
+        if (termsForm) {
+            termsForm.addEventListener('submit', function(e) {
+                termsHiddenInput.value = termsQuill.root.innerHTML;
+            });
+        }
+    }
 
     // Function to gather all form data and send to iframe
     function updatePreview() {
@@ -566,6 +638,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             settings[name] = value;
         });
+        
+        // Include Quill content for T&C
+        if (termsQuill) {
+            settings['terms_conditions_content'] = termsQuill.root.innerHTML;
+        }
 
         // Post message to iframe
         if (previewFrame.contentWindow) {

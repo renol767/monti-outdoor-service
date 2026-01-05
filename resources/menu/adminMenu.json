@@ -33,6 +33,24 @@
           "slug": "admin.addons.index"
         }
       ]
+    },
+    {
+      "url": "admin/trip-types?category=mountain",
+      "name": "Mountain Trip",
+      "icon": "menu-icon icon-base ti tabler-mountain",
+      "slug": "admin.trip-types.index"
+    },
+    {
+      "url": "admin/trip-types?category=outdoor",
+      "name": "Outdoor Trip",
+      "icon": "menu-icon icon-base ti tabler-trees",
+      "slug": "admin.trip-types.outdoor"
+    },
+    {
+      "url": "admin/trip-types?category=indoor",
+      "name": "Indoor Trip",
+      "icon": "menu-icon icon-base ti tabler-building",
+      "slug": "admin.trip-types.indoor"
     }
   ]
 }

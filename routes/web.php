@@ -178,6 +178,59 @@ Route::get('/index-page', function () {
     return view('welcome', compact('settings', 'features', 'trips', 'services', 'gallery', 'testimonials'));
 })->name('landing');
 
+// About Us Page
+Route::get('/about-us', function () {
+    $settings = \App\Models\LandingSetting::all()->pluck('value', 'key');
+    return view('about-us', compact('settings'));
+})->name('about-us');
+
+// Terms & Conditions Page
+Route::get('/terms-conditions', function () {
+    $settings = \App\Models\LandingSetting::all()->pluck('value', 'key');
+    return view('terms-conditions', compact('settings'));
+})->name('terms-conditions');
+
+// Mountain Trip Page
+Route::get('/mountain-trip', function () {
+    $settings = \App\Models\LandingSetting::all()->pluck('value', 'key');
+    $sections = \App\Models\TripTypeSection::byCategory('mountain')->active()->ordered()->get();
+    return view('mountain-trip', compact('settings', 'sections'));
+})->name('mountain-trip');
+
+// Mountain Trip Detail Page
+Route::get('/mountain-trip/{slug}', function ($slug) {
+    $settings = \App\Models\LandingSetting::all()->pluck('value', 'key');
+    $section = \App\Models\TripTypeSection::where('slug', $slug)->where('is_active', true)->firstOrFail();
+    return view('trip-type-detail', compact('settings', 'section'));
+})->name('mountain-trip.detail');
+
+// Outdoor Activity Trip Page
+Route::get('/outdoor-trip', function () {
+    $settings = \App\Models\LandingSetting::all()->pluck('value', 'key');
+    $sections = \App\Models\TripTypeSection::byCategory('outdoor')->active()->ordered()->get();
+    return view('outdoor-trip', compact('settings', 'sections'));
+})->name('outdoor-trip');
+
+// Outdoor Trip Detail Page
+Route::get('/outdoor-trip/{slug}', function ($slug) {
+    $settings = \App\Models\LandingSetting::all()->pluck('value', 'key');
+    $section = \App\Models\TripTypeSection::where('slug', $slug)->where('is_active', true)->firstOrFail();
+    return view('trip-type-detail', compact('settings', 'section'));
+})->name('outdoor-trip.detail');
+
+// Indoor Activity Trip Page
+Route::get('/indoor-trip', function () {
+    $settings = \App\Models\LandingSetting::all()->pluck('value', 'key');
+    $sections = \App\Models\TripTypeSection::byCategory('indoor')->active()->ordered()->get();
+    return view('indoor-trip', compact('settings', 'sections'));
+})->name('indoor-trip');
+
+// Indoor Trip Detail Page
+Route::get('/indoor-trip/{slug}', function ($slug) {
+    $settings = \App\Models\LandingSetting::all()->pluck('value', 'key');
+    $section = \App\Models\TripTypeSection::where('slug', $slug)->where('is_active', true)->firstOrFail();
+    return view('trip-type-detail', compact('settings', 'section'));
+})->name('indoor-trip.detail');
 
 // Open Trip Page
 Route::get('/open-trip', function () {
@@ -367,6 +420,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::put('/trip-media/{media}', [App\Http\Controllers\Admin\TripMediaController::class, 'update'])->name('admin.trip-media.update');
     Route::post('/trip-management/{trip}/media/reorder', [App\Http\Controllers\Admin\TripMediaController::class, 'reorder'])->name('admin.trip-media.reorder');
     Route::delete('/trip-media/{media}', [App\Http\Controllers\Admin\TripMediaController::class, 'destroy'])->name('admin.trip-media.destroy');
+
+    // Trip Type Sections
+    Route::get('/trip-types', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'index'])->name('admin.trip-types.index');
+    Route::post('/trip-types', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'store'])->name('admin.trip-types.store');
+    Route::get('/trip-types/{section}/edit', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'edit'])->name('admin.trip-types.edit');
+    Route::put('/trip-types/{section}', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'update'])->name('admin.trip-types.update');
+    Route::delete('/trip-types/{section}', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'destroy'])->name('admin.trip-types.destroy');
 });
 
 // User Dashboard Routes (Requires session auth and role:user)

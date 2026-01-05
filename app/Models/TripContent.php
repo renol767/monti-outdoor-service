@@ -28,7 +28,7 @@ class TripContent extends Model
     const TAB_OVERVIEW = 'overview';
     const TAB_INCLUDE_EXCLUDE = 'include_exclude';
     const TAB_ITINERARY = 'itinerary';
-    const TAB_TERMS = 'terms';
+    // Note: Terms & Conditions removed - now uses global T&C from landing_settings
 
     public static function tabTypes(): array
     {
@@ -36,7 +36,6 @@ class TripContent extends Model
             self::TAB_OVERVIEW,
             self::TAB_INCLUDE_EXCLUDE,
             self::TAB_ITINERARY,
-            self::TAB_TERMS,
         ];
     }
 

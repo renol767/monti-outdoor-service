@@ -1,9 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Open Trip - Monti Outdoor Service</title>
+  
+  <!-- Primary Meta Tags -->
+  <title>Open Trip Indonesia - Jadwal & Harga Terbaru | Monti Outdoor Service</title>
+  <meta name="title" content="Open Trip Indonesia - Jadwal & Harga Terbaru | Monti Outdoor Service">
+  <meta name="description" content="Temukan jadwal Open Trip terbaru ke berbagai destinasi Indonesia. Pendakian gunung, wisata alam, island hopping dengan harga terjangkau dan guide profesional.">
+  <meta name="keywords" content="open trip, jadwal open trip, harga open trip, pendakian gunung, wisata alam, island hopping, backpacker indonesia">
+  <meta name="author" content="Monti Outdoor Service">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{{ url()->current() }}">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon/favicon.ico') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon/favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon/favicon-16x16.png') }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/favicon/apple-touch-icon.png') }}">
+  <link rel="manifest" href="{{ asset('images/favicon/site.webmanifest') }}">
+  <meta name="theme-color" content="#e97543">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ url()->current() }}">
+  <meta property="og:title" content="Open Trip Indonesia - Jadwal & Harga Terbaru">
+  <meta property="og:description" content="Temukan jadwal Open Trip terbaru ke berbagai destinasi Indonesia dengan harga terjangkau dan guide profesional.">
+  <meta property="og:image" content="{{ asset($settings['global_logo'] ?? 'images/logo/Untitled-4.png') }}">
+  <meta property="og:locale" content="id_ID">
+  <meta property="og:site_name" content="Monti Outdoor Service">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="{{ url()->current() }}">
+  <meta property="twitter:title" content="Open Trip Indonesia - Jadwal & Harga Terbaru">
+  <meta property="twitter:description" content="Temukan jadwal Open Trip terbaru ke berbagai destinasi Indonesia dengan harga terjangkau dan guide profesional.">
+  <meta property="twitter:image" content="{{ asset($settings['global_logo'] ?? 'images/logo/Untitled-4.png') }}">
+
   <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
   @vite(['resources/css/landing-ui-fixes.css'])
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -729,19 +762,8 @@
         </button>
 
         <nav class="nav">
-          <!-- MOS Menu with submenu -->
-          <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
-              MOS
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M4 6L8 10L12 6H4Z"/>
-              </svg>
-            </button>
-            <div class="dropdown-menu">
-              <a href="{{ route('landing') }}#about" class="dropdown-item">About Us</a>
-              <a href="{{ route('landing') }}#about" class="dropdown-item">Our Team</a>
-            </div>
-          </div>
+          <!-- About Us - direct link -->
+          <a href="{{ route('about-us') }}" class="nav-link">About Us</a>
 
           <!-- Open Trip - current page -->
           <a href="{{ route('open-trip') }}" class="nav-link" style="color: var(--color-primary); font-weight: 600;">Open Trip</a>
@@ -755,12 +777,12 @@
               </svg>
             </button>
             <div class="dropdown-menu">
-              <a href="#" class="dropdown-item">Open Trip</a>
-              <a href="#" class="dropdown-item">Private Trip</a>
-              <a href="#" class="dropdown-item">One Day Trip</a>
-              <a href="#" class="dropdown-item">Expedition Trip</a>
-              <a href="#" class="dropdown-item">International Trip</a>
-              <a href="#" class="dropdown-item">Custom Trip</a>
+              <a href="{{ route('open-trip') }}" class="dropdown-item">Open Trip</a>
+              <a href="{{ route('mountain-trip') }}#private-trip" class="dropdown-item">Private Trip</a>
+              <a href="{{ route('mountain-trip') }}#one-day-trip" class="dropdown-item">One Day Trip</a>
+              <a href="{{ route('mountain-trip') }}#expedition-trip" class="dropdown-item">Expedition Trip</a>
+              <a href="{{ route('mountain-trip') }}#international-trip" class="dropdown-item">International Trip</a>
+              <a href="{{ route('mountain-trip') }}#custom-trip" class="dropdown-item">Custom Trip</a>
             </div>
           </div>
 
@@ -773,12 +795,12 @@
               </svg>
             </button>
             <div class="dropdown-menu">
-              <a href="#" class="dropdown-item">Cultural Trip</a>
-              <a href="#" class="dropdown-item">One Day Trip</a>
-              <a href="#" class="dropdown-item">Island Trip</a>
-              <a href="#" class="dropdown-item">Camping</a>
-              <a href="#" class="dropdown-item">Outdoor Team Building</a>
-              <a href="#" class="dropdown-item">Outdoor Custom Trip</a>
+              <a href="{{ route('outdoor-trip') }}#cultural-trip" class="dropdown-item">Cultural Trip</a>
+              <a href="{{ route('outdoor-trip') }}#one-day-outdoor-trip" class="dropdown-item">One Day Trip</a>
+              <a href="{{ route('outdoor-trip') }}#island-trip" class="dropdown-item">Island Trip</a>
+              <a href="{{ route('outdoor-trip') }}#camping-trip" class="dropdown-item">Camping</a>
+              <a href="{{ route('outdoor-trip') }}#outdoor-team-building" class="dropdown-item">Outdoor Team Building</a>
+              <a href="{{ route('outdoor-trip') }}#outdoor-custom-trip" class="dropdown-item">Outdoor Custom Trip</a>
             </div>
           </div>
 
@@ -791,12 +813,12 @@
               </svg>
             </button>
             <div class="dropdown-menu">
-              <a href="#" class="dropdown-item">City Tour</a>
-              <a href="#" class="dropdown-item">Company Gathering</a>
-              <a href="#" class="dropdown-item">Outing, Tour & Travel</a>
-              <a href="#" class="dropdown-item">MICE Organizer</a>
-              <a href="#" class="dropdown-item">Indoor Team Building</a>
-              <a href="#" class="dropdown-item">Indoor Custom Trip</a>
+              <a href="{{ route('indoor-trip') }}#city-tour" class="dropdown-item">City Tour</a>
+              <a href="{{ route('indoor-trip') }}#company-gathering" class="dropdown-item">Company Gathering</a>
+              <a href="{{ route('indoor-trip') }}#outing-tour-travel" class="dropdown-item">Outing, Tour & Travel</a>
+              <a href="{{ route('indoor-trip') }}#mice-organizer" class="dropdown-item">MICE Organizer</a>
+              <a href="{{ route('indoor-trip') }}#indoor-team-building" class="dropdown-item">Indoor Team Building</a>
+              <a href="{{ route('indoor-trip') }}#indoor-custom-trip" class="dropdown-item">Indoor Custom Trip</a>
             </div>
           </div>
 
@@ -1101,13 +1123,40 @@
     </section>
   </div><!-- End content-wrapper -->
 
+  <!-- Terms & Conditions Notice Section -->
+  <section style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 3rem 0;">
+    <div class="container" style="text-align: center;">
+      <h3 style="color: #fff; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem;">Syarat & Ketentuan</h3>
+      <p style="color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+        Sebelum melakukan booking, pastikan Anda telah membaca dan memahami syarat & ketentuan yang berlaku untuk semua trip kami.
+      </p>
+      <a href="{{ route('terms-conditions') }}" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--color-primary); color: #fff; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        Baca Syarat & Ketentuan
+      </a>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-col">
           <div class="footer-logo">
-            <img src="{{ asset($settings['global_logo'] ?? 'images/logo/Untitled-4.png') }}" alt="Monti Outdoor" width="80">
+            @if(isset($settings['global_footer_logo']))
+              <img src="{{ asset($settings['global_footer_logo']) }}" alt="Monti Outdoor" width="80">
+            @else
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 2L4 14L8 18L16 10L24 18L28 14L16 2Z" fill="#e97543"/>
+              <path d="M8 18L4 22V30H12V24H20V30H28V22L24 18L16 26L8 18Z" fill="#e97543"/>
+            </svg>
+            @endif
           </div>
           <p class="footer-description">{{ $settings['global_footer_text'] ?? 'Your trusted partner for outdoor adventures and mountain expeditions across Indonesia.' }}</p>
         </div>
@@ -1125,10 +1174,10 @@
         <div class="footer-col">
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
-            <li><a href="#">Mountain Trip</a></li>
-            <li><a href="#">Island Trip</a></li>
-            <li><a href="#">City Tour</a></li>
-            <li><a href="#">International Trip</a></li>
+            <li><a href="{{ route('open-trip') }}">Open Trip</a></li>
+            <li><a href="{{ route('mountain-trip') }}">Mountain Trip</a></li>
+            <li><a href="{{ route('outdoor-trip') }}">Outdoor Activity Trip</a></li>
+            <li><a href="{{ route('indoor-trip') }}">Indoor Activity Trip</a></li>
           </ul>
         </div>
 
@@ -1144,6 +1193,10 @@
 
       <div class="footer-bottom">
         <p>&copy; 2026 Monti Outdoor Service. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="{{ route('terms-conditions') }}">Terms of Service</a>
+        </div>
       </div>
     </div>
   </footer>
