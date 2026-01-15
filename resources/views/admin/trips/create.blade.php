@@ -84,8 +84,32 @@
           <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label" for="thumbnail">Thumbnail Image</label>
-              <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*">
-              <small class="text-muted">Recommended: 16:9 ratio, max 5MB</small>
+              <input type="file" class="form-control" id="thumbnailInput" accept="image/*">
+              <input type="hidden" name="thumbnail_cropped" id="thumbnailCroppedData">
+              <div class="mt-2 d-none" id="croppedThumbnailPreview">
+                <img src="" alt="Cropped preview" class="rounded border" style="max-height: 150px;">
+                <small class="d-block text-success mt-1"><i class="ti tabler-check"></i> Valid 4:5 Thumbnail</small>
+              </div>
+              <small class="text-muted">Recommended: 4:5 ratio (portrait). Image will be cropped automatically.</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label" for="thumbnail_landscape">Landscape Thumbnail (Hero)</label>
+              <input type="file" class="form-control cropper-input" id="landscapeInput" data-type="landscape" accept="image/*">
+              <input type="hidden" name="thumbnail_landscape_cropped" id="landscapeCroppedData">
+              <div class="mt-2 d-none" id="croppedLandscapePreview">
+                <img src="" alt="Cropped preview" class="rounded border" style="max-height: 150px;">
+                <small class="d-block text-success mt-1"><i class="ti tabler-check"></i> Valid Landscape Thumbnail</small>
+              </div>
+              <small class="text-muted">Recommended: Landscape (16:9). Required for Hero section.</small>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="mb-3">
+              <label class="form-label" for="trip_itinerary_pdf">Trip Itinerary PDF</label>
+              <input type="file" class="form-control" id="trip_itinerary_pdf" name="trip_itinerary_pdf" accept=".pdf">
+              <small class="text-muted">Upload PDF file for "Download Trip Detail" button.</small>
             </div>
           </div>
         </div>
@@ -118,4 +142,150 @@
     </div>
   </div>
 </div>
+
+<!-- Cropper.js CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" rel="stylesheet">
+<style>
+.cropper-container { max-height: 400px; }
+</style>
+
+<!-- Image Cropper Modal -->
+<div class="modal fade" id="imageCropperModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Crop Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Aspect Ratio: Fixed 4:5</label>
+        </div>
+        <div style="max-height: 400px; overflow: hidden; background: #333;">
+          <img id="cropperImage" src="" style="max-width: 100%; display: block;">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="cropBtn">
+          <i class="ti tabler-crop me-1"></i> Crop & Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@endsection
+
+@section('page-script')
+<!-- Cropper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Cropper Variables
+    let cropper = null;
+    const cropperModal = new bootstrap.Modal(document.getElementById('imageCropperModal'));
+    const cropperImage = document.getElementById('cropperImage');
+    const cropBtn = document.getElementById('cropBtn');
+    
+    // State
+    let currentInputType = null; // 'portrait' or 'landscape'
+
+    // 1. File Selection Handler
+    function handleFileSelect(e, type) {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            
+            // Validate Type
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                return;
+            }
+
+            currentInputType = type;
+
+            // Update Modal Title/Label
+            const label = type === 'portrait' ? 'Fixed 4:5 (Portrait)' : 'Fixed 16:9 (Landscape)';
+            document.querySelector('#imageCropperModal .form-label').textContent = `Aspect Ratio: ${label}`;
+
+            // Load Image
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                cropperImage.src = evt.target.result;
+                cropperModal.show();
+            };
+            reader.readAsDataURL(file);
+        }
+        e.target.value = ''; // Reset
+    }
+
+    // Attach listeners
+    document.getElementById('thumbnailInput').addEventListener('change', (e) => handleFileSelect(e, 'portrait'));
+    document.getElementById('landscapeInput').addEventListener('change', (e) => handleFileSelect(e, 'landscape'));
+
+    // 2. Init Cropper when Modal opens
+    document.getElementById('imageCropperModal').addEventListener('shown.bs.modal', function() {
+        if (cropper) cropper.destroy();
+        
+        const aspectRatio = currentInputType === 'portrait' ? 0.8 : (16/9);
+
+        cropper = new Cropper(cropperImage, {
+            viewMode: 1,
+            dragMode: 'move',
+            autoCropArea: 0.9,
+            responsive: true,
+            background: false,
+            aspectRatio: aspectRatio,
+        });
+    });
+
+    document.getElementById('imageCropperModal').addEventListener('hidden.bs.modal', function() {
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+        currentInputType = null;
+    });
+
+
+    // 4. Crop Action
+    cropBtn.addEventListener('click', function() {
+        if (!cropper || !currentInputType) return;
+
+        // Get cropped canvas
+        const canvas = cropper.getCroppedCanvas({
+            maxWidth: 1600,
+            maxHeight: 1600, // Sufficient for both
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: 'high',
+        });
+
+        if (canvas) {
+            // Convert to Base64
+            const base64 = canvas.toDataURL('image/jpeg', 0.9);
+            
+            // Determine targets based on type
+            let hiddenInputId, previewId;
+            if (currentInputType === 'portrait') {
+                hiddenInputId = 'thumbnailCroppedData';
+                previewId = 'croppedThumbnailPreview';
+            } else {
+                hiddenInputId = 'landscapeCroppedData';
+                previewId = 'croppedLandscapePreview';
+            }
+            
+            // Set Hidden Input
+            document.getElementById(hiddenInputId).value = base64;
+            
+            // Show Preview
+            const previewEl = document.getElementById(previewId);
+            previewEl.querySelector('img').src = base64;
+            previewEl.classList.remove('d-none');
+            
+            // Close Modal
+            cropperModal.hide();
+        }
+    });
+});
+</script>
 @endsection

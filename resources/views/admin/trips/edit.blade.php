@@ -260,7 +260,141 @@
                     </div>
                     <input type="file" class="form-control" id="thumbnailInput" accept="image/*">
                     <input type="hidden" name="thumbnail_cropped" id="thumbnailCroppedData">
-                    <small class="text-muted">Click to select and crop thumbnail image</small>
+                    <small class="text-muted">Click to select and crop thumbnail image. Recommended: 4:5 ratio.</small>
+                  </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                  <div class="mb-3">
+                    <label class="form-label">Landscape Thumbnail (Hero)</label>
+                    <div class="d-flex align-items-center mb-2">
+                        @if($trip->thumbnail_landscape)
+                            <img src="{{ asset($trip->thumbnail_landscape) }}" alt="Current Landscape" class="rounded me-3" style="height: 60px; object-fit: cover;">
+                        @endif
+                        <div id="croppedLandscapePreview" class="d-none">
+                             <img src="" alt="Preview" class="rounded border" style="height: 60px;">
+                             <span class="text-success ms-2"><i class="ti tabler-check"></i> Ready</span>
+                        </div>
+                    </div>
+                    <input type="file" class="form-control" id="landscapeInput" accept="image/*" onchange="showCropper(this, 'landscape')">
+                    <input type="hidden" name="thumbnail_landscape_cropped" id="landscapeCroppedData">
+                    <small class="text-muted">Recommended: Landscape (16:9). Required for Hero section.</small>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mb-4">
+                  <div class="mb-3">
+                    <label class="form-label" for="trip_itinerary_pdf">Trip Itinerary PDF</label>
+                    @if($trip->trip_itinerary_pdf)
+                        <div class="mb-2">
+                            <a href="{{ asset($trip->trip_itinerary_pdf) }}" target="_blank" class="badge bg-label-primary">
+                                <i class="ti tabler-file-type-pdf me-1"></i> Current PDF
+                            </a>
+                        </div>
+                    @endif
+                    <input type="file" class="form-control" id="trip_itinerary_pdf" name="trip_itinerary_pdf" accept=".pdf">
+                    <small class="text-muted">Upload PDF file for "Download Trip Detail" button.</small>
+                  </div>
+                </div>
+              </div>
+              
+              <hr class="my-4">
+              
+              <!-- Trip Facts / Metrics -->
+              <h6 class="text-muted mb-3">Trip Facts (Metrics) Checklists</h6>
+              <div class="alert alert-info py-2 mb-3">
+                <i class="ti tabler-info-circle me-1"></i> Check the box to display the metric on the Trip Detail page.
+              </div>
+              
+              <div class="row">
+                <!-- Grade -->
+                <div class="col-md-6 col-lg-4">
+                  <div class="mb-3">
+                    <label class="form-label">Grade</label>
+                    <div class="input-group">
+                      <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox" name="trip_facts[grade][enabled]" value="1" {{ data_get($trip->trip_facts, 'grade.enabled') ? 'checked' : '' }}>
+                      </div>
+                      <input type="text" class="form-control" name="trip_facts[grade][value]" value="{{ data_get($trip->trip_facts, 'grade.value') }}" placeholder="e.g. III - Menengah">
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Distance -->
+                <div class="col-md-6 col-lg-4">
+                  <div class="mb-3">
+                    <label class="form-label">Distance</label>
+                    <div class="input-group">
+                      <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox" name="trip_facts[distance][enabled]" value="1" {{ data_get($trip->trip_facts, 'distance.enabled') ? 'checked' : '' }}>
+                      </div>
+                      <input type="text" class="form-control" name="trip_facts[distance][value]" value="{{ data_get($trip->trip_facts, 'distance.value') }}" placeholder="e.g. 5.2 KM">
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Max Altitude -->
+                <div class="col-md-6 col-lg-4">
+                  <div class="mb-3">
+                    <label class="form-label">Max Altitude</label>
+                    <div class="input-group">
+                      <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox" name="trip_facts[max_altitude][enabled]" value="1" {{ data_get($trip->trip_facts, 'max_altitude.enabled') ? 'checked' : '' }}>
+                      </div>
+                      <input type="text" class="form-control" name="trip_facts[max_altitude][value]" value="{{ data_get($trip->trip_facts, 'max_altitude.value') }}" placeholder="e.g. 3.142 mdpl">
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Duration (Text Override) -->
+                <div class="col-md-6 col-lg-4">
+                  <div class="mb-3">
+                    <label class="form-label">Duration (Text)</label>
+                    <div class="input-group">
+                      <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox" name="trip_facts[duration][enabled]" value="1" {{ data_get($trip->trip_facts, 'duration.enabled') ? 'checked' : '' }}>
+                      </div>
+                      <input type="text" class="form-control" name="trip_facts[duration][value]" value="{{ data_get($trip->trip_facts, 'duration.value') }}" placeholder="e.g. 2H 1M (Auto-filled if empty)">
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Trekking Time -->
+                <div class="col-md-6 col-lg-4">
+                  <div class="mb-3">
+                    <label class="form-label">Trekking Time</label>
+                    <div class="input-group">
+                      <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox" name="trip_facts[trekking_time][enabled]" value="1" {{ data_get($trip->trip_facts, 'trekking_time.enabled') ? 'checked' : '' }}>
+                      </div>
+                      <input type="text" class="form-control" name="trip_facts[trekking_time][value]" value="{{ data_get($trip->trip_facts, 'trekking_time.value') }}" placeholder="e.g. 5-7 Jam">
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Elevation Gain -->
+                <div class="col-md-6 col-lg-4">
+                  <div class="mb-3">
+                    <label class="form-label">Elevation Gain</label>
+                    <div class="input-group">
+                      <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox" name="trip_facts[elevation_gain][enabled]" value="1" {{ data_get($trip->trip_facts, 'elevation_gain.enabled') ? 'checked' : '' }}>
+                      </div>
+                      <input type="text" class="form-control" name="trip_facts[elevation_gain][value]" value="{{ data_get($trip->trip_facts, 'elevation_gain.value') }}" placeholder="e.g. 1.292 mdpl">
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Terrain (Alternative) -->
+                <div class="col-md-6 col-lg-4">
+                  <div class="mb-3">
+                    <label class="form-label">Terrain (Alternative)</label>
+                    <div class="input-group">
+                      <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox" name="trip_facts[terrain][enabled]" value="1" {{ data_get($trip->trip_facts, 'terrain.enabled') ? 'checked' : '' }}>
+                      </div>
+                      <input type="text" class="form-control" name="trip_facts[terrain][value]" value="{{ data_get($trip->trip_facts, 'terrain.value') }}" placeholder="e.g. Aspal / Pasir / Hutan">
+                    </div>
                   </div>
                 </div>
               </div>
@@ -554,6 +688,46 @@
             </div>
           </div>
           
+          <!-- Gear Lists Section -->
+          <div class="col-md-8">
+            <div class="card mb-4">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Gear Lists (Images)</h5>
+                <label for="gearListUpload" class="btn btn-primary btn-sm mb-0">
+                  <i class="ti tabler-upload me-1"></i> Upload Images
+                </label>
+                <input type="file" id="gearListUpload" accept="image/*" multiple class="d-none">
+              </div>
+              <div class="card-body">
+                <div id="gearListDropzone" class="border-2 border-dashed rounded p-4 text-center mb-4" style="border-style: dashed; border-color: #ccc;">
+                  <i class="ti tabler-clipboard-list fs-1 text-muted"></i>
+                  <p class="mb-0 text-muted">Drag & drop Gear List images here</p>
+                </div>
+                
+                <div id="gearListGrid" class="row g-3">
+                  @foreach($trip->media->where('media_type', 'gear_list') as $image)
+                  <div class="col-md-4 col-6 gallery-item" data-id="{{ $image->id }}">
+                    <div class="card h-100 position-relative">
+                      <img src="{{ asset($image->file_path) }}" class="card-img-top" alt="{{ $image->alt_text }}" style="height: 150px; object-fit: cover;">
+                      <div class="card-body p-2">
+                        <div class="d-flex justify-content-end">
+                          <button type="button" class="btn btn-sm btn-icon text-danger btn-delete-media" data-id="{{ $image->id }}" title="Delete">
+                            <i class="ti tabler-trash"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  @endforeach
+                </div>
+                
+                @if($trip->media->where('media_type', 'gear_list')->isEmpty())
+                <p class="text-muted text-center" id="noGearListMessage">No gear list images uploaded yet</p>
+                @endif
+              </div>
+            </div>
+          </div>
+          
           <!-- Tracking Map Section -->
           <div class="col-md-4">
             <div class="card">
@@ -825,9 +999,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Upload handler
     async function uploadMedia(file, mediaType, skipResize = false) {
-        // Resize gallery images, but NOT tracking map
+        // Resize gallery and gear_list images, but NOT tracking map
         let fileToUpload = file;
-        if (!skipResize && mediaType === 'gallery') {
+        if (!skipResize && (mediaType === 'gallery' || mediaType === 'gear_list')) {
             fileToUpload = await resizeImage(file, 1920, 1920, 0.8);
         }
 
@@ -878,6 +1052,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 cropper.destroy();
             }
             
+            // Determine Ratio & Title
+            let ratio = 0.8; // Default 4:5
+            let label = 'Fixed 4:5 (Portrait)';
+            
+            if (mediaType === 'landscape') {
+                ratio = 16/9;
+                label = 'Fixed 16:9 (Landscape)';
+            }
+            
+            // Update Title
+            const labelEl = document.querySelector('#imageCropperModal .form-label');
+            if (labelEl) labelEl.textContent = `Aspect Ratio: ${label}`;
+            
             // Initialize new cropper after modal is shown
             setTimeout(() => {
                 cropper = new Cropper(cropperImage, {
@@ -886,29 +1073,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     autoCropArea: 0.9,
                     responsive: true,
                     background: false,
+                    aspectRatio: ratio, 
                 });
             }, 300);
         };
         reader.readAsDataURL(file);
     }
     
-    // Aspect ratio buttons
-    document.querySelectorAll('.aspect-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.aspect-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            const aspect = this.dataset.aspect;
-            if (cropper) {
-                if (aspect === 'free') {
-                    cropper.setAspectRatio(NaN);
-                } else {
-                    const [w, h] = aspect.split(':').map(Number);
-                    cropper.setAspectRatio(w / h);
-                }
-            }
-        });
-    });
+
     
     // Crop and upload button
     document.getElementById('cropAndUploadBtn').addEventListener('click', async function() {
@@ -967,6 +1139,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         e.target.value = ''; // clear input
     });
+
+    // Gear List upload (direct upload, no crop needed usually, or reuse cropper if preferred? User said "file image", list usually vertical. Let's use direct upload with resize for now to keep it simple, or reuse cropper? 
+    // Gallery uses cropper forced to 4:5. Gear list might need full view. Let's just do uploadMedia direct with resize.
+    const gearListUpload = document.getElementById('gearListUpload');
+    if (gearListUpload) {
+        gearListUpload.addEventListener('change', async function(e) {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+            
+            // Show loading indicator somewhere?
+            // Just basic loop upload
+            for (const file of files) {
+                await uploadMedia(file, 'gear_list');
+            }
+            e.target.value = '';
+        });
+    }
     
     // Thumbnail upload (with cropper)
     const thumbnailInput = document.getElementById('thumbnailInput');
@@ -982,10 +1171,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Special handling for thumbnail - store in hidden field instead of uploading
+    // Landscape upload (with cropper)
+    const landscapeInput = document.getElementById('landscapeInput');
+    if (landscapeInput) {
+        landscapeInput.addEventListener('change', function(e) {
+            if (e.target.files[0]) {
+                pendingFiles = [e.target.files[0]];
+                currentFileIndex = 0;
+                currentMediaType = 'landscape';
+                showCropper(e.target.files[0], 'landscape');
+            }
+            e.target.value = ''; // clear input
+        });
+    }
+
+    // Special handling for thumbnail/landscape - store in hidden field instead of uploading
     const originalCropHandler = document.getElementById('cropAndUploadBtn').onclick;
     document.getElementById('cropAndUploadBtn').addEventListener('click', function(e) {
-        if (currentMediaType === 'thumbnail' && cropper) {
+        if ((currentMediaType === 'thumbnail' || currentMediaType === 'landscape') && cropper) {
             e.stopImmediatePropagation();
             
             const btn = this;
@@ -1001,16 +1204,26 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Store base64 in hidden field
             const base64 = canvas.toDataURL('image/jpeg', 0.92);
-            document.getElementById('thumbnailCroppedData').value = base64;
             
-            // Show preview
-            const preview = document.getElementById('croppedThumbnailPreview');
-            preview.querySelector('img').src = base64;
-            preview.classList.remove('d-none');
-            
-            // Hide current thumbnail
-            const current = document.getElementById('currentThumbnail');
-            if (current) current.classList.add('d-none');
+            if (currentMediaType === 'thumbnail') {
+                document.getElementById('thumbnailCroppedData').value = base64;
+                
+                // Show preview
+                const preview = document.getElementById('croppedThumbnailPreview');
+                preview.querySelector('img').src = base64;
+                preview.classList.remove('d-none');
+                
+                // Hide current thumbnail
+                const current = document.getElementById('currentThumbnail');
+                if (current) current.classList.add('d-none');
+
+            } else if (currentMediaType === 'landscape') {
+                document.getElementById('landscapeCroppedData').value = base64;
+                 // Show preview
+                const preview = document.getElementById('croppedLandscapePreview');
+                preview.querySelector('img').src = base64;
+                preview.classList.remove('d-none');
+            }
             
             cropper.destroy();
             cropper = null;
@@ -1122,13 +1335,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
       <div class="modal-body">
         <div class="mb-3">
-          <label class="form-label">Aspect Ratio:</label>
-          <div class="btn-group" role="group">
-            <button type="button" class="btn btn-outline-primary btn-sm aspect-btn active" data-aspect="free">Free</button>
-            <button type="button" class="btn btn-outline-primary btn-sm aspect-btn" data-aspect="16:9">16:9</button>
-            <button type="button" class="btn btn-outline-primary btn-sm aspect-btn" data-aspect="4:3">4:3</button>
-            <button type="button" class="btn btn-outline-primary btn-sm aspect-btn" data-aspect="1:1">1:1</button>
-          </div>
+          <label class="form-label">Aspect Ratio: Fixed 4:5</label>
         </div>
         <div style="max-height: 400px; overflow: hidden;">
           <img id="cropperImage" src="" style="max-width: 100%;">

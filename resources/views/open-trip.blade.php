@@ -46,19 +46,18 @@
     /* Open Trip Page Specific Styles */
     .open-trip-hero {
       position: relative;
-      min-height: 70vh;
+      min-height: 75vh;
       display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      overflow: visible;
+      align-items: center; /* Center vertically */
+      justify-content: center; /* Center horizontally */
+      overflow: hidden;
       padding-top: 100px;
-      padding-bottom: 180px;
+      padding-bottom: 0;
     }
 
     @media (min-width: 768px) {
       .open-trip-hero {
-        min-height: 65vh;
-        padding-bottom: 220px;
+        min-height: 80vh;
       }
     }
 
@@ -76,48 +75,41 @@
     .open-trip-hero .hero-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.3));
-    }
-
-    /* White fog at bottom of hero - transition to content */
-    .open-trip-hero::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 200px;
-      background: linear-gradient(to top, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 30%, rgba(255, 255, 255, 0.3) 60%, transparent 100%);
-      pointer-events: none;
-      z-index: 5;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
     }
 
     .open-trip-hero .hero-content {
       position: relative;
       z-index: 10;
       text-align: center;
-      padding: 2rem 1rem;
+      padding: 2rem;
       width: 100%;
+      max-width: 600px;
     }
 
-    .open-trip-hero .hero-title {
-      color: var(--color-white);
-      font-size: 2.5rem;
-      margin-bottom: 0.75rem;
+    .open-trip-badge {
+      display: inline-block;
+      background: var(--color-primary);
+      color: white;
+      padding: 0.35rem 1rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .open-trip-hero .hero-tagline {
+      color: #fff;
+      font-size: 1.2rem;
+      font-style: italic;
+      line-height: 1.6;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
     }
 
     @media (min-width: 768px) {
-      .open-trip-hero .hero-title {
-        font-size: 3.5rem;
+      .open-trip-hero .hero-tagline {
+        font-size: 1.4rem;
       }
-    }
-
-    .open-trip-hero .hero-subtitle {
-      color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 2rem;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
     }
 
     /* Search Bar */
@@ -383,22 +375,22 @@
     }
 
     .open-trip-card {
-      background: var(--color-white);
+      background: #2a2a2a;
       border-radius: var(--border-radius-xl);
       overflow: hidden;
-      box-shadow: var(--shadow-md);
-      border: 1px solid var(--color-slate-100);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       transition: var(--transition-normal);
     }
 
     .open-trip-card:hover {
-      box-shadow: var(--shadow-2xl);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
       transform: translateY(-0.5rem);
     }
 
     .open-trip-card .card-image {
       position: relative;
-      height: 180px;
+      aspect-ratio: 4/5;
       overflow: hidden;
       border-radius: var(--border-radius-lg);
       margin: 0.75rem 0.75rem 0;
@@ -462,7 +454,7 @@
     .open-trip-card .card-title {
       font-size: 1rem;
       font-weight: 700;
-      color: var(--color-slate-900);
+      color: #fbcaa5;
       margin: 0;
     }
 
@@ -472,7 +464,7 @@
       gap: 0.25rem;
       font-weight: 600;
       font-size: 0.9rem;
-      color: var(--color-slate-700);
+      color: rgba(255, 255, 255, 0.9);
     }
 
     .open-trip-card .card-rating svg {
@@ -484,17 +476,27 @@
 
     .open-trip-card .card-duration {
       font-size: 0.8rem;
-      color: var(--color-slate-500);
+      color: rgba(255, 255, 255, 0.6);
       margin-bottom: 0.75rem;
     }
 
     .open-trip-card .card-amenities {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.5rem;
       padding: 0.75rem 0;
-      border-top: 1px solid var(--color-slate-100);
-      border-bottom: 1px solid var(--color-slate-100);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .open-trip-card .amenity-more {
+      display: flex;
+      align-items: center;
+      font-size: 0.7rem;
+      color: var(--color-primary);
+      font-weight: 500;
     }
 
     .open-trip-card .amenity {
@@ -505,14 +507,14 @@
     }
 
     .open-trip-card .amenity svg {
-      width: 18px;
-      height: 18px;
-      color: var(--color-slate-400);
+      width: 16px;
+      height: 16px;
+      color: rgba(255, 255, 255, 0.6);
     }
 
     .open-trip-card .amenity span {
-      font-size: 0.7rem;
-      color: var(--color-slate-500);
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.6);
     }
 
     .open-trip-card .card-features {
@@ -521,12 +523,19 @@
       list-style: none;
     }
 
+    .open-trip-card .card-features-label {
+      font-size: 0.75rem;
+      color: var(--color-primary);
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
     .open-trip-card .card-features li {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       font-size: 0.8rem;
-      color: var(--color-slate-600);
+      color: rgba(255, 255, 255, 0.8);
       margin-bottom: 0.2rem;
     }
 
@@ -544,25 +553,25 @@
 
     .open-trip-card .price-old {
       font-size: 0.8rem;
-      color: var(--color-slate-400);
+      color: rgba(255, 255, 255, 0.4);
       text-decoration: line-through;
     }
 
     .open-trip-card .price-current {
       font-size: 1.125rem;
       font-weight: 700;
-      color: var(--color-slate-900);
+      color: #fbcaa5;
     }
 
     .open-trip-card .price-unit {
       font-size: 0.8rem;
-      color: var(--color-slate-500);
+      color: rgba(255, 255, 255, 0.6);
     }
 
     /* Price From Label */
     .open-trip-card .price-from {
       font-size: 0.75rem;
-      color: var(--color-slate-500);
+      color: rgba(255, 255, 255, 0.5);
       font-weight: 400;
     }
 
@@ -572,7 +581,7 @@
       justify-content: space-between;
       padding: 0.5rem 0;
       margin-bottom: 0.5rem;
-      border-bottom: 1px solid var(--color-slate-100);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .open-trip-card .schedule-item {
@@ -580,7 +589,7 @@
       align-items: center;
       gap: 0.35rem;
       font-size: 0.8rem;
-      color: var(--color-slate-600);
+      color: rgba(255, 255, 255, 0.7);
     }
 
     .open-trip-card .schedule-item svg {
@@ -741,8 +750,137 @@
     .end-of-list {
       text-align: center;
       padding: 2rem;
-      color: var(--color-slate-400);
+      color: #000000; /* Dark for visibility on light bg */
       font-size: 0.9rem;
+      font-style: italic;
+    }
+
+    /* Open Trip Description Section */
+    .open-trip-description {
+      background: #1e1e1e;
+      padding: 4rem 0 16rem; /* Vastly increased padding to hold Sort Section + Overlay Gap */
+    }
+
+    .open-trip-description .section-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #fbcaa5;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    .open-trip-description .description-text {
+      color: rgba(251, 202, 165, 0.85);
+      font-size: 1rem;
+      line-height: 1.8;
+      font-style: italic;
+      max-width: 900px;
+    }
+
+    .open-trip-description .description-text p {
+      margin-bottom: 1.5rem;
+    }
+
+    .open-trip-description .description-text strong {
+      color: #e97543;
+      font-weight: 700;
+    }
+
+    /* Kategori Wrapper inside Open Trip Section */
+    .kategori-wrapper {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(251, 202, 165, 0.2);
+      text-align: center;
+    }
+
+    .kategori-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fbcaa5;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .kategori-tabs-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .kategori-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.25rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-width: 90px;
+    }
+
+    .kategori-tab:hover {
+      border-color: #e97543;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .kategori-tab.active {
+      border-color: #e97543;
+      background: rgba(233, 117, 67, 0.2);
+    }
+
+    .kategori-tab svg {
+      width: 28px;
+      height: 28px;
+      color: rgba(251, 202, 165, 0.7);
+    }
+
+    .kategori-tab.active svg {
+      color: #e97543;
+    }
+
+    .kategori-tab span {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: rgba(251, 202, 165, 0.8);
+    }
+
+    .kategori-tab.active span {
+      color: #fbcaa5;
+      font-weight: 600;
+    }
+
+    /* Cards Overlay Wrapper */
+    .cards-overlay-wrapper {
+      background: #bab6a5;
+      position: relative;
+      z-index: 30;
+      /* No negative margin on wrapper itself, let it sit naturally below */
+    }
+
+    /* Sort Dropdown */
+    .sort-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 1rem 0; /* Added padding top/sides */
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .cards-overlay-wrapper .trips-section {
+      margin-top: -12rem; /* Keep pulling up */
+      padding-top: 0;
+    }
+
+    @media (min-width: 768px) {
+      .cards-overlay-wrapper .trips-section {
+        margin-top: -14rem; /* More pull up on desktop */
+      }
     }
   </style>
 </head>
@@ -770,7 +908,7 @@
           
           <!-- Mountain Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('mountain-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Mountain Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
@@ -788,12 +926,12 @@
 
           <!-- Outdoor Activity Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('outdoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Outdoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('outdoor-trip') }}#cultural-trip" class="dropdown-item">Cultural Trip</a>
               <a href="{{ route('outdoor-trip') }}#one-day-outdoor-trip" class="dropdown-item">One Day Trip</a>
@@ -806,12 +944,12 @@
 
           <!-- Indoor Activity Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('indoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Indoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('indoor-trip') }}#city-tour" class="dropdown-item">City Tour</a>
               <a href="{{ route('indoor-trip') }}#company-gathering" class="dropdown-item">Company Gathering</a>
@@ -831,138 +969,96 @@
     </div>
   </header>
 
-  <!-- Hero Section with Search -->
+  <!-- Hero Section -->
   <section class="open-trip-hero">
     <div class="hero-bg">
-      <img src="{{ asset('images/Annapurna Basecamp.jpg') }}" alt="Open Trip Hero">
+      <img src="{{ asset('images/open-trip-hero-new.jpg') }}" alt="Open Trip Hero">
       <div class="hero-overlay"></div>
     </div>
     <div class="hero-content container">
-      <h1 class="hero-title">Explore Our Open Trips</h1>
-      <p class="hero-subtitle">Join fellow adventurers on our scheduled group trips across Indonesia and beyond.</p>
+      <span class="open-trip-badge">Open Trip</span>
+      <p class="hero-tagline">Menjelajah ke tempat baru, bersama teman baru...<br>Dengan servis yang mewah, aman dan nyaman..</p>
+    </div>
+  </section>
+
+
+  <!-- Open Trip Description Section with Kategori -->
+  <section class="open-trip-description">
+    <div class="container">
+      <h2 class="section-title">OPEN TRIP</h2>
+      <div class="description-text">
+        <p>Trip perjalanan yang diselenggarakan dengan pelaksanaan waktu, layanan dan harga yang sudah ditetapkan.</p>
+        <p>OPEN TRIP MONTI Outdoor Service menjunjung tinggi standar keamanan dan kenyamanan dengan tetap mengedepankan servis yang mewah dan terjangkau.<br>
+        Di OPEN TRIP ini lah teman-teman semua akan mendapatkan teman baru dan akan mengetahui bagaimana seharusnya trip perjalanan dan pendakian dilaksanakan dengan cara yang benar.</p>
+      </div>
       
-      <!-- Search Bar -->
-      <div class="search-bar-container">
-        <form class="search-bar">
-          <div class="search-field">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/>
-              <path d="M21 21l-4.35-4.35"/>
+      <!-- Kategori Tabs inside Open Trip Section -->
+      <div class="kategori-wrapper">
+        <h3 class="kategori-title">KATEGORI TRIP</h3>
+        <div class="kategori-tabs-wrapper">
+          <button class="kategori-tab active" data-kategori="all">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
             </svg>
-            <input type="text" placeholder="Search destinations, trips...">
-          </div>
-          <div class="search-field">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-              <line x1="16" y1="2" x2="16" y2="6"/>
-              <line x1="8" y1="2" x2="8" y2="6"/>
-              <line x1="3" y1="10" x2="21" y2="10"/>
+            <span>All Trips</span>
+          </button>
+          <button class="kategori-tab" data-kategori="mountain">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 21l4-11 4 11"/><path d="M12 10l4-9 4 9"/>
             </svg>
-            <input type="month" id="departureMonth" placeholder="Departure Month" style="cursor: pointer;">
-          </div>
-          <div class="search-field">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            <span>Mountain Trip</span>
+          </button>
+          <button class="kategori-tab" data-kategori="island">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 17l2-4 3 2 4-6 4 6 3-2 2 4H3z"/><circle cx="12" cy="5" r="2"/>
             </svg>
-            <select>
-              <option>1 Person</option>
-              <option>2 People</option>
-              <option>3 People</option>
-              <option>4+ People</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-primary">Search</button>
-        </form>
+            <span>Island Trip</span>
+          </button>
+          <button class="kategori-tab" data-kategori="city">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 21h18M5 21V7l8-4v18M13 21V9l6 2v10"/>
+              <path d="M9 9h1M9 13h1M9 17h1M17 13h1M17 17h1"/>
+            </svg>
+            <span>City Tour</span>
+          </button>
+          <button class="kategori-tab" data-kategori="oneday">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span>1 Day Trip</span>
+          </button>
+          <button class="kategori-tab" data-kategori="international">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            <span>International Trip</span>
+          </button>
+        </div>
       </div>
 
-      <!-- Categories Section - Inside Hero -->
-      <div class="categories-section">
-        <h2 class="categories-title">Top Categories</h2>
-        <div class="categories-slider-wrapper">
-          <!-- Left Arrow -->
-          <button class="category-nav-btn" id="categoryPrev" aria-label="Previous categories">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="15 18 9 12 15 6"/>
-            </svg>
-          </button>
-          
-          <div class="categories-tabs" id="categoriesTabs">
-            <button class="category-tab active" data-category="all">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-              </svg>
-              <span>All Trips</span>
-            </button>
-            <button class="category-tab" data-category="mountain">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M8 21l4-11 4 11"/>
-                <path d="M12 10l4-9 4 9"/>
-                <path d="M4 21h16"/>
-              </svg>
-              <span>Mountain Trip</span>
-            </button>
-            <button class="category-tab" data-category="island">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
-                <path d="M22 10a3 3 0 0 0-3-3h-2.207a5.502 5.502 0 0 0-10.702.5"/>
-              </svg>
-              <span>Island Trip</span>
-            </button>
-            <button class="category-tab" data-category="city">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="11" width="6" height="10"/>
-                <rect x="9" y="6" width="6" height="15"/>
-                <rect x="15" y="3" width="6" height="18"/>
-              </svg>
-              <span>City Tour</span>
-            </button>
-            <button class="category-tab" data-category="oneday">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
-              </svg>
-              <span>1 Day Trip</span>
-            </button>
-            <button class="category-tab" data-category="international">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 2L11 13"/>
-                <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
-              </svg>
-              <span>International Trip</span>
-            </button>
-          </div>
-          
-          <!-- Right Arrow -->
-          <button class="category-nav-btn" id="categoryNext" aria-label="Next categories">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="9 18 15 12 9 6"/>
-            </svg>
-          </button>
+      <!-- Sort Section - Moved here -->
+      <div class="sort-section">
+        <span class="results-count" id="resultsCount">{{ $trips->count() }} trips found</span>
+        <div class="sort-dropdown">
+          <select id="sortSelect">
+            <option value="newest">Terbaru</option>
+            <option value="price-low">Harga Terendah</option>
+            <option value="price-high">Harga Tertinggi</option>
+          </select>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Content Wrapper - Overlaps Hero -->
-  <div class="content-wrapper">
+  <!-- Cards Section - Overlaps into Open Trip Section -->
+  <div class="cards-overlay-wrapper">
     <!-- Trips Grid Section -->
     <section class="trips-section">
       <div class="container">
-        <!-- Sort Section -->
-        <div class="sort-section">
-          <span class="results-count" id="resultsCount">{{ $trips->count() }} trips found</span>
-          <div class="sort-dropdown">
-            <select id="sortSelect">
-              <option value="newest">Terbaru</option>
-              <option value="price-low">Harga Terendah</option>
-              <option value="price-high">Harga Tertinggi</option>
-            </select>
-          </div>
-        </div>
+        <!-- Sort Section Moved Up -->
+
 
         <div class="trips-section-header">
           <h2 class="trips-section-title">Popular Open Trips</h2>
@@ -972,7 +1068,7 @@
         <div class="trips-grid" id="tripsGrid">
         @foreach($trips as $trip)
         <a href="{{ route('trip.detail', $trip->slug) }}" class="open-trip-card-link" style="text-decoration: none; color: inherit;">
-        <div class="open-trip-card" data-category="{{ strtolower(str_replace(' ', '', $trip->category)) }}" data-departures="{{ implode(',', $trip->departure_months ?? []) }}" data-title="{{ strtolower($trip->title) }}">
+        <div class="open-trip-card" data-category="{{ strtolower(str_replace(' ', '', $trip->category)) }}" data-departures="{{ implode(',', $trip->departure_months ?? []) }}" data-title="{{ strtolower($trip->title) }}" data-timestamp="{{ $trip->created_at ? $trip->created_at->timestamp : 0 }}">
           <div class="card-image">
             <img src="{{ asset($trip->image) }}" alt="{{ $trip->title }}" loading="lazy">
             <button class="favorite-btn" aria-label="Add to favorites" data-trip-id="{{ $trip->id }}">
@@ -1030,8 +1126,11 @@
                   'documentation' => ['path' => 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z', 'label' => 'Doc'],
                 ];
                 $tripIncludes = $trip->includes ?? [];
+                $maxShow = 7;
+                $totalIncludes = count($tripIncludes);
+                $remaining = $totalIncludes - $maxShow;
               @endphp
-              @foreach(array_slice($tripIncludes, 0, 4) as $inc)
+              @foreach(array_slice($tripIncludes, 0, $maxShow) as $inc)
                 @if(isset($iconMap[$inc]))
                 <div class="amenity">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1041,6 +1140,9 @@
                 </div>
                 @endif
               @endforeach
+              @if($remaining > 0)
+                <span class="amenity-more">+{{ $remaining }}</span>
+              @endif
               @if(empty($tripIncludes))
               <div class="amenity">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1051,9 +1153,10 @@
               @endif
             </div>
 
+            <div class="card-features-label">Destinasi:</div>
             <ul class="card-features">
               @if(!empty($trip->highlights))
-                @foreach(array_slice($trip->highlights, 0, 3) as $highlight)
+                @foreach(array_slice($trip->highlights, 0, 4) as $highlight)
                 <li>{{ $highlight }}</li>
                 @endforeach
               @else
@@ -1121,10 +1224,10 @@
         </div>
       </div>
     </section>
-  </div><!-- End content-wrapper -->
+  </div><!-- End cards-overlay-wrapper -->
 
   <!-- Terms & Conditions Notice Section -->
-  <section style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 3rem 0;">
+  <section style="background: linear-gradient(135deg, #1e1e1e 0%, #151515 100%); padding: 3rem 0;">
     <div class="container" style="text-align: center;">
       <h3 style="color: #fff; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem;">Syarat & Ketentuan</h3>
       <p style="color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
@@ -1176,7 +1279,7 @@
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
             <li><a href="{{ route('open-trip') }}">Open Trip</a></li>
-            <li><a href="{{ route('mountain-trip') }}">Mountain Trip</a></li>
+            <li><a href="{{ route('mountain-trip') }}"></a></li>
             <li><a href="{{ route('outdoor-trip') }}">Outdoor Activity Trip</a></li>
             <li><a href="{{ route('indoor-trip') }}">Indoor Activity Trip</a></li>
           </ul>
@@ -1293,16 +1396,16 @@
     });
 
     // Category Tab Functionality
-    document.querySelectorAll('.category-tab').forEach(tab => {
+    document.querySelectorAll('.kategori-tab').forEach(tab => {
       tab.addEventListener('click', function() {
         // Remove active class from all tabs
-        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.kategori-tab').forEach(t => t.classList.remove('active'));
         
         // Add active class to clicked tab
         this.classList.add('active');
         
         // Filter trips based on category
-        const category = this.dataset.category;
+        const category = this.dataset.kategori;
         const cards = document.querySelectorAll('.open-trip-card');
         let visibleCount = 0;
         
@@ -1380,8 +1483,12 @@
               return priceA - priceB;
             } else if (sortValue === 'price-high') {
               return priceB - priceA;
+            } else if (sortValue === 'newest') {
+              // Sort by timestamp
+              const timeA = parseInt(a.dataset.timestamp) || 0;
+              const timeB = parseInt(b.dataset.timestamp) || 0;
+              return timeB - timeA;
             }
-            // 'newest' - keep original order (would need data attribute for actual date)
             return 0;
           });
           
@@ -1476,8 +1583,8 @@
     // Reset filters function
     function resetFilters() {
       // Reset category to "all"
-      document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-      document.querySelector('.category-tab[data-category="all"]').classList.add('active');
+      document.querySelectorAll('.kategori-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector('.kategori-tab[data-kategori="all"]').classList.add('active');
       
       // Show all cards
       document.querySelectorAll('.open-trip-card').forEach(card => {

@@ -77,6 +77,7 @@ class TripTemplateController extends Controller
             'thumbnail' => 'nullable|image|max:5120',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
+            'trip_facts' => 'nullable|array',
         ]);
 
         $validated['slug'] = Str::slug($request->title);
@@ -84,9 +85,38 @@ class TripTemplateController extends Controller
         $validated['created_by'] = auth()->id();
 
         // Handle thumbnail upload
-        if ($request->hasFile('thumbnail')) {
+        // Handle thumbnail (base64 cropped preferred)
+        if ($request->filled('thumbnail_cropped')) {
+            $base64 = $request->input('thumbnail_cropped');
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64, $matches)) {
+                $imageData = base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $base64));
+                $filename = 'uploads/trips/thumbnail_' . time() . '_' . uniqid() . '.jpg';
+                \Illuminate\Support\Facades\Storage::disk('public')->put($filename, $imageData);
+                $validated['thumbnail'] = 'storage/' . $filename;
+            }
+        } elseif ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('uploads/trips', 'public');
             $validated['thumbnail'] = 'storage/' . $path;
+        }
+
+        // Handle landscape thumbnail (base64 cropped preferred)
+        if ($request->filled('thumbnail_landscape_cropped')) {
+            $base64 = $request->input('thumbnail_landscape_cropped');
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64, $matches)) {
+                $imageData = base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $base64));
+                $filename = 'uploads/trips/landscape_' . time() . '_' . uniqid() . '.jpg';
+                \Illuminate\Support\Facades\Storage::disk('public')->put($filename, $imageData);
+                $validated['thumbnail_landscape'] = 'storage/' . $filename;
+            }
+        } elseif ($request->hasFile('thumbnail_landscape')) {
+            $path = $request->file('thumbnail_landscape')->store('uploads/trips', 'public');
+            $validated['thumbnail_landscape'] = 'storage/' . $path;
+        }
+
+        // Handle PDF upload
+        if ($request->hasFile('trip_itinerary_pdf')) {
+            $path = $request->file('trip_itinerary_pdf')->store('uploads/trips/documents', 'public');
+            $validated['trip_itinerary_pdf'] = 'storage/' . $path;
         }
 
         // Check slug uniqueness
@@ -157,6 +187,7 @@ class TripTemplateController extends Controller
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
             'status' => 'nullable|string|in:draft,published,archived',
+            'trip_facts' => 'nullable|array',
         ]);
 
         // Keep slug unless title changes significantly
@@ -183,6 +214,26 @@ class TripTemplateController extends Controller
                 \Illuminate\Support\Facades\Storage::disk('public')->put($filename, $imageData);
                 $validated['thumbnail'] = 'storage/' . $filename;
             }
+        }
+
+        // Handle landscape thumbnail update
+        if ($request->filled('thumbnail_landscape_cropped')) {
+            $base64 = $request->input('thumbnail_landscape_cropped');
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64, $matches)) {
+                $imageData = base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $base64));
+                $filename = 'uploads/trips/landscape_' . time() . '_' . uniqid() . '.jpg';
+                \Illuminate\Support\Facades\Storage::disk('public')->put($filename, $imageData);
+                $validated['thumbnail_landscape'] = 'storage/' . $filename;
+            }
+        } elseif ($request->hasFile('thumbnail_landscape')) {
+            $path = $request->file('thumbnail_landscape')->store('uploads/trips', 'public');
+            $validated['thumbnail_landscape'] = 'storage/' . $path;
+        }
+
+        // Handle PDF update
+        if ($request->hasFile('trip_itinerary_pdf')) {
+            $path = $request->file('trip_itinerary_pdf')->store('uploads/trips/documents', 'public');
+            $validated['trip_itinerary_pdf'] = 'storage/' . $path;
         }
 
         // Handle includes (array of amenities)

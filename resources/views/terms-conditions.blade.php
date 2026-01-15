@@ -39,7 +39,7 @@
     .tc-hero .hero-bg {
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+      background: linear-gradient(135deg, #151515 0%, #1e1e1e 100%);
     }
     .tc-hero .hero-content {
       position: relative;
@@ -60,17 +60,17 @@
     .tc-title {
       font-size: 2.5rem;
       font-weight: 900;
-      color: #fff;
+      color: #fbcaa5;
       margin-bottom: 0.5rem;
     }
     .tc-subtitle {
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(251, 202, 165, 0.8);
       font-size: 1rem;
     }
 
     /* Main Content */
     .tc-content {
-      background: #fff;
+      background: #1e1e1e;
       padding: 4rem 0;
     }
     .tc-container {
@@ -81,7 +81,7 @@
     .tc-container h2 {
       font-size: 1.75rem;
       font-weight: 800;
-      color: #1f2937;
+      color: #fbcaa5;
       margin-bottom: 2rem;
       padding-bottom: 1rem;
       border-bottom: 3px solid var(--color-primary);
@@ -89,12 +89,12 @@
     .tc-container h3 {
       font-size: 1.25rem;
       font-weight: 700;
-      color: #1f2937;
+      color: #fbcaa5;
       margin-top: 2rem;
       margin-bottom: 1rem;
     }
     .tc-container p {
-      color: #4b5563;
+      color: rgba(251,202,165,0.85);
       line-height: 1.8;
       margin-bottom: 1rem;
     }
@@ -103,19 +103,19 @@
       margin-bottom: 1.5rem;
     }
     .tc-container li {
-      color: #4b5563;
+      color: rgba(251,202,165,0.85);
       line-height: 1.8;
       margin-bottom: 0.5rem;
     }
     .tc-container strong {
-      color: #1f2937;
+      color: #fbcaa5;
     }
 
     /* Back link */
     .tc-back {
       margin-top: 3rem;
       padding-top: 2rem;
-      border-top: 1px solid #e5e7eb;
+      border-top: 1px solid rgba(251,202,165,0.2);
       text-align: center;
     }
     .tc-back a {
@@ -129,6 +129,43 @@
     }
     .tc-back a:hover {
       gap: 0.75rem;
+    }
+
+    /* T&C Image Gallery */
+    .tc-images-gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .tc-image-item {
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .tc-image-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    /* Empty State */
+    .tc-empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: rgba(251,202,165,0.7);
+    }
+    .tc-empty-state svg {
+      margin-bottom: 1.5rem;
+      opacity: 0.5;
+    }
+    .tc-empty-state h3 {
+      color: #fbcaa5;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .tc-empty-state p {
+      color: rgba(251,202,165,0.6);
     }
 
     @media (max-width: 768px) {
@@ -162,7 +199,7 @@
           
           <!-- Mountain Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('mountain-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Mountain Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
@@ -180,12 +217,12 @@
 
           <!-- Outdoor Activity Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('outdoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Outdoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('outdoor-trip') }}#cultural-trip" class="dropdown-item">Cultural Trip</a>
               <a href="{{ route('outdoor-trip') }}#one-day-outdoor-trip" class="dropdown-item">One Day Trip</a>
@@ -198,12 +235,12 @@
 
           <!-- Indoor Activity Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('indoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Indoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('indoor-trip') }}#city-tour" class="dropdown-item">City Tour</a>
               <a href="{{ route('indoor-trip') }}#company-gathering" class="dropdown-item">Company Gathering</a>
@@ -233,10 +270,38 @@
     </div>
   </section>
 
-  <!-- Main Content -->
+  <!-- Main Content - Image Gallery -->
   <section class="tc-content">
     <div class="tc-container">
-      {!! $settings['terms_conditions_content'] ?? '<p>Konten Terms & Conditions belum diatur. Silakan atur melalui Admin Panel.</p>' !!}
+      @php 
+          $tcImages = isset($settings['terms_conditions_images']) ? json_decode($settings['terms_conditions_images'], true) : [];
+      @endphp
+      
+      @if(is_array($tcImages) && count($tcImages) > 0)
+        <div class="tc-images-gallery">
+          @foreach($tcImages as $index => $img)
+            <div class="tc-image-item">
+              @if(is_string($img))
+                <img src="{{ asset($img) }}" alt="Terms & Conditions - Page {{ $index + 1 }}" loading="lazy">
+              @elseif(is_array($img) && count($img) > 0 && is_string($img[0]))
+                <img src="{{ asset($img[0]) }}" alt="Terms & Conditions - Page {{ $index + 1 }}" loading="lazy">
+              @endif
+            </div>
+          @endforeach
+        </div>
+      @else
+        <div class="tc-empty-state">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14,2 14,8 20,8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10,9 9,9 8,9"></polyline>
+          </svg>
+          <h3>Terms & Conditions Belum Tersedia</h3>
+          <p>Silakan hubungi Admin untuk informasi lebih lanjut.</p>
+        </div>
+      @endif
 
       <div class="tc-back">
         <a href="{{ route('open-trip') }}">
@@ -305,7 +370,7 @@
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
             <li><a href="{{ route('open-trip') }}">Open Trip</a></li>
-            <li><a href="{{ route('mountain-trip') }}">Mountain Trip</a></li>
+            <li><a href="{{ route('mountain-trip') }}"></a></li>
             <li><a href="{{ route('outdoor-trip') }}">Outdoor Activity Trip</a></li>
             <li><a href="{{ route('indoor-trip') }}">Indoor Activity Trip</a></li>
           </ul>

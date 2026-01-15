@@ -66,7 +66,7 @@
     .about-hero .hero-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.6));
+      background: linear-gradient(to bottom, rgba(30, 30, 30, 0.85), rgba(21, 21, 21, 0.75));
     }
     .about-hero .hero-content {
       position: relative;
@@ -97,7 +97,7 @@
       text-underline-offset: 8px;
     }
     .about-subtitle {
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(251, 202, 165, 0.9);
       font-size: 1.125rem;
       line-height: 1.8;
       font-style: italic;
@@ -105,23 +105,23 @@
 
     /* Salam Kenal Section */
     .salam-section {
-      background: #bab6a5;
+      background: #1e1e1e;
       padding: 4rem 0;
     }
     .salam-title {
       font-size: 2.5rem;
       font-weight: 900;
-      color: #1f2937;
+      color: #fbcaa5;
       margin-bottom: 1.5rem;
     }
     .salam-content p {
-      color: #4b5563;
+      color: rgba(251,202,165,0.85);
       line-height: 1.9;
       margin-bottom: 1.5rem;
       font-size: 1rem;
     }
     .salam-content strong {
-      color: #1f2937;
+      color: #fbcaa5;
     }
 
     /* Quote Section - Match Reference Design */
@@ -181,7 +181,7 @@
     }
     .company-grid {
       display: grid;
-      grid-template-columns: 420px 1fr;
+      grid-template-columns: 550px 1fr;
       gap: 2rem;
       align-items: start;
       max-width: 1200px;
@@ -265,7 +265,7 @@
       justify-content: center;
     }
     .partner-logos img {
-      height: 55px;
+      height: 85px;
       opacity: 0.9;
       filter: grayscale(10%);
       transition: all 0.3s ease;
@@ -300,14 +300,14 @@
     .team-title {
       font-size: 2.5rem;
       font-weight: 900;
-      color: #1f2937;
+      color: #ffffff;
       margin-bottom: 1rem;
       text-decoration: underline;
       text-decoration-color: var(--color-primary);
       text-underline-offset: 8px;
     }
     .team-intro {
-      color: #000000;
+      color: #ffffff;
       font-size: 1rem;
       max-width: 800px;
       margin: 0 auto;
@@ -315,7 +315,7 @@
       line-height: 1.8;
     }
     .team-photo {
-      max-width: 900px;
+      width: 100%;
       margin: 0 auto 3rem;
       border-radius: 12px;
       overflow: hidden;
@@ -327,8 +327,8 @@
     .team-grid {
       display: flex;
       flex-direction: column;
-      gap: 2rem;
-      max-width: 1100px;
+      gap: 3rem;
+      width: 100%;
       margin: 0 auto;
     }
     .team-member {
@@ -345,8 +345,8 @@
       text-align: right;
     }
     .team-avatar {
-      width: 160px;
-      height: 160px;
+      width: 220px;
+      height: 220px;
       border-radius: 50%;
       overflow: hidden;
       flex-shrink: 0;
@@ -358,23 +358,23 @@
       object-fit: cover;
     }
     .team-info h4 {
-      font-size: 1.5rem;
+      font-size: 2.25rem;
       font-weight: 700;
-      color: #000000;
-      margin-bottom: 0.35rem;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
     }
     .team-info h4 .nickname {
-      color: #000000;
+      color: #ffffff;
     }
     .team-info p {
-      font-size: 1.125rem;
-      color: #000000;
+      font-size: 1.35rem;
+      color: #ffffff;
       margin: 0;
       line-height: 1.5;
       font-weight: 600;
     }
     .team-info .role-primary {
-      color: #000000;
+      color: #ffffff;
       text-decoration: none;
     }
 
@@ -391,11 +391,11 @@
     .hashtag {
       font-size: 2rem;
       font-weight: 900;
-      color: #1e3a5f;
+      color: #fbcaa5;
       font-style: italic;
     }
     .hashtag-sub {
-      color: #6b7280;
+      color: rgba(251,202,165,0.7);
       font-size: 0.875rem;
     }
 
@@ -408,6 +408,29 @@
       }
       .team-title {
         font-size: 1.75rem;
+      }
+      
+      /* Team Mobile Optimizations */
+      .team-grid {
+        gap: 2.5rem;
+      }
+      .team-member, 
+      .team-member.reverse {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        padding: 0 1rem;
+      }
+      .team-avatar {
+        width: 180px;
+        height: 180px;
+        margin: 0 auto;
+      }
+      .team-info h4 {
+        font-size: 1.75rem;
+      }
+      .team-info p {
+        font-size: 1.15rem;
       }
     }
   </style>
@@ -436,7 +459,7 @@
           
           <!-- Mountain Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('mountain-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Mountain Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
@@ -454,12 +477,12 @@
 
           <!-- Outdoor Activity Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('outdoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Outdoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('outdoor-trip') }}#cultural-trip" class="dropdown-item">Cultural Trip</a>
               <a href="{{ route('outdoor-trip') }}#one-day-outdoor-trip" class="dropdown-item">One Day Trip</a>
@@ -472,12 +495,12 @@
 
           <!-- Indoor Activity Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('indoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Indoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('indoor-trip') }}#city-tour" class="dropdown-item">City Tour</a>
               <a href="{{ route('indoor-trip') }}#company-gathering" class="dropdown-item">Company Gathering</a>

@@ -23,6 +23,7 @@ class TripMediaController extends Controller
 
         return response()->json([
             'gallery' => $media->where('media_type', 'gallery')->values(),
+            'gear_list' => $media->where('media_type', 'gear_list')->values(),
             'tracking_map' => $media->where('media_type', 'tracking_map')->first(),
         ]);
     }
@@ -34,7 +35,7 @@ class TripMediaController extends Controller
     {
         $request->validate([
             'file' => 'required|image|max:10240', // Max 10MB
-            'media_type' => 'required|in:gallery,tracking_map',
+            'media_type' => 'required|in:gallery,tracking_map,gear_list',
             'alt_text' => 'nullable|string|max:255',
         ]);
 

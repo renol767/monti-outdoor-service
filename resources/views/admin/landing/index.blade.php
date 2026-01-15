@@ -47,11 +47,7 @@
               <i class="ti tabler-photo me-1"></i> Gallery
             </button>
           </li>
-           <li class="nav-item">
-            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-testimonials" aria-controls="navs-testimonials" aria-selected="false">
-              <i class="ti tabler-star me-1"></i> Testimonials
-            </button>
-          </li>
+
           <li class="nav-item">
             <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-about" aria-controls="navs-about" aria-selected="false">
               <i class="ti tabler-info-circle me-1"></i> About
@@ -334,62 +330,7 @@
              </div>
           </div>
           
-           <!-- Testimonials Tab -->
-          <div class="tab-pane fade" id="navs-testimonials" role="tabpanel">
-             <div class="card mb-3">
-                <div class="card-body">
-                     <form action="{{ route('admin.landing.settings.update') }}" method="POST">
-                        @csrf
-                         <div class="row">
-                            @foreach($settings as $setting)
-                                @if(\Illuminate\Support\Str::startsWith($setting->key, 'testimonials_'))
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">{{ $setting->label ?? ucfirst(str_replace('_', ' ', $setting->key)) }}</label>
-                                     <input type="text" class="form-control" name="{{ $setting->key }}" value="{{ $setting->value }}">
-                                </div>
-                                @endif
-                            @endforeach
-                         </div>
-                         <button type="submit" class="btn btn-primary">Save Section Title/Desc</button>
-                     </form>
-                </div>
-            </div>
-            <hr>
-             <div class="mb-3">
-                 <a href="{{ route('admin.testimonials.create') }}" class="btn btn-primary">
-                    <i class="ti tabler-plus me-1"></i> Add New Testimonial
-                 </a>
-            </div>
-             <div class="table-responsive text-nowrap">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Role</th>
-                    <th>Content</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach($testimonials as $testimonial)
-                  <tr>
-                    <td>{{ $testimonial->name }}</td>
-                    <td>{{ $testimonial->role }}</td>
-                    <td>{{ \Illuminate\Support\Str::limit($testimonial->content, 50) }}</td>
-                    <td>
-                        <a href="{{ route('admin.testimonials.edit', $testimonial->id) }}" class="btn btn-sm btn-icon item-edit"><i class="ti tabler-edit"></i></a>
-                        <form action="{{ route('admin.testimonials.destroy', $testimonial->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-icon item-trash"><i class="ti tabler-trash"></i></button>
-                        </form>
-                    </td>
-                  </tr>
-                  @endforeach
-                </tbody>
-              </table>
-             </div>
-          </div>
+
           
            <!-- About Tab -->
           <div class="tab-pane fade" id="navs-about" role="tabpanel">
@@ -458,18 +399,70 @@
           
            <!-- Terms & Conditions Tab -->
           <div class="tab-pane fade" id="navs-terms" role="tabpanel">
-             <form action="{{ route('admin.landing.settings.update') }}" method="POST" id="termsForm">
+             <form action="{{ route('admin.landing.settings.update') }}" method="POST" enctype="multipart/form-data" id="termsForm">
               @csrf
               <div class="row">
                   <div class="col-12 mb-3">
                       <h5 class="fw-semibold">Syarat & Ketentuan</h5>
-                      <p class="text-muted">Konten ini akan ditampilkan di halaman /terms-conditions dan dapat diakses dari footer semua halaman.</p>
+                      <p class="text-muted">Upload gambar-gambar Terms & Conditions. Gambar akan ditampilkan berurutan di halaman /terms-conditions.</p>
                       <hr>
                   </div>
-                  <div class="col-md-12 mb-3">
-                      <label class="form-label">Konten Terms & Conditions</label>
-                      <div id="termsQuillEditor" style="height: 400px; background: #fff; border-radius: 0.375rem;"></div>
-                      <input type="hidden" name="terms_conditions_content" id="terms_conditions_content">
+                  
+                  <!-- Existing Images Preview -->
+                  <div class="col-12 mb-4">
+                      <label class="form-label fw-semibold">Gambar T&C yang Sudah Diupload</label>
+                      @php 
+                          $tcImages = $settings->where('key', 'terms_conditions_images')->first();
+                          $tcImagesArray = $tcImages && $tcImages->value ? json_decode($tcImages->value, true) : [];
+                      @endphp
+                      
+                      @if(count($tcImagesArray) > 0)
+                      <div class="row" id="tcImagesPreview">
+                          @foreach($tcImagesArray as $index => $img)
+                          <div class="col-md-4 col-lg-3 mb-3" id="tc-img-{{ $index }}">
+                              <div class="card h-100 border">
+                                  @if(is_string($img))
+                                    <img src="{{ asset($img) }}" class="card-img-top" alt="T&C Image" style="height: 150px; object-fit: cover;">
+                                  @elseif(is_array($img) && count($img) > 0 && is_string($img[0]))
+                                    <img src="{{ asset($img[0]) }}" class="card-img-top" alt="T&C Image" style="height: 150px; object-fit: cover;">
+                                    {{-- Debug: Rendered from array --}}
+                                  @else
+                                    <div class="d-flex align-items-center justify-content-center bg-light" style="height: 150px;">
+                                        <small class="text-danger">Invalid Image Format</small>
+                                    </div>
+                                  @endif
+                                  <div class="card-body p-2">
+                                      <div class="d-flex justify-content-between align-items-center">
+                                          <small class="text-muted">Image {{ $index + 1 }}</small>
+                                          <div class="form-check">
+                                              <input class="form-check-input" type="checkbox" name="delete_tc_images_indices[]" value="{{ $index }}" id="del-{{ $index }}">
+                                              <label class="form-check-label text-danger" for="del-{{ $index }}">
+                                                  <i class="ti tabler-trash"></i> Hapus
+                                              </label>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          @endforeach
+                      </div>
+                      @else
+                      <div class="alert alert-info">
+                          <i class="ti tabler-info-circle me-1"></i> Belum ada gambar T&C yang diupload.
+                      </div>
+                      @endif
+                  </div>
+
+                  <!-- Upload New Images -->
+                  <div class="col-12 mb-3">
+                      <label class="form-label fw-semibold">Tambah Gambar Baru</label>
+                      <input type="file" class="form-control" name="terms_conditions_images[]" id="terms_conditions_images" accept="image/*" multiple>
+                      <div class="form-text">Pilih satu atau beberapa gambar sekaligus. Format: JPG, PNG, JPEG. Maksimal 10MB per file.</div>
+                  </div>
+
+                  <!-- Preview New Images -->
+                  <div class="col-12 mb-3">
+                      <div class="row" id="newImagesPreview"></div>
                   </div>
               </div>
               <button type="submit" class="btn btn-primary" id="saveTermsBtn">
@@ -577,41 +570,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewFrame = document.getElementById('previewFrame');
     const previewModal = document.getElementById('previewModal');
 
-    // ============ TERMS & CONDITIONS QUILL EDITOR ============
-    let termsQuill = null;
-    const termsEditorEl = document.getElementById('termsQuillEditor');
-    const termsHiddenInput = document.getElementById('terms_conditions_content');
-    const termsForm = document.getElementById('termsForm');
+    // ============ TERMS & CONDITIONS - PREVIEW NEW IMAGES ============
+    const tcImageInput = document.getElementById('terms_conditions_images');
+    const newImagesPreview = document.getElementById('newImagesPreview');
     
-    if (termsEditorEl) {
-        // Initialize Quill for Terms & Conditions
-        termsQuill = new Quill('#termsQuillEditor', {
-            theme: 'snow',
-            placeholder: 'Tulis syarat dan ketentuan di sini...',
-            modules: {
-                toolbar: [
-                    [{ 'header': [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'color': [] }, { 'background': [] }],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['link'],
-                    ['clean']
-                ]
+    if (tcImageInput && newImagesPreview) {
+        tcImageInput.addEventListener('change', function(e) {
+            newImagesPreview.innerHTML = '';
+            const files = e.target.files;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-3 mb-3';
+                    col.innerHTML = `
+                        <div class="card border">
+                            <img src="${e.target.result}" class="card-img-top" style="height: 100px; object-fit: cover;">
+                            <div class="card-body p-2">
+                                <small class="text-muted">${file.name}</small>
+                            </div>
+                        </div>
+                    `;
+                    newImagesPreview.appendChild(col);
+                };
+                
+                reader.readAsDataURL(file);
             }
         });
-        
-        // Load existing content
-        const existingContent = @json($settings->where('key', 'terms_conditions_content')->first()->value ?? '');
-        if (existingContent) {
-            termsQuill.clipboard.dangerouslyPasteHTML(existingContent);
-        }
-        
-        // On form submit, copy Quill HTML content to hidden input
-        if (termsForm) {
-            termsForm.addEventListener('submit', function(e) {
-                termsHiddenInput.value = termsQuill.root.innerHTML;
-            });
-        }
     }
 
     // Function to gather all form data and send to iframe
@@ -638,11 +626,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             settings[name] = value;
         });
-        
-        // Include Quill content for T&C
-        if (termsQuill) {
-            settings['terms_conditions_content'] = termsQuill.root.innerHTML;
-        }
 
         // Post message to iframe
         if (previewFrame.contentWindow) {

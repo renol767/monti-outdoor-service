@@ -56,15 +56,10 @@
     .mt-hero .hero-bg {
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
-    }
-    .mt-hero .hero-bg::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 80 L25 50 L50 70 L75 30 L100 60 L100 100 L0 100 Z' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E") no-repeat bottom;
+      background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url("{{ asset('assets/img/front-pages/hero/mountain-hero.jpg') }}") no-repeat bottom;
       background-size: cover;
     }
+    /* Removed ::before SVG pattern to show image clearly */
     .mt-hero .hero-content {
       position: relative;
       z-index: 10;
@@ -100,7 +95,7 @@
       scroll-margin-top: 100px;
     }
     .trip-section:nth-child(even) {
-      background: #f8fafc;
+      background: #151515;
     }
     .trip-section-grid {
       display: grid;
@@ -149,11 +144,11 @@
     .trip-images .img-placeholder {
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+      background: linear-gradient(135deg, #151515 0%, #1e1e1e 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: rgba(255,255,255,0.3);
+      color: rgba(251,202,165,0.3);
       font-size: 2rem;
     }
 
@@ -161,7 +156,7 @@
     .trip-content h2 {
       font-size: 2rem;
       font-weight: 800;
-      color: #1f2937;
+      color: #fbcaa5;
       margin-bottom: 0.5rem;
     }
     .trip-content .subtitle {
@@ -171,11 +166,11 @@
       margin-bottom: 1.5rem;
     }
     .trip-content .description {
-      color: #4b5563;
+      color: rgba(251,202,165,0.85);
       line-height: 1.8;
     }
     .trip-content .description h3 {
-      color: #1f2937;
+      color: #fbcaa5;
       font-size: 1.125rem;
       font-weight: 700;
       margin-top: 1.5rem;
@@ -193,8 +188,8 @@
       gap: 0.5rem;
       margin-top: 2rem;
       padding: 0.875rem 1.5rem;
-      background: #1e293b;
-      color: #fff;
+      background: #151515;
+      color: #fbcaa5;
       border-radius: 8px;
       text-decoration: none;
       font-weight: 600;
@@ -207,18 +202,18 @@
 
     /* CTA Section */
     .cta-section {
-      background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+      background: linear-gradient(135deg, #151515 0%, #1e1e1e 100%);
       padding: 4rem 0;
       text-align: center;
     }
     .cta-section h3 {
-      color: #fff;
+      color: #fbcaa5;
       font-size: 1.75rem;
       font-weight: 800;
       margin-bottom: 1rem;
     }
     .cta-section p {
-      color: rgba(255,255,255,0.8);
+      color: rgba(251,202,165,0.8);
       margin-bottom: 2rem;
       max-width: 500px;
       margin-left: auto;
@@ -279,12 +274,12 @@
           
           <!-- Mountain Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle active">
+            <a href="{{ route('mountain-trip') }}" class="custom-dropdown-toggle dropdown-toggle active">
               Mountain Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('open-trip') }}" class="dropdown-item">Open Trip</a>
               @foreach($sections as $section)
@@ -295,12 +290,12 @@
 
           <!-- Outdoor Activity Trip -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('outdoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Outdoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('outdoor-trip') }}#cultural-trip" class="dropdown-item">Cultural Trip</a>
               <a href="{{ route('outdoor-trip') }}#one-day-outdoor-trip" class="dropdown-item">One Day Trip</a>
@@ -313,12 +308,12 @@
 
           <!-- Indoor Activity Trip -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('indoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Indoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('indoor-trip') }}#city-tour" class="dropdown-item">City Tour</a>
               <a href="{{ route('indoor-trip') }}#company-gathering" class="dropdown-item">Company Gathering</a>
@@ -456,7 +451,7 @@
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
             <li><a href="{{ route('open-trip') }}">Open Trip</a></li>
-            <li><a href="{{ route('mountain-trip') }}">Mountain Trip</a></li>
+            <li><a href="{{ route('mountain-trip') }}"></a></li>
             <li><a href="{{ route('outdoor-trip') }}">Outdoor Activity Trip</a></li>
             <li><a href="{{ route('indoor-trip') }}">Indoor Activity Trip</a></li>
           </ul>

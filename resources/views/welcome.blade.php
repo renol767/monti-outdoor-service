@@ -98,12 +98,12 @@
           
           <!-- Mountain Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('mountain-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Mountain Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('open-trip') }}" class="dropdown-item">Open Trip</a>
               <a href="{{ route('mountain-trip') }}#private-trip" class="dropdown-item">Private Trip</a>
@@ -116,12 +116,12 @@
 
           <!-- Outdoor Activity Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('outdoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Outdoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('outdoor-trip') }}#cultural-trip" class="dropdown-item">Cultural Trip</a>
               <a href="{{ route('outdoor-trip') }}#one-day-outdoor-trip" class="dropdown-item">One Day Trip</a>
@@ -134,12 +134,12 @@
 
           <!-- Indoor Activity Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('indoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Indoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('indoor-trip') }}#city-tour" class="dropdown-item">City Tour</a>
               <a href="{{ route('indoor-trip') }}#company-gathering" class="dropdown-item">Company Gathering</a>
@@ -338,42 +338,7 @@
     </div>
   </section>
 
-  <!-- Testimonials -->
-  <section class="section bg-light">
-    <div class="container">
-      <div class="section-header animate-on-scroll">
-        <h2 class="section-title" data-preview-key="testimonials_title">{{ $settings['testimonials_title'] ?? 'What Adventurers Say' }}</h2>
-        <p class="section-description" data-preview-key="testimonials_description">{{ $settings['testimonials_description'] ?? 'Real experiences from our community of explorers' }}</p>
-      </div>
 
-      <div class="testimonials-grid">
-        @foreach($testimonials as $testimonial)
-        <div class="testimonial-card animate-on-scroll">
-          <div class="quote-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
-            </svg>
-          </div>
-          <div class="testimonial-header">
-            <img src="{{ $testimonial->avatar }}" alt="Reviewer" class="testimonial-avatar">
-            <div>
-              <h4 class="testimonial-name">{{ $testimonial->name }}</h4>
-              <p class="testimonial-role">{{ $testimonial->role }}</p>
-            </div>
-          </div>
-          <div class="testimonial-rating">
-            @for($i=0; $i < $testimonial->rating; $i++)
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#e97543">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-            </svg>
-            @endfor
-          </div>
-          <p class="testimonial-text">{{ $testimonial->content }}</p>
-        </div>
-        @endforeach
-      </div>
-    </div>
-  </section>
 
   <!-- About -->
   <section id="about" class="section bg-white">
@@ -445,34 +410,25 @@
     </div>
   </section>
 
-  <!-- Blog -->
   <section class="section bg-white">
     <div class="container">
       <div class="section-header animate-on-scroll">
-        <h2 class="section-title">Adventure Tips & Resources</h2>
-        <p class="section-description">Guides, insights, and inspiration to help you prepare for your next journey</p>
+        <h2 class="section-title">Explore Our Adventures</h2>
+        <p class="section-description">Choose your preferred way to explore nature and build connections.</p>
       </div>
 
       <div class="blog-grid">
+        <!-- Mountain Trip -->
         <article class="blog-card animate-on-scroll">
           <div class="blog-image">
-            <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=600" alt="Blog post">
-            <div class="blog-category">Guide</div>
+            <img src="{{ asset('assets/img/front-pages/hero/mountain-hero.jpg') }}" alt="Mountain Trip" style="height: 240px; object-fit: cover;">
+            <div class="blog-category">Mountain</div>
           </div>
           <div class="blog-content">
-            <div class="blog-meta">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                <line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/>
-                <line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-              <span>Dec 1, 2025</span>
-            </div>
-            <h3 class="blog-title">Essential Gear for Mountain Trekking</h3>
-            <p class="blog-excerpt">Everything you need to pack for a safe and comfortable mountain adventure, from clothing to navigation tools.</p>
-            <button class="blog-link">
-              Read More
+            <h3 class="blog-title">Mountain Trip</h3>
+            <p class="blog-excerpt">Explore the majestic peaks of Indonesia. Available for Private, Open, and Expedition trips.</p>
+            <a href="{{ route('mountain-trip') }}" class="blog-link">
+              Explore Mountain
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="5" y1="12" x2="19" y2="12"/>
                 <polyline points="12 5 19 12 12 19"/>
@@ -481,25 +437,17 @@
           </div>
         </article>
 
+        <!-- Outdoor Trip -->
         <article class="blog-card animate-on-scroll">
           <div class="blog-image">
-            <img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=600" alt="Blog post">
-            <div class="blog-category">Tips</div>
+            <img src="{{ asset('assets/img/front-pages/hero/outdoor-hero.jpg') }}" alt="Outdoor Activity" style="height: 240px; object-fit: cover;">
+            <div class="blog-category">Outdoor</div>
           </div>
           <div class="blog-content">
-            <div class="blog-meta">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                <line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/>
-                <line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-              <span>Nov 28, 2025</span>
-            </div>
-            <h3 class="blog-title">Preparing for High Altitude Climbing</h3>
-            <p class="blog-excerpt">Learn how to acclimatize properly and avoid altitude sickness during your summit expedition.</p>
-            <button class="blog-link">
-              Read More
+            <h3 class="blog-title">Outdoor Activity Trip</h3>
+            <p class="blog-excerpt">Experience thrilling outdoor adventures. From Island Trips to Camping and Team Building.</p>
+            <a href="{{ route('outdoor-trip') }}" class="blog-link">
+              Explore Outdoor
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="5" y1="12" x2="19" y2="12"/>
                 <polyline points="12 5 19 12 12 19"/>
@@ -508,25 +456,17 @@
           </div>
         </article>
 
+        <!-- Indoor Trip -->
         <article class="blog-card animate-on-scroll">
           <div class="blog-image">
-            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600" alt="Blog post">
-            <div class="blog-category">Story</div>
+            <img src="{{ asset('assets/img/front-pages/hero/indoor-hero.jpg') }}" alt="Indoor Activity" style="height: 240px; object-fit: cover;">
+            <div class="blog-category">Indoor</div>
           </div>
           <div class="blog-content">
-            <div class="blog-meta">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                <line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/>
-                <line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-              <span>Nov 25, 2025</span>
-            </div>
-            <h3 class="blog-title">Indonesia's Most Beautiful Summit Views</h3>
-            <p class="blog-excerpt">Explore the breathtaking panoramas from Indonesia's most iconic mountain peaks and plan your next climb.</p>
-            <button class="blog-link">
-              Read More
+            <h3 class="blog-title">Indoor Activity Trip</h3>
+            <p class="blog-excerpt">Exciting activities without going too far. City Tours, Gatherings, and MICE Organizer.</p>
+            <a href="{{ route('indoor-trip') }}" class="blog-link">
+              Explore Indoor
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="5" y1="12" x2="19" y2="12"/>
                 <polyline points="12 5 19 12 12 19"/>
@@ -721,7 +661,7 @@
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
             <li><a href="{{ route('open-trip') }}">Open Trip</a></li>
-            <li><a href="{{ route('mountain-trip') }}">Mountain Trip</a></li>
+            <li><a href="{{ route('mountain-trip') }}"></a></li>
             <li><a href="{{ route('outdoor-trip') }}">Outdoor Activity Trip</a></li>
             <li><a href="{{ route('indoor-trip') }}">Indoor Activity Trip</a></li>
           </ul>

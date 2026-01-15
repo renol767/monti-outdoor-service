@@ -23,6 +23,9 @@ class TripTemplate extends Model
         'includes',
         'highlights',
         'thumbnail',
+        'thumbnail_landscape',
+        'trip_itinerary_pdf',
+        'trip_facts',
         'meta_title',
         'meta_description',
         'status',
@@ -36,6 +39,7 @@ class TripTemplate extends Model
         'duration_nights' => 'integer',
         'includes' => 'array',
         'highlights' => 'array',
+        'trip_facts' => 'array',
     ];
 
     // Scopes
@@ -73,6 +77,11 @@ class TripTemplate extends Model
     public function gallery(): HasMany
     {
         return $this->hasMany(TripMedia::class)->where('media_type', 'gallery')->orderBy('sort_order');
+    }
+
+    public function gearLists(): HasMany
+    {
+        return $this->hasMany(TripMedia::class)->where('media_type', 'gear_list')->orderBy('sort_order');
     }
 
     public function wishlists(): HasMany

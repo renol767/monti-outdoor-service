@@ -53,39 +53,112 @@
       }
     }
     .booking-panel {
-      background: white;
+      background: #1e1e1e; /* Dark background */
+      border: 1px solid rgba(251, 202, 165, 0.1);
       border-radius: 12px;
       padding: 1.5rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
       height: fit-content;
       position: sticky;
       top: 100px;
+      color: #fbcaa5; /* Text color */
+    }
+    .booking-panel h4 {
+      color: #fbcaa5 !important;
     }
     .variant-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 1rem;
-      border: 2px solid #e5e7eb;
+      border: 2px solid rgba(255,255,255,0.1);
       border-radius: 8px;
       margin-bottom: 0.5rem;
       cursor: pointer;
       transition: all 0.2s;
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.9);
     }
     .variant-item:hover, .variant-item.selected {
-      border-color: var(--color-primary);
-      background: rgba(59, 130, 246, 0.05);
+      border-color: #e97543;
+      background: rgba(233, 117, 67, 0.1);
+    }
+    .variant-item:hover, .variant-item.selected {
+      border-color: #e97543;
+      background: rgba(233, 117, 67, 0.1);
+    }
+    
+    /* Sticky Booking Panel Select */
+    .select-dark {
+        background-color: #1e1e1e;
+        color: #fbcaa5;
+        border: 2px solid rgba(251, 202, 165, 0.3);
+        border-radius: 8px;
+        padding: 0.75rem;
+        width: 100%;
+        cursor: pointer;
+        appearance: none; /* remove default arrow */
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23fbcaa5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        font-size: 0.9rem;
+    }
+    .select-dark:focus {
+        border-color: #e97543;
+        outline: none;
+    }
+
+    /* 1 Top + 4 Bottom Layout */
+    .gallery-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .gallery-stack-top {
+        width: 100%;
+        aspect-ratio: 16/9; /* or 4/3 as preferred */
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+    }
+    .gallery-stack-bottom {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.75rem;
+    }
+    .gallery-stack-thumb {
+        aspect-ratio: 1;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+    }
+    .gallery-stack-thumb img, .gallery-stack-top img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+    .gallery-stack-thumb:hover img, .gallery-stack-top:hover img {
+        transform: scale(1.05);
+    }
+    
+    @media (max-width: 768px) {
+        .gallery-stack-top {
+            aspect-ratio: 4/3;
+        }
     }
     .content-section {
-      background: white;
+      background: #1e1e1e; /* Dark background */
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       margin-top: 2rem;
       overflow: hidden;
+      border: 1px solid rgba(251, 202, 165, 0.1);
     }
     .content-tabs {
       display: flex;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
       overflow-x: auto;
     }
     .content-tabs button {
@@ -93,7 +166,7 @@
       background: none;
       border: none;
       font-weight: 500;
-      color: #6b7280;
+      color: #9ca3af;
       cursor: pointer;
       white-space: nowrap;
       border-bottom: 3px solid transparent;
@@ -114,7 +187,7 @@
       display: block;
     }
     .content-panel p, .content-panel ul, .content-panel ol, .content-panel li {
-      color: #4b5563;
+      color: #d1d5db; /* Lighter text */
       line-height: 1.8;
     }
     .content-panel ul, .content-panel ol {
@@ -125,12 +198,218 @@
       margin-bottom: 0.5rem;
     }
     .content-panel h1, .content-panel h2, .content-panel h3, .content-panel h4, .content-panel h5, .content-panel h6 {
-      color: #1f2937;
+      color: #f3f4f6; /* White headers */
       margin-top: 1.5rem;
       margin-bottom: 0.75rem;
     }
     .content-panel h1:first-child, .content-panel h2:first-child, .content-panel h3:first-child {
       margin-top: 0;
+    }
+    
+    /* Hero Section */
+    .trip-hero {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      margin-top: 100px; /* Accounts for fixed header */
+      margin-bottom: 0;
+      border-radius: 0 0 24px 24px;
+      overflow: hidden;
+    }
+    @media (min-width: 1024px) {
+        .trip-hero {
+            aspect-ratio: auto;
+            height: 600px; /* Limit height on large screens to avoid taking full fold */
+        }
+    }
+    .trip-hero-bg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: bottom center; /* Anchor to bottom */
+    }
+    .trip-hero-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Horiz Center */
+      justify-content: center; /* Vert Center */
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    .hero-badge {
+      background: #e97543;
+      color: white;
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+    }
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 800;
+      color: white;
+      text-transform: uppercase;
+      margin: 0;
+      line-height: 1.1;
+      font-style: italic;
+    }
+    .hero-subtitle {
+      font-size: 1.5rem;
+      color: rgba(255,255,255,0.9);
+      font-weight: 600;
+      font-style: italic;
+      margin-top: 0.5rem;
+    }
+
+    /* Modal Gallery */
+    .modal-gallery-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-gallery-overlay.active {
+      display: flex;
+    }
+    .gallery-modal-content {
+      background: white;
+      width: 90%;
+      max-width: 1200px;
+      height: 85vh;
+      display: flex;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    .gallery-main-view {
+      flex: 1;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .gallery-main-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .gallery-sidebar {
+      width: 320px;
+      background: white;
+      padding: 1.5rem;
+      overflow-y: auto;
+      border-left: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+    }
+    .gallery-sidebar-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #1f2937;
+    }
+    .gallery-grid-sidebar {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    .sidebar-thumb {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .sidebar-thumb.active {
+      border-color: #e97543;
+    }
+    .sidebar-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .modal-close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .nav-btn:hover {
+      background: rgba(255,255,255,0.4);
+    }
+    .prev-btn { left: 1rem; }
+    .next-btn { right: 1rem; }
+    
+    @media (max-width: 768px) {
+      .gallery-modal-content {
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        border-radius: 0;
+      }
+      .gallery-sidebar {
+        width: 100%;
+        height: 150px;
+        flex: none;
+        flex-direction: row;
+        gap: 1rem;
+        padding: 1rem;
+      }
+      .gallery-grid-sidebar {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+      }
+      .sidebar-thumb {
+        width: 80px;
+        flex: none;
+      }
+      .trip-hero {
+        height: 350px;
+      }
+      .hero-title {
+        font-size: 2rem;
+      }
     }
   </style>
 </head>
@@ -158,12 +437,12 @@
           
           <!-- Mountain Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('mountain-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Mountain Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('open-trip') }}" class="dropdown-item">Open Trip</a>
               <a href="{{ route('mountain-trip') }}#private-trip" class="dropdown-item">Private Trip</a>
@@ -176,12 +455,12 @@
 
           <!-- Outdoor Activity Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('outdoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Outdoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('outdoor-trip') }}#cultural-trip" class="dropdown-item">Cultural Trip</a>
               <a href="{{ route('outdoor-trip') }}#one-day-outdoor-trip" class="dropdown-item">One Day Trip</a>
@@ -194,12 +473,12 @@
 
           <!-- Indoor Activity Trip with submenu -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('indoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Indoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
-            </button>
+            </a>
             <div class="dropdown-menu">
               <a href="{{ route('indoor-trip') }}#city-tour" class="dropdown-item">City Tour</a>
               <a href="{{ route('indoor-trip') }}#company-gathering" class="dropdown-item">Company Gathering</a>
@@ -219,14 +498,30 @@
     </div>
   </header>
 
-  <!-- Breadcrumb -->
-  <nav style="background: #f9fafb; padding: 1rem 0; border-bottom: 1px solid #e5e7eb; margin-top: 100px;">
+  <!-- Breadcrumb removed from here -->
+
+  <!-- Hero Section (New) -->
+  @if($trip->thumbnail_landscape)
+  <div class="trip-hero">
+    <img src="{{ asset($trip->thumbnail_landscape) }}" alt="Hero Background" class="trip-hero-bg">
+    <div class="trip-hero-overlay">
+      <div class="container">
+        <span class="hero-badge">Open Trip</span>
+        <h1 class="hero-title">{{ $trip->title }}</h1>
+        <p class="hero-subtitle">{{ $trip->destination }}</p>
+      </div>
+    </div>
+  </div>
+  @endif
+
+  <!-- Breadcrumb (Moved Below Hero) -->
+  <nav style="background: transparent; padding: 1rem 0; margin-top: {{ $trip->thumbnail_landscape ? '1rem' : '100px' }}; position: relative; z-index: 2;">
     <div class="container">
-      <a href="{{ route('landing') }}" style="color: #6b7280; text-decoration: none;">Home</a>
-      <span style="color: #9ca3af; margin: 0 0.5rem;">›</span>
-      <a href="{{ route('open-trip') }}" style="color: #6b7280; text-decoration: none;">Open Trip</a>
-      <span style="color: #9ca3af; margin: 0 0.5rem;">›</span>
-      <span style="color: #1f2937;">{{ $trip->title }}</span>
+      <a href="{{ route('landing') }}" style="color: #fbcaa5; text-decoration: none;">Home</a>
+      <span style="color: rgba(251, 202, 165, 0.5); margin: 0 0.5rem;">›</span>
+      <a href="{{ route('open-trip') }}" style="color: #fbcaa5; text-decoration: none;">Open Trip</a>
+      <span style="color: rgba(251, 202, 165, 0.5); margin: 0 0.5rem;">›</span>
+      <span style="color: #fbcaa5; font-weight: 600;">{{ $trip->title }}</span>
     </div>
   </nav>
 
@@ -235,55 +530,74 @@
     <div class="container">
       <div class="product-grid">
         <!-- LEFT: Image (60%) -->
+        <!-- LEFT: Image Grid (Revised - 5 Images) -->
         <div>
-          <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); position: relative;">
-            @if($trip->thumbnail)
-            <img src="{{ asset($trip->thumbnail) }}" alt="{{ $trip->title }}" style="width: 100%; aspect-ratio: 4/3; object-fit: cover;">
-            @elseif($gallery->isNotEmpty())
-            <img src="{{ asset($gallery->first()->file_path) }}" alt="{{ $trip->title }}" style="width: 100%; aspect-ratio: 4/3; object-fit: cover;">
-            @else
-            <div style="width: 100%; aspect-ratio: 4/3; background: linear-gradient(135deg, #3b82f6, #1e40af); display: flex; align-items: center; justify-content: center;">
-              <span style="color: white; font-size: 4rem;">🏔️</span>
-            </div>
-            @endif
-            
-            <!-- Badges -->
-            <div style="position: absolute; bottom: 1rem; left: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-              <span style="background: #1e3a5f; color: white; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 600; font-size: 0.875rem;">
-                {{ $trip->duration_days }} DAY {{ $trip->duration_nights }} NIGHT
-              </span>
-              @if($nextDeparture)
-              <span style="background: #f59e0b; color: white; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 600; font-size: 0.875rem;">
-                {{ $nextDeparture->start_date->format('M d') }}-{{ $nextDeparture->end_date->format('d, Y') }}
-              </span>
+           @php
+               // Collect all images: Thumbnail (4:5) + Gallery
+               $allImages = collect();
+               if($trip->thumbnail) {
+                   $allImages->push((object)['file_path' => $trip->thumbnail, 'id' => 'thumb', 'is_video' => false]);
+               }
+               foreach($gallery as $img) {
+                   $allImages->push($img);
+               }
+           @endphp
+
+           <div class="gallery-stack">
+              <!-- Top Big Image with Badges -->
+              @if(isset($allImages[0]))
+              <div class="gallery-stack-top gallery-trigger" data-index="0">
+                  <img src="{{ asset($allImages[0]->file_path) }}" alt="{{ $trip->title }}">
+                  
+                  <!-- Badges Overlay (Preserved) -->
+                  <div style="position: absolute; bottom: 1rem; left: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; z-index: 2;">
+                    <span style="background: rgba(30, 30, 30, 0.9); color: white; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 600; font-size: 0.875rem; border: 1px solid rgba(255,255,255,0.2);">
+                      {{ $trip->duration_days }} DAY {{ $trip->duration_nights }} NIGHT
+                    </span>
+                    @if($nextDeparture)
+                    <span style="background: rgba(245, 158, 11, 0.9); color: white; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 600; font-size: 0.875rem;">
+                      {{ $nextDeparture->start_date->format('M d') }}-{{ $nextDeparture->end_date->format('d, Y') }}
+                    </span>
+                    @endif
+                  </div>
+              </div>
               @endif
-            </div>
-          </div>
+              
+              <!-- Bottom Grid (4 Images) -->
+              <div class="gallery-stack-bottom">
+                  @foreach($allImages->skip(1)->take(4) as $index => $img)
+                   <div class="gallery-stack-thumb gallery-trigger" data-index="{{ $index + 1 }}">
+                       <img src="{{ asset($img->file_path) }}" alt="Gallery Image">
+                       
+                       <!-- If this is the 4th thumbnail (total index 4) and there are more images -->
+                       @if($loop->last && $allImages->count() > 5)
+                       <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                           +{{ $allImages->count() - 5 }} Foto
+                       </div>
+                       @endif
+                   </div>
+                  @endforeach
+              </div>
+           </div>
           
-          <!-- Thumbnail Gallery -->
-          @if($gallery->isNotEmpty())
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 1rem;">
-            @foreach($gallery->take(4) as $index => $image)
-            <div style="border-radius: 8px; overflow: hidden; cursor: pointer; {{ $index === 0 ? 'border: 2px solid var(--color-primary);' : '' }}">
-              <img src="{{ asset($image->file_path) }}" alt="" style="width: 100%; aspect-ratio: 1; object-fit: cover;">
-            </div>
-            @endforeach
-          </div>
-          @endif
+           <!-- Hidden data for JS -->
+           <script>
+               window.tripImages = @json($allImages->map(fn($img) => asset($img->file_path)));
+           </script>
           
           <!-- Trip Title & Price -->
           <div style="margin-top: 1.5rem;">
             @if(!$nextDeparture || ($nextDeparture->capacity - $nextDeparture->booked_count) <= 0)
             <span style="color: #ef4444; font-size: 0.875rem; font-weight: 600;">(SOLD OUT)</span>
             @endif
-            <h1 style="font-size: 1.75rem; font-weight: 700; color: #1f2937; margin: 0.25rem 0;">{{ $trip->title }}</h1>
+            <h1 style="font-size: 1.75rem; font-weight: 700; color: #fbcaa5; margin: 0.25rem 0;">{{ $trip->title }}</h1>
             
             @if($nextDeparture && $nextDeparture->variants->isNotEmpty())
             @php 
               $minPrice = $nextDeparture->variants->min('base_price');
               $maxPrice = $nextDeparture->variants->max('base_price');
             @endphp
-            <p style="font-size: 1.25rem; color: #1f2937; margin-top: 0.5rem;">
+            <p style="font-size: 1.25rem; color: rgba(255,255,255,0.9); margin-top: 0.5rem;">
               <strong>Rp.{{ number_format($minPrice, 0, ',', '.') }}</strong>
               @if($minPrice != $maxPrice)
               - <strong>Rp.{{ number_format($maxPrice, 0, ',', '.') }}</strong>
@@ -306,7 +620,7 @@
           @if($departures->count() > 0)
           <h4 style="font-size: 0.875rem; color: #1f2937; margin-bottom: 0.75rem; font-weight: 600;">Select Departure Date</h4>
           <div style="margin-bottom: 1.5rem;">
-            <select id="departureSelect" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 0.9rem; cursor: pointer;" onchange="window.location.href='{{ route('trip.detail', $trip->slug) }}?departure=' + this.value">
+            <select id="departureSelect" class="select-dark" onchange="window.location.href='{{ route('trip.detail', $trip->slug) }}?departure=' + this.value">
               @foreach($departures as $departure)
               <option value="{{ $departure->id }}" {{ ($nextDeparture && $nextDeparture->id == $departure->id) ? 'selected' : '' }}>
                 {{ $departure->start_date->format('d M Y') }} - {{ $departure->end_date->format('d M Y') }}
@@ -365,7 +679,17 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             Share Product
           </button>
-        </div>
+          
+          <!-- PDF Download Button -->
+          @if($trip->trip_itinerary_pdf)
+          <div style="margin-top: 1rem;">
+             <a href="{{ asset($trip->trip_itinerary_pdf) }}" download target="_blank"
+                style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 1rem; background: #fbcaa5; color: #1e1e1e; text-decoration: none; border-radius: 8px; font-weight: 700; border: none; transition: all 0.2s;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Trip Detail
+             </a>
+          </div>
+          @endif
       </div>
     </div>
   </section>
@@ -390,27 +714,29 @@
             'documentation' => ['icon' => 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z', 'label' => 'Doc'],
           ];
         @endphp
-        <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; padding: 1.5rem; background: #f9fafb; border-bottom: 1px solid #e5e7eb;">
+        <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; padding: 1.5rem; background: transparent; border-bottom: 1px solid rgba(255,255,255,0.1);">
           @foreach($trip->includes as $include)
           @if(isset($includeIcons[$include]))
           <div style="text-align: center; min-width: 60px;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 0.25rem; display: block;">
               <path d="{{ $includeIcons[$include]['icon'] }}"/>
             </svg>
-            <span style="font-size: 0.7rem; color: #4b5563; display: block;">{{ $includeIcons[$include]['label'] }}</span>
+            <span style="font-size: 0.7rem; color: #d1d5db; display: block;">{{ $includeIcons[$include]['label'] }}</span>
           </div>
           @endif
           @endforeach
         </div>
         @endif
+
+
         
         <!-- Content Tabs -->
         <div class="content-tabs">
           <button class="active" data-tab="overview">Overview</button>
           <button data-tab="itinerary">Itinerary</button>
           <button data-tab="include_exclude">Include/Exclude</button>
-          @if($gallery->isNotEmpty())
-          <button data-tab="gallery">Gallery</button>
+          @if($trip->gearLists->isNotEmpty())
+          <button data-tab="gear-list">Gear Lists</button>
           @endif
           @if($trackingMap)
           <button data-tab="map">Tracking Map</button>
@@ -442,11 +768,11 @@
           @endif
         </div>
 
-        <div class="content-panel" id="panel-gallery">
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
-            @foreach($gallery as $image)
-            <div style="aspect-ratio: 1; border-radius: 8px; overflow: hidden; cursor: pointer;">
-              <img src="{{ asset($image->file_path) }}" alt="{{ $image->alt_text ?? $trip->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+        <div class="content-panel" id="panel-gear-list">
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            @foreach($trip->gearLists as $image)
+            <div style="width: 100%; border-radius: 8px; overflow: hidden; background: #2f2f2f;">
+              <img src="{{ asset($image->file_path) }}" alt="Gear List" style="width: 100%; height: auto; display: block;" onclick="window.open(this.src, '_blank')">
             </div>
             @endforeach
           </div>
@@ -458,11 +784,80 @@
           @endif
         </div>
       </div>
+      
+      <!-- Trip Facts / Metrics (Bottom) -->
+      @if($trip->trip_facts && (is_array($trip->trip_facts) && count($trip->trip_facts) > 0))
+      <div class="content-section">
+        @php
+            $facts = $trip->trip_facts;
+            $factConfig = [
+                'grade' => [
+                    'label' => 'Grade', 
+                    'path' => 'M3 13a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6zm6-8a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V5zm6 8a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-6z'
+                ],
+                'distance' => [
+                    'label' => 'Distance', 
+                    'path' => 'M19 12l-7-7-7 7M12 19V5'
+                ],
+                'max_altitude' => [
+                    'label' => 'Max Altitude', 
+                    'path' => 'M3 20h18L12 4l-9 16z M14.5 11a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z'
+                ],
+                'duration' => [
+                    'label' => 'Duration', 
+                    'path' => 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z M16 2v4 M8 2v4 M4 11h16'
+                ],
+                'trekking_time' => [
+                    'label' => 'Trekking Time', 
+                    'path' => 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0-18 0 M12 7v5l3 3'
+                ],
+                'elevation_gain' => [
+                    'label' => 'Elevation Gain', 
+                    'path' => 'M3 17l6-6 4 4 8-8 M14 7h7v7'
+                ],
+                'terrain' => [
+                    'label' => 'Terrain', 
+                    'path' => 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0-18 0 M9 10a3.5 3.5 0 0 0 7 0 M9 14a3.5 3.5 0 0 1 7 0'
+                ],
+            ];
+            
+            // Filter enabled facts
+            $enabledFacts = [];
+            foreach(['grade', 'distance', 'max_altitude', 'duration', 'trekking_time', 'elevation_gain', 'terrain'] as $key) {
+                if(data_get($facts, $key.'.enabled')) {
+                    $enabledFacts[] = $key;
+                }
+            }
+        @endphp
+        
+        @if(count($enabledFacts) > 0)
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1.25rem; padding: 1.5rem; background: transparent;">
+            @foreach($enabledFacts as $key)
+                <div style="display: flex; align-items: start; gap: 0.75rem;">
+                    <div style="color: var(--color-primary); min-width: 36px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="{{ $factConfig[$key]['path'] ?? '' }}"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <small style="color: #9ca3af; display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                            {{ $factConfig[$key]['label'] }}
+                        </small>
+                        <span style="color: #fbcaa5; font-weight: 700; font-size: 1rem; line-height: 1.2;">
+                            {{ data_get($facts, $key.'.value') }}
+                        </span>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        @endif
+      </div>
+      @endif
     </div>
   </section>
 
   <!-- Terms & Conditions Notice -->
-  <section style="background: #f8fafc; padding: 2rem 0; border-top: 1px solid #e5e7eb;">
+  <section style="background: #1e1e1e; padding: 2rem 0; border-top: 1px solid rgba(251, 202, 165, 0.2);">
     <div class="container" style="text-align: center;">
       <p style="color: #6b7280; margin: 0; font-size: 0.9rem;">
         Dengan melakukan pemesanan, Anda dianggap telah membaca dan menyetujui 
@@ -527,7 +922,7 @@
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
             <li><a href="{{ route('open-trip') }}">Open Trip</a></li>
-            <li><a href="{{ route('mountain-trip') }}">Mountain Trip</a></li>
+            <li><a href="{{ route('mountain-trip') }}"></a></li>
             <li><a href="{{ route('outdoor-trip') }}">Outdoor Activity Trip</a></li>
             <li><a href="{{ route('indoor-trip') }}">Indoor Activity Trip</a></li>
           </ul>
@@ -558,12 +953,111 @@
     </div>
   </footer>
 
+  <!-- Modal Gallery HTML -->
+  <div id="galleryModalOverlay" class="modal-gallery-overlay">
+    <div class="gallery-modal-content">
+       <button class="modal-close-btn" onclick="closeGalleryModal()">&times;</button>
+       
+       <div class="gallery-main-view">
+          <button class="nav-btn prev-btn" onclick="navGallery(-1)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          
+          <img id="modalMainImg" src="" class="gallery-main-img">
+          
+          <button class="nav-btn next-btn" onclick="navGallery(1)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+       </div>
+       
+       <div class="gallery-sidebar">
+           <h3 class="gallery-sidebar-title">Trip Gallery</h3>
+           <div class="gallery-grid-sidebar" id="modalThumbGrid">
+               <!-- JS populated -->
+           </div>
+       </div>
+    </div>
+  </div>
+
   <script src="{{ asset('js/landing.js') }}"></script>
   @vite(['resources/js/landing-preview.js', 'resources/js/landing-ui-fixes.js'])
   
   <script>
+    // --- Gallery Modal Logic ---
+    let currentImgIndex = 0;
+    const modalOverlay = document.getElementById('galleryModalOverlay');
+    const modalMainImg = document.getElementById('modalMainImg');
+    const modalThumbGrid = document.getElementById('modalThumbGrid');
+
+    function openGalleryModal(index = 0) {
+        currentImgIndex = index;
+        modalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // prevent scrolling
+        renderModal();
+    }
+
+    function closeGalleryModal() {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function renderModal() {
+        // Set Main Image
+        if (window.tripImages && window.tripImages[currentImgIndex]) {
+            modalMainImg.src = window.tripImages[currentImgIndex];
+        }
+
+        // Render Sidebar Thumbs
+        modalThumbGrid.innerHTML = '';
+        if (window.tripImages) {
+            window.tripImages.forEach((imgSrc, idx) => {
+                const thumb = document.createElement('div');
+                thumb.className = `sidebar-thumb ${idx === currentImgIndex ? 'active' : ''}`;
+                thumb.onclick = () => {
+                    currentImgIndex = idx;
+                    renderModal();
+                };
+                
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                
+                thumb.appendChild(img);
+                modalThumbGrid.appendChild(thumb);
+            });
+        }
+    }
+
+    function navGallery(direction) {
+        if (!window.tripImages) return;
+        currentImgIndex += direction;
+        
+        // Loop
+        if (currentImgIndex < 0) currentImgIndex = window.tripImages.length - 1;
+        if (currentImgIndex >= window.tripImages.length) currentImgIndex = 0;
+        
+        renderModal();
+    }
+
+    // Attach Click Events to Page Gallery
+    document.querySelectorAll('.gallery-trigger').forEach(el => {
+        el.addEventListener('click', function() {
+            const idx = parseInt(this.dataset.index);
+            openGalleryModal(idx);
+        });
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+            closeGalleryModal();
+        }
+    });
+
+    // --- End Gallery Logic ---
+
     // Tab switching
     document.querySelectorAll('.content-tabs button').forEach(btn => {
+    // ... existing JS ...
       btn.addEventListener('click', function() {
         document.querySelectorAll('.content-tabs button').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('active'));

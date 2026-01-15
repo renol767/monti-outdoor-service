@@ -8,8 +8,8 @@ use App\Http\Controllers\language\LanguageController;
 use App\Http\Controllers\layouts\CollapsedMenu;
 use App\Http\Controllers\layouts\ContentNavbar;
 use App\Http\Controllers\layouts\ContentNavSidebar;
-use App\Http\Controllers\layouts\NavbarFull;
-use App\Http\Controllers\layouts\NavbarFullSidebar;
+// use App\Http\Controllers\layouts\NavbarFull;
+// use App\Http\Controllers\layouts\NavbarFullSidebar;
 use App\Http\Controllers\layouts\Horizontal;
 use App\Http\Controllers\layouts\Vertical;
 use App\Http\Controllers\layouts\WithoutMenu;
@@ -38,7 +38,7 @@ use App\Http\Controllers\apps\EcommerceCustomerDetailsOverview;
 use App\Http\Controllers\apps\EcommerceCustomerDetailsSecurity;
 use App\Http\Controllers\apps\EcommerceCustomerDetailsBilling;
 use App\Http\Controllers\apps\EcommerceCustomerDetailsNotifications;
-use App\Http\Controllers\apps\EcommerceManageReviews;
+
 use App\Http\Controllers\apps\EcommerceReferrals;
 use App\Http\Controllers\apps\EcommerceSettingsDetails;
 use App\Http\Controllers\apps\EcommerceSettingsPayments;
@@ -100,7 +100,7 @@ use App\Http\Controllers\cards\CardBasic;
 use App\Http\Controllers\cards\CardAdvance;
 use App\Http\Controllers\cards\CardStatistics;
 use App\Http\Controllers\cards\CardAnalytics;
-use App\Http\Controllers\cards\CardGamifications;
+// use App\Http\Controllers\cards\CardGamifications;
 use App\Http\Controllers\cards\CardActions;
 use App\Http\Controllers\user_interface\Accordion;
 use App\Http\Controllers\user_interface\Alerts;
@@ -173,9 +173,9 @@ Route::get('/index-page', function () {
     $trips = \App\Models\LandingTrip::orderBy('order')->limit(6)->get();
     $services = \App\Models\LandingService::orderBy('order')->get();
     $gallery = \App\Models\LandingGallery::orderBy('order')->get();
-    $testimonials = \App\Models\LandingTestimonial::all();
 
-    return view('welcome', compact('settings', 'features', 'trips', 'services', 'gallery', 'testimonials'));
+
+    return view('welcome', compact('settings', 'features', 'trips', 'services', 'gallery'));
 })->name('landing');
 
 // About Us Page
@@ -281,6 +281,7 @@ Route::get('/open-trip', function () {
                 'includes' => $trip->includes ?? [],
                 'highlights' => $trip->highlights ?? [],
                 'departure_months' => $departureMonths,
+                'created_at' => $trip->created_at,
             ];
         });
 
@@ -379,7 +380,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::resource('/gallery', App\Http\Controllers\Admin\LandingGalleryController::class, ['as' => 'admin']);
     
     // Testimonials Resource
-    Route::resource('/testimonials', App\Http\Controllers\Admin\LandingTestimonialController::class, ['as' => 'admin']);
+
 
     // ===== TRIP MANAGEMENT =====
     // Trip Templates
@@ -446,8 +447,8 @@ Route::get('/lang/{locale}', [LanguageController::class, 'swap']);
 Route::get('/layouts/collapsed-menu', [CollapsedMenu::class, 'index'])->name('layouts-collapsed-menu');
 Route::get('/layouts/content-navbar', [ContentNavbar::class, 'index'])->name('layouts-content-navbar');
 Route::get('/layouts/content-nav-sidebar', [ContentNavSidebar::class, 'index'])->name('layouts-content-nav-sidebar');
-Route::get('/layouts/navbar-full', [NavbarFull::class, 'index'])->name('layouts-navbar-full');
-Route::get('/layouts/navbar-full-sidebar', [NavbarFullSidebar::class, 'index'])->name('layouts-navbar-full-sidebar');
+// Route::get('/layouts/navbar-full', [NavbarFull::class, 'index'])->name('layouts-navbar-full');
+// Route::get('/layouts/navbar-full-sidebar', [NavbarFullSidebar::class, 'index'])->name('layouts-navbar-full-sidebar');
 Route::get('/layouts/horizontal', [Horizontal::class, 'index'])->name('dashboard-analytics');
 Route::get('/layouts/vertical', [Vertical::class, 'index'])->name('dashboard-analytics');
 Route::get('/layouts/without-menu', [WithoutMenu::class, 'index'])->name('layouts-without-menu');
@@ -480,7 +481,7 @@ Route::get('/app/ecommerce/customer/details/overview', [EcommerceCustomerDetails
 Route::get('/app/ecommerce/customer/details/security', [EcommerceCustomerDetailsSecurity::class, 'index'])->name('app-ecommerce-customer-details-security');
 Route::get('/app/ecommerce/customer/details/billing', [EcommerceCustomerDetailsBilling::class, 'index'])->name('app-ecommerce-customer-details-billing');
 Route::get('/app/ecommerce/customer/details/notifications', [EcommerceCustomerDetailsNotifications::class, 'index'])->name('app-ecommerce-customer-details-notifications');
-Route::get('/app/ecommerce/manage/reviews', [EcommerceManageReviews::class, 'index'])->name('app-ecommerce-manage-reviews');
+
 Route::get('/app/ecommerce/referrals', [EcommerceReferrals::class, 'index'])->name('app-ecommerce-referrals');
 Route::get('/app/ecommerce/settings/details', [EcommerceSettingsDetails::class, 'index'])->name('app-ecommerce-settings-details');
 Route::get('/app/ecommerce/settings/payments', [EcommerceSettingsPayments::class, 'index'])->name('app-ecommerce-settings-payments');
@@ -552,7 +553,7 @@ Route::get('/cards/basic', [CardBasic::class, 'index'])->name('cards-basic');
 Route::get('/cards/advance', [CardAdvance::class, 'index'])->name('cards-advance');
 Route::get('/cards/statistics', [CardStatistics::class, 'index'])->name('cards-statistics');
 Route::get('/cards/analytics', [CardAnalytics::class, 'index'])->name('cards-analytics');
-Route::get('/cards/gamifications', [CardGamifications::class, 'index'])->name('cards-gamifications');
+// Route::get('/cards/gamifications', [CardGamifications::class, 'index'])->name('cards-gamifications');
 Route::get('/cards/actions', [CardActions::class, 'index'])->name('cards-actions');
 
 // User Interface

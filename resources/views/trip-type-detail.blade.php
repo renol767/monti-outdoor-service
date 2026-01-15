@@ -47,20 +47,20 @@
     .detail-hero {
       position: relative;
       padding: 120px 0 40px;
-      background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+      background: linear-gradient(135deg, #151515 0%, #1e1e1e 100%);
     }
     .detail-hero .breadcrumb {
       margin-bottom: 1rem;
     }
     .detail-hero .breadcrumb a {
-      color: rgba(255,255,255,0.7);
+      color: rgba(251,202,165,0.7);
       text-decoration: none;
     }
     .detail-hero .breadcrumb a:hover {
-      color: #fff;
+      color: #fbcaa5;
     }
     .detail-hero .breadcrumb span {
-      color: rgba(255,255,255,0.5);
+      color: rgba(251,202,165,0.5);
       margin: 0 0.5rem;
     }
     .detail-hero .breadcrumb-current {
@@ -69,18 +69,18 @@
     .detail-hero h1 {
       font-size: 2.5rem;
       font-weight: 900;
-      color: #fff;
+      color: #fbcaa5;
       margin-bottom: 0.5rem;
     }
     .detail-hero .subtitle {
-      color: rgba(255,255,255,0.8);
+      color: rgba(251,202,165,0.8);
       font-size: 1.125rem;
     }
 
     /* Image Gallery */
     .detail-gallery {
       padding: 3rem 0;
-      background: #f8fafc;
+      background: #1e1e1e;
     }
     .gallery-grid {
       display: grid;
@@ -117,11 +117,11 @@
     .gallery-grid .img-placeholder {
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+      background: linear-gradient(135deg, #151515 0%, #1e1e1e 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: rgba(255,255,255,0.3);
+      color: rgba(251,202,165,0.3);
       font-size: 3rem;
     }
 
@@ -136,12 +136,12 @@
     .detail-content .article {
       font-size: 1.125rem;
       line-height: 1.9;
-      color: #374151;
+      color: rgba(251,202,165,0.85);
     }
     .detail-content .article h1,
     .detail-content .article h2,
     .detail-content .article h3 {
-      color: #1f2937;
+      color: #fbcaa5;
       margin-top: 2rem;
       margin-bottom: 1rem;
     }
@@ -165,7 +165,7 @@
       margin-bottom: 1.5rem;
     }
     .detail-content .article strong {
-      color: #1f2937;
+      color: #fbcaa5;
     }
     .detail-content .article a {
       color: var(--color-primary);
@@ -173,18 +173,18 @@
 
     /* CTA Section */
     .detail-cta {
-      background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+      background: linear-gradient(135deg, #151515 0%, #1e1e1e 100%);
       padding: 4rem 0;
       text-align: center;
     }
     .detail-cta h3 {
-      color: #fff;
+      color: #fbcaa5;
       font-size: 2rem;
       font-weight: 800;
       margin-bottom: 1rem;
     }
     .detail-cta p {
-      color: rgba(255,255,255,0.8);
+      color: rgba(251,202,165,0.8);
       font-size: 1.125rem;
       margin-bottom: 2rem;
       max-width: 600px;
@@ -218,7 +218,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      color: #6b7280;
+      color: rgba(251,202,165,0.7);
       text-decoration: none;
       margin-bottom: 2rem;
       font-weight: 500;
@@ -289,7 +289,7 @@
 
           <!-- Outdoor Activity Trip -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('mountain-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Outdoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
@@ -307,7 +307,7 @@
 
           <!-- Indoor Activity Trip -->
           <div class="dropdown">
-            <button class="custom-dropdown-toggle dropdown-toggle">
+            <a href="{{ route('mountain-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
               Indoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
@@ -336,7 +336,7 @@
       <div class="breadcrumb">
         <a href="{{ route('landing') }}">Home</a>
         <span>›</span>
-        <a href="{{ route('mountain-trip') }}">Mountain Trip</a>
+        <a href="{{ route('mountain-trip') }}"></a>
         <span>›</span>
         <span class="breadcrumb-current">{{ $section->title }}</span>
       </div>
@@ -469,7 +469,7 @@
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
             <li><a href="{{ route('open-trip') }}">Open Trip</a></li>
-            <li><a href="{{ route('mountain-trip') }}">Mountain Trip</a></li>
+            <li><a href="{{ route('mountain-trip') }}"></a></li>
             <li><a href="{{ route('outdoor-trip') }}">Outdoor Activity Trip</a></li>
             <li><a href="{{ route('indoor-trip') }}">Indoor Activity Trip</a></li>
           </ul>
