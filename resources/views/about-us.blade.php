@@ -181,7 +181,7 @@
     }
     .company-grid {
       display: grid;
-      grid-template-columns: 550px 1fr;
+      grid-template-columns: 480px 1fr;
       gap: 2rem;
       align-items: start;
       max-width: 1200px;
@@ -258,14 +258,16 @@
     /* Partner logos - below company-left */
     .partner-logos {
       display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
+      gap: 0.5rem;
+      flex-wrap: nowrap;
       margin-top: 1.25rem;
       align-items: center;
       justify-content: center;
     }
     .partner-logos img {
-      height: 85px;
+      height: 70px;
+      max-width: 100%;
+      object-fit: contain;
       opacity: 0.9;
       filter: grayscale(10%);
       transition: all 0.3s ease;
@@ -300,14 +302,14 @@
     .team-title {
       font-size: 2.5rem;
       font-weight: 900;
-      color: #ffffff;
+      color: #000000;
       margin-bottom: 1rem;
       text-decoration: underline;
       text-decoration-color: var(--color-primary);
       text-underline-offset: 8px;
     }
     .team-intro {
-      color: #ffffff;
+      color: #000000;
       font-size: 1rem;
       max-width: 800px;
       margin: 0 auto;
@@ -360,21 +362,21 @@
     .team-info h4 {
       font-size: 2.25rem;
       font-weight: 700;
-      color: #ffffff;
+      color: #000000;
       margin-bottom: 0.5rem;
     }
     .team-info h4 .nickname {
-      color: #ffffff;
+      color: #000000;
     }
     .team-info p {
       font-size: 1.35rem;
-      color: #ffffff;
+      color: #000000;
       margin: 0;
       line-height: 1.5;
       font-weight: 600;
     }
     .team-info .role-primary {
-      color: #ffffff;
+      color: #000000;
       text-decoration: none;
     }
 
@@ -592,11 +594,11 @@
               
               <!-- Partner logos below company logos -->
               <div class="partner-logos">
-                <img src="{{ asset($settings['global_logo'] ?? 'images/logo/Untitled-4.png') }}" alt="Monti">
-                <img src="{{ asset('images/about-us/logo-monti-homestay.png') }}" alt="Monti Homestay">
-                <img src="{{ asset('images/about-us/logo-monti-kopi.png') }}" alt="Monti Kopi">
-                <img src="{{ asset('images/about-us/logo-monti-studio.png') }}" alt="Monti Studio">
-                <img src="{{ asset('images/about-us/logo-monti-wedding.png') }}" alt="Monti Wedding">
+                <img src="{{ asset('images/about-us/partner-monti-outdoor-hd.png') }}" alt="Monti">
+                <img src="{{ asset('images/about-us/partner-monti-homestay-hd.png') }}" alt="Monti Homestay">
+                <img src="{{ asset('images/about-us/partner-monti-kopi-hd.png') }}" alt="Monti Kopi">
+                <img src="{{ asset('images/about-us/partner-monti-studio-hd.png') }}" alt="Monti Studio">
+                <img src="{{ asset('images/about-us/partner-monti-wedding-hd.png') }}" alt="Monti Wedding">
               </div>
             </div>
             
@@ -608,11 +610,11 @@
                 Selatan dan menjalani berbagai usaha yang "anak muda banget", diantara nya :
               </p>
               <ul class="company-list">
-                <li>Usaha Cafe dan F & B - MONTI Kopi ( IG: <a href="https://instagram.com/montikopi.id" target="_blank">@montikopi.id</a> )</li>
-                <li>Usaha Studio Pemotretan dan Fotografi - MONTI Studio ( IG: <a href="https://instagram.com/montistudio.id" target="_blank">@montistudio.id</a> )</li>
-                <li>Usaha Wedding Organizer - MONTI Wedding ( IG: <a href="https://instagram.com/montiwedding" target="_blank">@montiwedding</a> )</li>
-                <li>Usaha Akomodasi dan Penginapan - MONTI Homestay ( IG: <a href="https://instagram.com/monti.homestay" target="_blank">@monti.homestay</a> )</li>
-                <li>Serta Usaha Trip & Travel Organizer - MONTI Outdoor Service ( IG: <a href="https://instagram.com/monti.outdoorservice" target="_blank">@monti.outdoorservice</a> )</li>
+                <li>Usaha Cafe dan F & B - MONTI Kopi <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/montikopi.id" target="_blank">@montikopi.id</a> )</span></li>
+                <li>Usaha Studio Pemotretan dan Fotografi - MONTI Studio <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/montistudio.id" target="_blank">@montistudio.id</a> )</span></li>
+                <li>Usaha Wedding Organizer - MONTI Wedding <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/montiwedding" target="_blank">@montiwedding</a> )</span></li>
+                <li>Usaha Akomodasi dan Penginapan - MONTI Homestay <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/monti.homestay" target="_blank">@monti.homestay</a> )</span></li>
+                <li>Serta Usaha Trip & Travel Organizer - MONTI Outdoor Service <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/monti.outdoorservice" target="_blank">@monti.outdoorservice</a> )</span></li>
               </ul>
             </div>
           </div>
