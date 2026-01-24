@@ -16,49 +16,96 @@
   </nav>
 
   <div class="row">
-    <div class="col-lg-7">
+    <div class="col-lg-8">
       <div class="card mb-4">
-        <div class="card-header">
-          <h5 class="mb-0">Edit Section: {{ $section->title }}</h5>
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Edit Section</h5>
+          <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" form="mainForm" name="is_active" id="isActive" {{ $section->is_active ? 'checked' : '' }}>
+              <label class="form-check-label" for="isActive">Active</label>
+          </div>
         </div>
         <div class="card-body">
           <form action="{{ route('admin.trip-types.update', $section) }}" method="POST" enctype="multipart/form-data" id="mainForm">
             @csrf
             @method('PUT')
 
+            <!-- Common Fields -->
             <div class="row mb-3">
-              <div class="col-md-6">
-                <label class="form-label">Title</label>
-                <input type="text" class="form-control" name="title" value="{{ old('title', $section->title) }}" required>
-              </div>
               <div class="col-md-6">
                 <label class="form-label">Sort Order</label>
                 <input type="number" class="form-control" name="sort_order" value="{{ old('sort_order', $section->sort_order) }}" min="0">
               </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Subtitle</label>
-              <input type="text" class="form-control" name="subtitle" value="{{ old('subtitle', $section->subtitle) }}" placeholder="Short description">
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Content Highlight <small class="text-muted">(ditampilkan di halaman Mountain Trip)</small></label>
-              <div id="quillEditorHighlight" style="height: 180px;"></div>
-              <input type="hidden" name="content_html" id="contentHtml">
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Content Full <small class="text-muted">(ditampilkan di halaman detail)</small></label>
-              <div id="quillEditorFull" style="height: 300px;"></div>
-              <input type="hidden" name="content_full" id="contentFull">
-            </div>
-
-            <div class="mb-3">
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" name="is_active" id="isActive" {{ $section->is_active ? 'checked' : '' }}>
-                <label class="form-check-label" for="isActive">Active</label>
+              <div class="col-md-6">
+                 <label class="form-label">Slug (ID)</label>
+                 <input type="text" class="form-control" value="{{ $section->slug }}" disabled>
               </div>
+            </div>
+
+            <!-- Language Tabs -->
+            <ul class="nav nav-tabs mb-3" role="tablist">
+                <li class="nav-item">
+                    <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-id" aria-controls="navs-id" aria-selected="true">
+                        <i class="ti tabler-flag me-1"></i> Indonesia
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-en" aria-controls="navs-en" aria-selected="false">
+                        <i class="ti tabler-flag me-1"></i> English
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content p-0">
+                <!-- INDONESIA TAB -->
+                <div class="tab-pane fade show active" id="navs-id" role="tabpanel">
+                    <div class="mb-3">
+                        <label class="form-label">Judul (ID)</label>
+                        <input type="text" class="form-control" name="title[id]" value="{{ old('title.id', $section->getTranslation('title', 'id', false)) }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Sub-judul (ID)</label>
+                        <input type="text" class="form-control" name="subtitle[id]" value="{{ old('subtitle.id', $section->getTranslation('subtitle', 'id', false)) }}" placeholder="Deskripsi singkat">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Content Highlight (ID) <small class="text-muted">(ditampilkan di halaman list)</small></label>
+                        <div id="quillHighlightID" style="height: 150px;"></div>
+                        <input type="hidden" name="content_html[id]" id="contentHtmlID">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Content Full (ID) <small class="text-muted">(ditampilkan di halaman detail)</small></label>
+                        <div id="quillFullID" style="height: 300px;"></div>
+                        <input type="hidden" name="content_full[id]" id="contentFullID">
+                    </div>
+                </div>
+
+                <!-- ENGLISH TAB -->
+                <div class="tab-pane fade" id="navs-en" role="tabpanel">
+                    <div class="mb-3">
+                        <label class="form-label">Title (EN)</label>
+                        <input type="text" class="form-control" name="title[en]" value="{{ old('title.en', $section->getTranslation('title', 'en', false)) }}" placeholder="English Title">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Subtitle (EN)</label>
+                        <input type="text" class="form-control" name="subtitle[en]" value="{{ old('subtitle.en', $section->getTranslation('subtitle', 'en', false)) }}" placeholder="Short description">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Content Highlight (EN)</label>
+                        <div id="quillHighlightEN" style="height: 150px;"></div>
+                        <input type="hidden" name="content_html[en]" id="contentHtmlEN">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Content Full (EN)</label>
+                        <div id="quillFullEN" style="height: 300px;"></div>
+                        <input type="hidden" name="content_full[en]" id="contentFullEN">
+                    </div>
+                </div>
             </div>
 
             <!-- Hidden inputs for cropped images -->
@@ -67,16 +114,18 @@
             <input type="hidden" name="cropped_image_2" id="croppedImage2">
             <input type="hidden" name="cropped_image_3" id="croppedImage3">
 
-            <button type="submit" class="btn btn-primary">
-              <i class="ti tabler-check me-1"></i> Save Changes
-            </button>
-            <a href="{{ route('admin.trip-types.index', ['category' => $section->category]) }}" class="btn btn-outline-secondary">Cancel</a>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">
+                <i class="ti tabler-check me-1"></i> Save Changes
+                </button>
+                <a href="{{ route('admin.trip-types.index', ['category' => $section->category]) }}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
           </form>
         </div>
       </div>
     </div>
 
-    <div class="col-lg-5">
+    <div class="col-lg-4">
       <!-- Images with Cropper -->
       <div class="card">
         <div class="card-header d-flex justify-content-between">
@@ -269,47 +318,36 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Quill Editor - Content Highlight
-  const quillHighlight = new Quill('#quillEditorHighlight', {
-    theme: 'snow',
-    placeholder: 'Tulis ringkasan singkat untuk ditampilkan di halaman Mountain Trip...',
-    modules: {
-      toolbar: [
-        ['bold', 'italic', 'underline'],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        ['clean']
-      ]
-    }
-  });
-
-  // Load existing highlight content
-  const existingHighlight = @json($section->content_html ?? '');
-  if (existingHighlight) {
-    quillHighlight.clipboard.dangerouslyPasteHTML(existingHighlight);
+  
+  // Helper to init Quill
+  function initQuill(selector, placeholder, content) {
+      const quill = new Quill(selector, {
+        theme: 'snow',
+        placeholder: placeholder,
+        modules: {
+          toolbar: [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['clean']
+          ]
+        }
+      });
+      if (content) {
+        quill.clipboard.dangerouslyPasteHTML(content);
+      }
+      return quill;
   }
 
-  // Quill Editor - Content Full
-  const quillFull = new Quill('#quillEditorFull', {
-    theme: 'snow',
-    placeholder: 'Tulis artikel lengkap untuk ditampilkan di halaman detail...',
-    modules: {
-      toolbar: [
-        [{ 'header': [1, 2, 3, false] }],
-        ['bold', 'italic', 'underline'],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        ['link'],
-        ['clean']
-      ]
-    }
-  });
+  // Init 4 Editors
+  const quillHighlightID = initQuill('#quillHighlightID', 'Ringkasan Bahasa Indonesia...', @json($section->getTranslation('content_html', 'id', false) ?? ''));
+  const quillFullID = initQuill('#quillFullID', 'Konten Lengkap Bahasa Indonesia...', @json($section->getTranslation('content_full', 'id', false) ?? ''));
+  
+  const quillHighlightEN = initQuill('#quillHighlightEN', 'English Highlight...', @json($section->getTranslation('content_html', 'en', false) ?? ''));
+  const quillFullEN = initQuill('#quillFullEN', 'English Full Content...', @json($section->getTranslation('content_full', 'en', false) ?? ''));
 
-  // Load existing full content
-  const existingFull = @json($section->content_full ?? '');
-  if (existingFull) {
-    quillFull.clipboard.dangerouslyPasteHTML(existingFull);
-  }
 
-  // Cropper
+  // Cropper logic (Keep existing)
   let cropper = null;
   let currentIndex = null;
   const cropModal = new bootstrap.Modal(document.getElementById('cropModal'));
@@ -392,8 +430,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Form submit
   document.getElementById('mainForm').addEventListener('submit', function(e) {
-    document.getElementById('contentHtml').value = quillHighlight.root.innerHTML;
-    document.getElementById('contentFull').value = quillFull.root.innerHTML;
+    // Sync Quill to Hidden
+    document.getElementById('contentHtmlID').value = quillHighlightID.root.innerHTML;
+    document.getElementById('contentFullID').value = quillFullID.root.innerHTML;
+    
+    document.getElementById('contentHtmlEN').value = quillHighlightEN.root.innerHTML;
+    document.getElementById('contentFullEN').value = quillFullEN.root.innerHTML;
   });
 });
 </script>

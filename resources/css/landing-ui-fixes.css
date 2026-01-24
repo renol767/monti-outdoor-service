@@ -41,9 +41,10 @@
         top: 100%;
         left: 0;
         right: 0;
-        background: white;
+        background: rgba(30, 30, 30, 0.95) !important; /* Dark background */
+        backdrop-filter: blur(10px) !important;
         padding: 2rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         z-index: 1000;
         height: auto;
         gap: 1.5rem; /* Space between items */
@@ -58,7 +59,7 @@
     .nav-link {
         font-size: 1.25rem !important;
         padding: 10px 0;
-        color: #333 !important; /* Ensure visibility on white bg */
+        color: #fbcaa5 !important; /* Light beige text for readability */
         width: 100%;
         justify-content: space-between; /* Align dropdown arrows */
     }
@@ -92,7 +93,7 @@
         flex-direction: column !important;
         align-items: stretch !important; /* Changed from flex-start to stretch for full width */
         width: 100% !important;
-        border-bottom: 1px solid #eee; /* Optional: clear separation */
+        border-bottom: 1px solid rgba(251, 202, 165, 0.1); /* Subtle separator */
     }
 
     #header .nav .dropdown-menu {
@@ -100,7 +101,8 @@
         float: none !important;
         width: 100% !important;
         box-shadow: none !important;
-        background: #f8f9fa !important; /* Slight contrast */
+        background: rgba(21, 21, 21, 0.95) !important; /* Darker background for submenu */
+        backdrop-filter: blur(10px) !important;
         transform: none !important;
         padding: 0.5rem 0 0.5rem 1.5rem !important; /* Indent subitems */
         margin: 0 !important;
@@ -113,6 +115,16 @@
     
     #header .nav .dropdown.active .dropdown-menu {
         display: block !important;
+    }
+    
+    #header .nav .dropdown-item {
+        color: #fbcaa5 !important; /* Light beige text */
+        padding: 0.75rem 1rem !important;
+    }
+    
+    #header .nav .dropdown-item:hover {
+        background: rgba(251, 202, 165, 0.15) !important;
+        color: #e97543 !important; /* Orange on hover */
     }
     
     #header .nav .dropdown-toggle,
@@ -128,7 +140,7 @@
         /* Nav Link Styles Copy */
         font-family: inherit !important; /* Button defaults are different, force inherit */
         font-weight: 500 !important; /* Match links */
-        color: #333 !important;
+        color: #fbcaa5 !important; /* Light beige text */
         background: none;
         border: none;
         text-align: left !important; /* Ensure text aligns left like links */
@@ -139,3 +151,4 @@
         margin-left: auto !important;
     }
 }
+

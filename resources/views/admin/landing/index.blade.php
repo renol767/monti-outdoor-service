@@ -23,12 +23,7 @@
       <div class="nav-align-top mb-4">
         <ul class="nav nav-tabs mb-3" role="tablist">
           <li class="nav-item">
-            <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-hero" aria-controls="navs-hero" aria-selected="true">
-              <i class="ti tabler-home me-1"></i> Hero
-            </button>
-          </li>
-          <li class="nav-item">
-            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-features" aria-controls="navs-features" aria-selected="false">
+            <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-features" aria-controls="navs-features" aria-selected="true">
               <i class="ti tabler-bulb me-1"></i> Why Us
             </button>
           </li>
@@ -40,6 +35,11 @@
           <li class="nav-item">
             <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-services" aria-controls="navs-services" aria-selected="false">
                <i class="ti tabler-list me-1"></i> Services
+            </button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-quote" aria-controls="navs-quote" aria-selected="false">
+              <i class="ti tabler-quote me-1"></i> Quote
             </button>
           </li>
           <li class="nav-item">
@@ -76,35 +76,8 @@
         </ul>
         <div class="tab-content">
           
-          <!-- Hero Tab -->
-          <div class="tab-pane fade show active" id="navs-hero" role="tabpanel">
-             <form action="{{ route('admin.landing.settings.update') }}" method="POST" enctype="multipart/form-data">
-              @csrf
-              <div class="row">
-                  @foreach($settings as $setting)
-                     @if(\Illuminate\Support\Str::startsWith($setting->key, 'hero_') && !\Illuminate\Support\Str::contains($setting->key, 'cta'))
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label" for="{{ $setting->key }}">{{ $setting->label ?? ucfirst(str_replace('_', ' ', $setting->key)) }}</label>
-                      @if($setting->type == 'image')
-                         @if($setting->value)
-                            <div class="mb-2">
-                                <img src="{{ asset($setting->value) }}" alt="Preview" class="d-block rounded" style="max-height: 100px; width: auto;">
-                            </div>
-                         @endif
-                         <input type="file" class="form-control crop-image" name="{{ $setting->key }}" id="{{ $setting->key }}" accept="image/*" data-ratio="16/9">
-                      @else
-                        <input type="text" class="form-control" name="{{ $setting->key }}" id="{{ $setting->key }}" value="{{ $setting->value }}">
-                      @endif
-                    </div>
-                     @endif
-                  @endforeach
-              </div>
-              <button type="submit" class="btn btn-primary">Save Changes</button>
-             </form>
-          </div>
-
           <!-- Features (Why Us) Tab -->
-          <div class="tab-pane fade" id="navs-features" role="tabpanel">
+          <div class="tab-pane fade show active" id="navs-features" role="tabpanel">
             <div class="card mb-3">
                 <div class="card-body">
                      <form action="{{ route('admin.landing.settings.update') }}" method="POST">
@@ -178,46 +151,72 @@
                      </form>
                 </div>
             </div>
+            
             <hr>
-            <div class="mb-3">
-                 <a href="{{ route('admin.trips.create') }}" class="btn btn-primary">
-                    <i class="ti tabler-plus me-1"></i> Add New Trip
-                 </a>
-            </div>
-            <div class="table-responsive text-nowrap">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Price</th>
-                    <th>Duration</th>
-
-                    <th>Category</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody class="table-border-bottom-0">
-                  @foreach($trips as $trip)
-                  <tr>
-                    <td><strong>{{ $trip->title }}</strong></td>
-                    <td>{{ $trip->price }}</td>
-                    <td>{{ $trip->duration }}</td>
-                    <td>
-
-                    </td>
-                    <td><span class="badge bg-label-primary">{{ $trip->category }}</span></td>
-                    <td>
-                        <a href="{{ route('admin.trips.edit', $trip->id) }}" class="btn btn-sm btn-icon item-edit"><i class="ti tabler-edit"></i></a>
-                        <form action="{{ route('admin.trips.destroy', $trip->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this trip?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-icon item-trash"><i class="ti tabler-trash"></i></button>
-                        </form>
-                    </td>
-                  </tr>
-                  @endforeach
-                </tbody>
-              </table>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Select Popular Trips (Max 6)</h5>
+                    <small class="text-muted">Select open trips to display on the landing page.</small>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.landing.popular-trips.update') }}" method="POST">
+                        @csrf
+                        <div class="table-responsive text-nowrap">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px;">Select</th>
+                                        <th>Trip Title</th>
+                                        <th>Category</th>
+                                        <th>Price (From)</th>
+                                        <th style="width: 100px;">Order</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($openTrips as $trip)
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="popular_trips[]" value="{{ $trip->id }}" id="trip_{{ $trip->id }}" {{ $trip->is_popular ? 'checked' : '' }}>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <label class="form-check-label" for="trip_{{ $trip->id }}">
+                                                <strong>{{ $trip->title }}</strong>
+                                                <br>
+                                                <small class="text-muted">{{ $trip->duration }}</small>
+                                            </label>
+                                        </td>
+                                        <td><span class="badge bg-label-primary">{{ $trip->category }}</span></td>
+                                        <td>
+                                            @if($trip->from_price)
+                                                IDR {{ number_format($trip->from_price, 0, ',', '.') }}
+                                            @else
+                                                <span class="text-muted">Contact us</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control form-control-sm" name="popular_orders[{{ $trip->id }}]" value="{{ $trip->popular_order }}" min="0">
+                                        </td>
+                                        <td>
+                                            @if($trip->status === 'published')
+                                                <span class="badge bg-success">Published</span>
+                                            @else
+                                                <span class="badge bg-secondary">{{ ucfirst($trip->status) }}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary">Update Popular Trips</button>
+                        </div>
+                    </form>
+                </div>
             </div>
           </div>
           
@@ -276,7 +275,47 @@
              </div>
           </div>
 
-           <!-- Gallery Tab -->
+           <!-- Quote Tab -->
+          <div class="tab-pane fade" id="navs-quote" role="tabpanel">
+             <form action="{{ route('admin.landing.settings.update') }}" method="POST" enctype="multipart/form-data">
+              @csrf
+              <div class="row">
+                  <div class="col-12 mb-3">
+                      <h5 class="fw-semibold">Quote Section</h5>
+                      <p class="text-muted">Manage the inspirational quote section on the homepage</p>
+                      <hr>
+                  </div>
+                  
+                  <!-- Quote Text -->
+                  <div class="col-md-12 mb-3">
+                      <label class="form-label" for="quote_text">Quote Text</label>
+                      <textarea class="form-control" name="quote_text" id="quote_text" rows="4" placeholder="Enter the inspirational quote...">{{ $settings->where('key', 'quote_text')->first()->value ?? '' }}</textarea>
+                      <div class="form-text">The inspirational quote that will be displayed on the homepage</div>
+                  </div>
+                  
+                  <!-- Background Image -->
+                  <div class="col-md-12 mb-3">
+                      <label class="form-label" for="quote_background_image">Background Image (16:9 Ratio)</label>
+                      @php $quoteBg = $settings->where('key', 'quote_background_image')->first()->value ?? ''; @endphp
+                      @if($quoteBg)
+                         <div class="mb-2">
+                             <img src="{{ asset($quoteBg) }}" alt="Quote Background Preview" class="d-block rounded" style="max-height: 200px; width: auto;">
+                         </div>
+                      @endif
+                      <input type="file" class="form-control crop-image" name="quote_background_image" id="quote_background_image" accept="image/*" data-ratio="16/9">
+                      <div class="form-text">Upload a landscape image (16:9 ratio recommended). The image will be used as background for the quote section.</div>
+                  </div>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                <i class="ti tabler-check me-1"></i> Save Changes
+              </button>
+              <a href="{{ route('landing') }}#quote" target="_blank" class="btn btn-outline-secondary ms-2">
+                <i class="ti tabler-external-link me-1"></i> Preview on Homepage
+              </a>
+             </form>
+          </div>
+
+          <!-- Gallery Tab -->
           <div class="tab-pane fade" id="navs-gallery" role="tabpanel">
              <div class="card mb-3">
                 <div class="card-body">

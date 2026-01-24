@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class TripTypeSection extends Model
 {
-    use HasFactory;
+    use HasFactory, \Spatie\Translatable\HasTranslations;
+
+    public $translatable = ['title', 'subtitle', 'content_html', 'content_full'];
 
     protected $fillable = [
         'category',

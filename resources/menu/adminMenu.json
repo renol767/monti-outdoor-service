@@ -13,6 +13,12 @@
       "slug": "landing-customization"
     },
     {
+      "url": "admin/hero-slides",
+      "name": "Hero Slides",
+      "icon": "menu-icon icon-base ti tabler-slideshow",
+      "slug": "admin.hero-slides.index"
+    },
+    {
       "name": "Trip Management",
       "icon": "menu-icon icon-base ti tabler-map-2",
       "slug": "trip-management",

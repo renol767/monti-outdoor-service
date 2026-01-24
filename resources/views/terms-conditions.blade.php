@@ -26,6 +26,44 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
+    /* Fix Mobile Menu Background (dark like main page) */
+    .nav.mobile-open {
+      background: rgba(30, 30, 30, 0.95) !important;
+      backdrop-filter: blur(10px) !important;
+    }
+    
+    /* Fix Mobile Menu Text Color */
+    @media (max-width: 1023px) {
+      .nav.mobile-open .nav-link {
+        color: #fbcaa5 !important;
+      }
+      
+      .nav.mobile-open .dropdown-toggle {
+        color: #fbcaa5 !important;
+      }
+      
+      .nav.mobile-open .dropdown-menu {
+        background: rgba(21, 21, 21, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+        position: static !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        margin-top: 0.5rem !important;
+        box-shadow: none !important;
+      }
+      
+      .nav.mobile-open .dropdown-item {
+        color: #fbcaa5 !important;
+        padding: 0.75rem 1.5rem !important;
+      }
+      
+      .nav.mobile-open .dropdown-item:hover {
+        background: rgba(251, 202, 165, 0.15) !important;
+        color: #e97543 !important;
+      }
+    }
+
     /* Terms & Conditions Page Styles */
     .tc-hero {
       position: relative;
@@ -254,6 +292,29 @@
           <!-- Contact -->
           <a href="{{ route('landing') }}#contact" class="nav-link">Contact</a>
           
+          <!-- Language Switcher -->
+          <div class="dropdown">
+            <a href="#" class="custom-dropdown-toggle dropdown-toggle" style="display: flex; align-items: center; gap: 0.5rem;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+              <span>{{ strtoupper(app()->getLocale()) }}</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M4 6L8 10L12 6H4Z"/>
+              </svg>
+            </a>
+            <div class="dropdown-menu">
+              <a href="{{ route('lang.switch', 'id') }}" class="dropdown-item {{ app()->getLocale() == 'id' ? 'active' : '' }}">
+                🇮🇩 Indonesia
+              </a>
+              <a href="{{ route('lang.switch', 'en') }}" class="dropdown-item {{ app()->getLocale() == 'en' ? 'active' : '' }}">
+                🇬🇧 English
+              </a>
+            </div>
+          </div>
+          
           <a href="{{ route('login') }}" class="btn btn-primary">Book Now</a>
         </nav>
       </div>
@@ -264,9 +325,9 @@
   <section class="tc-hero">
     <div class="hero-bg"></div>
     <div class="hero-content container">
-      <span class="tc-badge">Legal</span>
-      <h1 class="tc-title">Syarat & Ketentuan</h1>
-      <p class="tc-subtitle">Mohon baca dengan seksama sebelum melakukan pemesanan trip</p>
+      <span class="tc-badge">{{ __('general.legal') }}</span>
+      <h1 class="tc-title">{{ __('general.terms_conditions_title') }}</h1>
+      <p class="tc-subtitle">{{ __('general.terms_conditions_subtitle') }}</p>
     </div>
   </section>
 
@@ -309,7 +370,7 @@
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
           </svg>
-          Kembali ke Open Trip
+          {{ __('general.back_to_open_trip') }}
         </a>
       </div>
     </div>
@@ -332,27 +393,16 @@
             <span>Monti Outdoor</span>
           </div>
           <p class="footer-description">{{ $settings['global_footer_text'] ?? 'Your trusted partner for outdoor adventures and mountain expeditions across Indonesia.' }}</p>
-          <div class="footer-social">
-            @if(isset($settings['social_facebook']))
-            <a href="{{ $settings['social_facebook'] }}" class="social-link" aria-label="Facebook" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          <div class="footer-social" style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <a href="https://www.instagram.com/monti.outdoorservice/" class="social-link" aria-label="Instagram" target="_blank" style="color: rgba(255,255,255,0.7);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </a>
-            @endif
-            @if(isset($settings['social_instagram']))
-            <a href="{{ $settings['social_instagram'] }}" class="social-link" aria-label="Instagram" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            <a href="https://www.tiktok.com/@monti.outdoor.service" class="social-link" aria-label="TikTok" target="_blank" style="color: rgba(255,255,255,0.7);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
             </a>
-            @endif
-            @if(isset($settings['social_twitter']))
-            <a href="{{ $settings['social_twitter'] }}" class="social-link" aria-label="Twitter" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+            <a href="https://www.youtube.com/@montioutdoorservice" class="social-link" aria-label="YouTube" target="_blank" style="color: rgba(255,255,255,0.7);">
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
             </a>
-            @endif
-            @if(isset($settings['social_tiktok']))
-            <a href="{{ $settings['social_tiktok'] }}" class="social-link" aria-label="TikTok" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-            </a>
-            @endif
           </div>
         </div>
 
@@ -370,7 +420,7 @@
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
             <li><a href="{{ route('open-trip') }}">Open Trip</a></li>
-            <li><a href="{{ route('mountain-trip') }}"></a></li>
+            <li><a href="{{ route('mountain-trip') }}">Mountain Trip</a></li>
             <li><a href="{{ route('outdoor-trip') }}">Outdoor Activity Trip</a></li>
             <li><a href="{{ route('indoor-trip') }}">Indoor Activity Trip</a></li>
           </ul>

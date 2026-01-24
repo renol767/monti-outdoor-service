@@ -43,6 +43,44 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
+    /* Fix Mobile Menu Background (dark like main page) */
+    .nav.mobile-open {
+      background: rgba(30, 30, 30, 0.95) !important;
+      backdrop-filter: blur(10px) !important;
+    }
+    
+    /* Fix Mobile Menu Text Color */
+    @media (max-width: 1023px) {
+      .nav.mobile-open .nav-link {
+        color: #fbcaa5 !important;
+      }
+      
+      .nav.mobile-open .dropdown-toggle {
+        color: #fbcaa5 !important;
+      }
+      
+      .nav.mobile-open .dropdown-menu {
+        background: rgba(21, 21, 21, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+        position: static !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        margin-top: 0.5rem !important;
+        box-shadow: none !important;
+      }
+      
+      .nav.mobile-open .dropdown-item {
+        color: #fbcaa5 !important;
+        padding: 0.75rem 1.5rem !important;
+      }
+      
+      .nav.mobile-open .dropdown-item:hover {
+        background: rgba(251, 202, 165, 0.15) !important;
+        color: #e97543 !important;
+      }
+    }
+
     /* Open Trip Page Specific Styles */
     .open-trip-hero {
       position: relative;
@@ -458,21 +496,7 @@
       margin: 0;
     }
 
-    .open-trip-card .card-rating {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.9);
-    }
 
-    .open-trip-card .card-rating svg {
-      width: 16px;
-      height: 16px;
-      fill: #fbbf24;
-      color: #fbbf24;
-    }
 
     .open-trip-card .card-duration {
       font-size: 0.8rem;
@@ -963,6 +987,29 @@
           <!-- Contact -->
           <a href="{{ route('landing') }}#contact" class="nav-link">Contact</a>
           
+          <!-- Language Switcher -->
+          <div class="dropdown">
+            <a href="#" class="custom-dropdown-toggle dropdown-toggle" style="display: flex; align-items: center; gap: 0.5rem;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+              <span>{{ strtoupper(app()->getLocale()) }}</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M4 6L8 10L12 6H4Z"/>
+              </svg>
+            </a>
+            <div class="dropdown-menu">
+              <a href="{{ route('lang.switch', 'id') }}" class="dropdown-item {{ app()->getLocale() == 'id' ? 'active' : '' }}">
+                🇮🇩 Indonesia
+              </a>
+              <a href="{{ route('lang.switch', 'en') }}" class="dropdown-item {{ app()->getLocale() == 'en' ? 'active' : '' }}">
+                🇬🇧 English
+              </a>
+            </div>
+          </div>
+          
           <a href="{{ route('login') }}" class="btn btn-primary">Book Now</a>
         </nav>
       </div>
@@ -977,7 +1024,7 @@
     </div>
     <div class="hero-content container">
       <span class="open-trip-badge">Open Trip</span>
-      <p class="hero-tagline">Menjelajah ke tempat baru, bersama teman baru...<br>Dengan servis yang mewah, aman dan nyaman..</p>
+      <p class="hero-tagline">{!! __('content.hero.open_trip.tagline') !!}</p>
     </div>
   </section>
 
@@ -985,42 +1032,41 @@
   <!-- Open Trip Description Section with Kategori -->
   <section class="open-trip-description">
     <div class="container">
-      <h2 class="section-title">OPEN TRIP</h2>
+      <h2 class="section-title">{{ __('content.hero.open_trip.title') }}</h2>
       <div class="description-text">
-        <p>Trip perjalanan yang diselenggarakan dengan pelaksanaan waktu, layanan dan harga yang sudah ditetapkan.</p>
-        <p>OPEN TRIP MONTI Outdoor Service menjunjung tinggi standar keamanan dan kenyamanan dengan tetap mengedepankan servis yang mewah dan terjangkau.<br>
-        Di OPEN TRIP ini lah teman-teman semua akan mendapatkan teman baru dan akan mengetahui bagaimana seharusnya trip perjalanan dan pendakian dilaksanakan dengan cara yang benar.</p>
+        <p>{{ __('content.hero.open_trip.description_1') }}</p>
+        <p>{!! __('content.hero.open_trip.description_2') !!}</p>
       </div>
       
       <!-- Kategori Tabs inside Open Trip Section -->
       <div class="kategori-wrapper">
-        <h3 class="kategori-title">KATEGORI TRIP</h3>
+        <h3 class="kategori-title">{{ strtoupper(__('trip.trip_category')) }}</h3>
         <div class="kategori-tabs-wrapper">
           <button class="kategori-tab active" data-kategori="all">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
               <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
             </svg>
-            <span>All Trips</span>
+            <span>{{ __('trip.all_categories') }}</span>
           </button>
           <button class="kategori-tab" data-kategori="mountain">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M8 21l4-11 4 11"/><path d="M12 10l4-9 4 9"/>
             </svg>
-            <span>Mountain Trip</span>
+            <span>{{ __('trip.mountain') }}</span>
           </button>
           <button class="kategori-tab" data-kategori="island">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 17l2-4 3 2 4-6 4 6 3-2 2 4H3z"/><circle cx="12" cy="5" r="2"/>
             </svg>
-            <span>Island Trip</span>
+            <span>{{ __('trip.outdoor') }}</span>
           </button>
           <button class="kategori-tab" data-kategori="city">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 21h18M5 21V7l8-4v18M13 21V9l6 2v10"/>
               <path d="M9 9h1M9 13h1M9 17h1M17 13h1M17 17h1"/>
             </svg>
-            <span>City Tour</span>
+            <span>{{ __('trip.indoor') }}</span>
           </button>
           <button class="kategori-tab" data-kategori="oneday">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1040,12 +1086,12 @@
 
       <!-- Sort Section - Moved here -->
       <div class="sort-section">
-        <span class="results-count" id="resultsCount">{{ $trips->count() }} trips found</span>
+        <span class="results-count" id="resultsCount">{{ $trips->count() }} {{ __('trip.trips_found') }}</span>
         <div class="sort-dropdown">
           <select id="sortSelect">
-            <option value="newest">Terbaru</option>
-            <option value="price-low">Harga Terendah</option>
-            <option value="price-high">Harga Tertinggi</option>
+            <option value="newest">{{ __('general.sort_newest') }}</option>
+            <option value="price-low">{{ __('general.sort_price_low_high') }}</option>
+            <option value="price-high">{{ __('general.sort_price_high_low') }}</option>
           </select>
         </div>
       </div>
@@ -1080,12 +1126,7 @@
           <div class="card-content">
             <div class="card-header">
               <h3 class="card-title">{{ $trip->title }}</h3>
-              <div class="card-rating">
-                <svg viewBox="0 0 24 24">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                </svg>
-                <span>4.8</span>
-              </div>
+
             </div>
             <p class="card-duration">{{ $trip->duration }}</p>
             
@@ -1169,7 +1210,7 @@
             <div class="card-price">
               <span class="price-from">From</span>
               <span class="price-current">{{ $trip->price }}</span>
-              <span class="price-unit">/ person</span>
+              <span class="price-unit">/ pax</span>
             </div>
           </div>
         </div>
@@ -1220,7 +1261,7 @@
         
         <!-- End of List Message -->
         <div class="end-of-list" id="endOfList" style="display: none;">
-          You've seen all available trips 🏔️
+          {{ __('general.all_trips_shown') }} 🏔️
         </div>
       </div>
     </section>
@@ -1229,9 +1270,9 @@
   <!-- Terms & Conditions Notice Section -->
   <section style="background: linear-gradient(135deg, #1e1e1e 0%, #151515 100%); padding: 3rem 0;">
     <div class="container" style="text-align: center;">
-      <h3 style="color: #fff; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem;">Syarat & Ketentuan</h3>
+      <h3 style="color: #fff; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem;">{{ __('general.terms_conditions_title') }}</h3>
       <p style="color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-        Sebelum melakukan booking, pastikan Anda telah membaca dan memahami syarat & ketentuan yang berlaku untuk semua trip kami.
+        {{ __('general.terms_conditions_desc') }}
       </p>
       <a href="{{ route('terms-conditions') }}" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--color-primary); color: #fff; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1241,7 +1282,7 @@
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
         </svg>
-        Baca Syarat & Ketentuan
+        {{ __('general.read_terms_conditions') }}
       </a>
     </div>
   </section>
@@ -1263,6 +1304,17 @@
             <span>Monti Outdoor</span>
           </div>
           <p class="footer-description">{{ $settings['global_footer_text'] ?? 'Your trusted partner for outdoor adventures and mountain expeditions across Indonesia.' }}</p>
+          <div class="footer-social" style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <a href="https://www.instagram.com/monti.outdoorservice/" class="social-link" aria-label="Instagram" target="_blank" style="color: rgba(255,255,255,0.7);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </a>
+            <a href="https://www.tiktok.com/@monti.outdoor.service" class="social-link" aria-label="TikTok" target="_blank" style="color: rgba(255,255,255,0.7);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+            </a>
+            <a href="https://www.youtube.com/@montioutdoorservice" class="social-link" aria-label="YouTube" target="_blank" style="color: rgba(255,255,255,0.7);">
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+            </a>
+          </div>
         </div>
 
         <div class="footer-col">

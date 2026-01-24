@@ -9,7 +9,7 @@ use App\Models\LandingFeature;
 use App\Models\LandingTrip;
 use App\Models\LandingService;
 use App\Models\LandingGallery;
-
+use App\Models\TripTemplate;
 
 class LandingPageController extends Controller
 {
@@ -17,12 +17,14 @@ class LandingPageController extends Controller
     {
         $settings = LandingSetting::all()->keyBy('key');
         $features = LandingFeature::orderBy('order')->get();
-        $trips = LandingTrip::orderBy('order')->get();
+        // $trips = LandingTrip::orderBy('order')->get(); // Old logic, can still keep for reference if needed or remove
+        $trips = LandingTrip::orderBy('order')->get(); // Keeping it for now as view expects it, but we are moving to TripTemplate
         $services = LandingService::orderBy('order')->get();
         $gallery = LandingGallery::orderBy('order')->get();
 
+        $openTrips = TripTemplate::all();
 
-        return view('admin.landing.index', compact('settings', 'features', 'trips', 'services', 'gallery'));
+        return view('admin.landing.index', compact('settings', 'features', 'trips', 'services', 'gallery', 'openTrips'));
     }
 
     public function updateSettings(Request $request)
@@ -142,9 +144,29 @@ class LandingPageController extends Controller
         return redirect()->back()->with('success', 'Settings updated successfully.');
     }
 
-    // Additional methods for lists (Trips, Services) can be added here or strictly handled via Resource Controllers.
-    // For now, I will assume the view might link to separate CRUD pages or modals.
-    // Given the constraints and time, I will just provide the index which passes data to the view.
-    // I will implement simple Delete/Update methods if needed later or if user asks detailed CRUD.
-    // But the request "make dynamic" means primarily "displaying from DB". Editing is implied.
+    public function updatePopularTrips(Request $request)
+    {
+        $selectedIds = $request->input('popular_trips', []);
+        $orders = $request->input('popular_orders', []);
+
+        if (count($selectedIds) > 6) {
+            return back()->with('error', 'You can only select up to 6 popular trips.');
+        }
+
+        // Reset all trips popular status
+        TripTemplate::query()->update(['is_popular' => false, 'popular_order' => null]);
+
+        // Update selected trips
+        if (!empty($selectedIds)) {
+            foreach ($selectedIds as $id) {
+                $order = isset($orders[$id]) ? (int)$orders[$id] : 0;
+                TripTemplate::where('id', $id)->update([
+                    'is_popular' => true,
+                    'popular_order' => $order
+                ]);
+            }
+        }
+
+        return back()->with('success', 'Popular trips updated successfully.');
+    }
 }

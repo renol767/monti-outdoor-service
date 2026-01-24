@@ -14,13 +14,27 @@
             @csrf
             
             <div class="mb-3">
-              <label class="form-label" for="title">Title</label>
-              <input type="text" class="form-control" id="title" name="title" required />
+              <label class="form-label">Title</label>
+              <div class="input-group mb-2">
+                <span class="input-group-text">ID</span>
+                <input type="text" class="form-control" name="title[id]" placeholder="Indonesia" required />
+              </div>
+              <div class="input-group">
+                <span class="input-group-text">EN</span>
+                <input type="text" class="form-control" name="title[en]" placeholder="English" />
+              </div>
             </div>
             
             <div class="mb-3">
-              <label class="form-label" for="description">Description</label>
-              <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+              <label class="form-label">Description</label>
+              <div class="input-group mb-2">
+                <span class="input-group-text">ID</span>
+                <textarea class="form-control" name="description[id]" rows="3" placeholder="Indonesia" required></textarea>
+              </div>
+              <div class="input-group">
+                <span class="input-group-text">EN</span>
+                <textarea class="form-control" name="description[en]" rows="3" placeholder="English"></textarea>
+              </div>
             </div>
 
             <div class="mb-3">

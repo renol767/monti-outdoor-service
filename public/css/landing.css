@@ -124,7 +124,7 @@ button {
 
 /* Container */
 .container {
-  max-width: var(--container-max-width);
+  max-width: 1400px; /* Increased from 1280px to accommodate navbar items */
   margin: 0 auto;
   padding: 0 1rem;
 }

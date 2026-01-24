@@ -43,6 +43,44 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
+    /* Fix Mobile Menu Background (dark like main page) */
+    .nav.mobile-open {
+      background: rgba(30, 30, 30, 0.95) !important;
+      backdrop-filter: blur(10px) !important;
+    }
+    
+    /* Fix Mobile Menu Text Color */
+    @media (max-width: 1023px) {
+      .nav.mobile-open .nav-link {
+        color: #fbcaa5 !important;
+      }
+      
+      .nav.mobile-open .dropdown-toggle {
+        color: #fbcaa5 !important;
+      }
+      
+      .nav.mobile-open .dropdown-menu {
+        background: rgba(21, 21, 21, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+        position: static !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        margin-top: 0.5rem !important;
+        box-shadow: none !important;
+      }
+      
+      .nav.mobile-open .dropdown-item {
+        color: #fbcaa5 !important;
+        padding: 0.75rem 1.5rem !important;
+      }
+      
+      .nav.mobile-open .dropdown-item:hover {
+        background: rgba(251, 202, 165, 0.15) !important;
+        color: #e97543 !important;
+      }
+    }
+
     /* About Hero */
     .about-hero {
       position: relative;
@@ -66,7 +104,7 @@
     .about-hero .hero-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(30, 30, 30, 0.85), rgba(21, 21, 21, 0.75));
+      background: transparent;
     }
     .about-hero .hero-content {
       position: relative;
@@ -516,6 +554,29 @@
           <!-- Contact -->
           <a href="{{ route('landing') }}#contact" class="nav-link">Contact</a>
           
+          <!-- Language Switcher -->
+          <div class="dropdown">
+            <a href="#" class="custom-dropdown-toggle dropdown-toggle" style="display: flex; align-items: center; gap: 0.5rem;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+              <span>{{ strtoupper(app()->getLocale()) }}</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M4 6L8 10L12 6H4Z"/>
+              </svg>
+            </a>
+            <div class="dropdown-menu">
+              <a href="{{ route('lang.switch', 'id') }}" class="dropdown-item {{ app()->getLocale() == 'id' ? 'active' : '' }}">
+                🇮🇩 Indonesia
+              </a>
+              <a href="{{ route('lang.switch', 'en') }}" class="dropdown-item {{ app()->getLocale() == 'en' ? 'active' : '' }}">
+                🇬🇧 English
+              </a>
+            </div>
+          </div>
+          
           <a href="{{ route('login') }}" class="btn btn-primary">Book Now</a>
         </nav>
       </div>
@@ -529,11 +590,10 @@
       <div class="hero-overlay"></div>
     </div>
     <div class="hero-content container">
-      <span class="about-badge">Tentang Kami</span>
-      <h1 class="about-title">MONTI Outdoor Service</h1>
+      <span class="about-badge">{{ __('about.hero.badge') }}</span>
+      <h1 class="about-title">{{ __('about.hero.title') }}</h1>
       <p class="about-subtitle">
-        Bagi Kami, ALAM adalah lebih dari sekedar profesi, GUNUNG adalah rumah, 
-        serta kehangatan antara Anda dan Kami untuk menikmati waktu bersama adalah anugrah...
+        {{ __('about.hero.subtitle') }}
       </p>
     </div>
   </section>
@@ -541,23 +601,16 @@
   <!-- Salam Kenal Section -->
   <section class="salam-section">
     <div class="container">
-      <h2 class="salam-title">Salam Kenal..!!</h2>
+      <h2 class="salam-title">{{ __('about.intro.title') }}</h2>
       <div class="salam-content">
         <p>
-          <strong>Inilah Kami, MONTI Outdoor Service... Partner yang akan membawa petualangan dan perjalanan Anda 
-          menjadi seru, menyenangkan dan berkesan...</strong>
+          <strong>{{ __('about.intro.p1') }}</strong>
         </p>
         <p>
-          <strong>MONTI Outdoor Service dibentuk oleh sekelompok anak muda yang syarat akan pengalaman serta 
-          memiliki jiwa petualang dan solidaritas yang luar biasa. Didirikan sejak Maret 2022 dengan 
-          manajemen yang simpel dan professional, MONTI Outdoor Service dapat menjadi andalan Anda dalam 
-          mengelola semua perjalanan dan petualangan yang aman, nyaman dan terjangkau.</strong>
+          <strong>{{ __('about.intro.p2') }}</strong>
         </p>
         <p>
-          <strong>Dengan mengedepankan kepercayaan dan kekeluargaan, MONTI Outdoor Service memberikan servis 
-          yang mewah dan eksklusif yang dapat disesuaikan dengan kemampuan dan kondisi Anda. 
-          Kami akan memberikan kepada Anda bagaimana rasanya berdiri di puncak gunung tertinggi dan 
-          membawa Anda kembali turun dengan aman.</strong>
+          <strong>{{ __('about.intro.p3') }}</strong>
         </p>
       </div>
     </div>
@@ -575,10 +628,7 @@
         <!-- Quote text at top - full width -->
         <div class="quote-content">
           <p class="quote-text">
-            <span class="highlight">ALAM</span> seharusnya dapat dinikmati oleh siapapun, namun dengan berbagai 
-            keterbatasan akhirnya membuat tidak semua orang bisa mendapatkannya. 
-            <span class="highlight">Tetapi Kami,</span>.. akan memastikan siapapun dapat menikmati nya dengan cara 
-            <span class="highlight">yang simpel dan elegan...</span>
+            {!! __('about.quote.text') !!}
           </p>
         </div>
         
@@ -588,7 +638,7 @@
             <div class="company-left">
               <img src="{{ asset($settings['global_logo'] ?? 'images/logo/Untitled-4.png') }}" alt="MONTI Logo" class="company-logo">
               <h3 class="company-name">PT. MONTI MENJELAJAH NEGERI</h3>
-              <p class="company-subtitle">Anak Perusahaan dari</p>
+              <p class="company-subtitle">{{ __('about.company.subtitle') }}</p>
               <img src="{{ asset('images/about-us/logo-mms.png') }}" alt="MMS" class="mms-logo-img">
               <p class="mms-name">PT. MONTI MEMBANGUN SINERGI</p>
               
@@ -604,17 +654,14 @@
             
             <div class="company-right">
               <p>
-                <strong>MONTI</strong> Outdoor Service berjalan dibawah naungan PT MONTI MENJELAJAH NEGERI, 
-                yang merupakan anak perusahaan dari MONTI Group PT MONTI MEMBANGUN SINERGI 
-                ( PT MMS ). MONTI Outdoor Service bersama dengan PT MMS berkantor di Jakarta 
-                Selatan dan menjalani berbagai usaha yang "anak muda banget", diantara nya :
+                {!! __('about.company.description') !!}
               </p>
               <ul class="company-list">
-                <li>Usaha Cafe dan F & B - MONTI Kopi <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/montikopi.id" target="_blank">@montikopi.id</a> )</span></li>
-                <li>Usaha Studio Pemotretan dan Fotografi - MONTI Studio <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/montistudio.id" target="_blank">@montistudio.id</a> )</span></li>
-                <li>Usaha Wedding Organizer - MONTI Wedding <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/montiwedding" target="_blank">@montiwedding</a> )</span></li>
-                <li>Usaha Akomodasi dan Penginapan - MONTI Homestay <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/monti.homestay" target="_blank">@monti.homestay</a> )</span></li>
-                <li>Serta Usaha Trip & Travel Organizer - MONTI Outdoor Service <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/monti.outdoorservice" target="_blank">@monti.outdoorservice</a> )</span></li>
+                <li>{{ __('about.company.services.coffee') }} <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/montikopi.id" target="_blank">@montikopi.id</a> )</span></li>
+                <li>{{ __('about.company.services.studio') }} <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/montistudio.id" target="_blank">@montistudio.id</a> )</span></li>
+                <li>{{ __('about.company.services.wedding') }} <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/montiwedding" target="_blank">@montiwedding</a> )</span></li>
+                <li>{{ __('about.company.services.homestay') }} <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/monti.homestay" target="_blank">@monti.homestay</a> )</span></li>
+                <li>{{ __('about.company.services.trip') }} <span style="white-space: nowrap;">( IG: <a href="https://instagram.com/monti.outdoorservice" target="_blank">@monti.outdoorservice</a> )</span></li>
               </ul>
             </div>
           </div>
@@ -630,11 +677,9 @@
     </div>
     <div class="container">
       <div class="team-header">
-        <h2 class="team-title">TIM Kami</h2>
+        <h2 class="team-title">{{ __('about.team.title') }}</h2>
         <p class="team-intro">
-          Dengan pengalaman yang sudah tidak diragukan lagi, Tim MONTI Outdoor Service tidak hanya akan 
-          menjadi pengelola dan pemandu yang professional, tetapi juga menjelma menjadi teman sekaligus 
-          keluarga yang menyenangkan, ceria dan penuh akan kehangatan.
+          {{ __('about.team.intro') }}
         </p>
       </div>
 
@@ -652,7 +697,7 @@
           </div>
           <div class="team-info">
             <h4>PRABOWO TRIPURYANTO</h4>
-            <p><strong><span class="role-primary">Owner PT MONTI MEMBANGUN SINERGI</span></strong></p>
+            <p><strong><span class="role-primary">{{ __('about.team.owner_role') }}</span></strong></p>
             <p><strong>Agrobussines</strong></p>
             <p><strong>Mountain Guide</strong></p>
           </div>
@@ -773,27 +818,16 @@
             <span>Monti Outdoor</span>
           </div>
           <p class="footer-description">{{ $settings['global_footer_text'] ?? 'Your trusted partner for outdoor adventures and mountain expeditions across Indonesia.' }}</p>
-          <div class="footer-social">
-            @if(isset($settings['social_facebook']))
-            <a href="{{ $settings['social_facebook'] }}" class="social-link" aria-label="Facebook" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          <div class="footer-social" style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <a href="https://www.instagram.com/monti.outdoorservice/" class="social-link" aria-label="Instagram" target="_blank" style="color: rgba(255,255,255,0.7);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </a>
-            @endif
-            @if(isset($settings['social_instagram']))
-            <a href="{{ $settings['social_instagram'] }}" class="social-link" aria-label="Instagram" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            <a href="https://www.tiktok.com/@monti.outdoor.service" class="social-link" aria-label="TikTok" target="_blank" style="color: rgba(255,255,255,0.7);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
             </a>
-            @endif
-            @if(isset($settings['social_twitter']))
-            <a href="{{ $settings['social_twitter'] }}" class="social-link" aria-label="Twitter" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+            <a href="https://www.youtube.com/@montioutdoorservice" class="social-link" aria-label="YouTube" target="_blank" style="color: rgba(255,255,255,0.7);">
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
             </a>
-            @endif
-            @if(isset($settings['social_tiktok']))
-            <a href="{{ $settings['social_tiktok'] }}" class="social-link" aria-label="TikTok" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-            </a>
-            @endif
           </div>
         </div>
 

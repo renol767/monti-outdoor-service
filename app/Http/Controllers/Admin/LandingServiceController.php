@@ -21,16 +21,24 @@ class LandingServiceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'title' => 'required|array',
+            'title.id' => 'required|string|max:255',
+            'description' => 'required|array',
+            'description.id' => 'required|string',
             'icon' => 'required|string', // SVG code or class
-            'features' => 'nullable|string', // Features as new-line separated string
+            'features' => 'nullable|array', // Features as array of locale strings
         ]);
 
         $data = $request->all();
-        // features input will be a string, we need to explode it to array for JSON casting
-        if ($request->has('features')) {
-            $data['features'] = array_filter(array_map('trim', explode("\n", $request->features)));
+        // features input will be an array ['id' => "A\nB", 'en' => "C\nD"], need to explode each
+        if ($request->has('features') && is_array($request->features)) {
+            $formattedFeatures = [];
+            foreach ($request->features as $locale => $content) {
+                if ($content) {
+                    $formattedFeatures[$locale] = array_values(array_filter(array_map('trim', explode("\n", $content))));
+                }
+            }
+            $data['features'] = $formattedFeatures;
         }
 
         LandingService::create($data);
@@ -46,15 +54,23 @@ class LandingServiceController extends Controller
     public function update(Request $request, LandingService $service)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'title' => 'required|array',
+            'title.id' => 'required|string|max:255',
+            'description' => 'required|array',
+            'description.id' => 'required|string',
             'icon' => 'required|string',
-            'features' => 'nullable|string',
+            'features' => 'nullable|array',
         ]);
 
         $data = $request->all();
-        if ($request->has('features')) {
-            $data['features'] = array_filter(array_map('trim', explode("\n", $request->features)));
+        if ($request->has('features') && is_array($request->features)) {
+            $formattedFeatures = [];
+            foreach ($request->features as $locale => $content) {
+                if ($content) {
+                    $formattedFeatures[$locale] = array_values(array_filter(array_map('trim', explode("\n", $content))));
+                }
+            }
+            $data['features'] = $formattedFeatures;
         }
 
         $service->update($data);

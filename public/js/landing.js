@@ -324,6 +324,46 @@ function animateCounter(element, target, duration) {
   }, 16);
 }
 
+// Hero Swiper Slider Initialization
+if (typeof Swiper !== 'undefined') {
+  // Check how many slides exist
+  const slideCount = document.querySelectorAll('.heroSwiper .swiper-slide').length;
+  
+  const heroSwiper = new Swiper('.heroSwiper', {
+    loop: slideCount > 1, // Only enable loop if more than 1 slide
+    autoplay: slideCount > 1 ? {
+      delay: 5000,
+      disableOnInteraction: false,
+    } : false, // Disable autoplay if only 1 slide
+    effect: 'fade',
+    fadeEffect: {
+      crossFade: true
+    },
+    speed: 1000,
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+    // Hide navigation if only 1 slide
+    on: {
+      init: function() {
+        if (slideCount <= 1) {
+          const nextBtn = document.querySelector('.swiper-button-next');
+          const prevBtn = document.querySelector('.swiper-button-prev');
+          const pagination = document.querySelector('.swiper-pagination');
+          if (nextBtn) nextBtn.style.display = 'none';
+          if (prevBtn) prevBtn.style.display = 'none';
+          if (pagination) pagination.style.display = 'none';
+        }
+      }
+    }
+  });
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Monti Outdoor Service website loaded successfully!');

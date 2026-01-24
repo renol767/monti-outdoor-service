@@ -64,10 +64,217 @@
   </script>
 
   <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/hero-slider.css') }}">
   @vite(['resources/css/landing-ui-fixes.css'])
+  
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* Fix Mobile Menu Background (dark like main page) */
+    .nav.mobile-open {
+      background: rgba(30, 30, 30, 0.95) !important;
+      backdrop-filter: blur(10px) !important;
+    }
+    
+    /* Fix Mobile Menu Text Color */
+    @media (max-width: 1023px) {
+      .nav.mobile-open .nav-link {
+        color: #fbcaa5 !important;
+      }
+      
+      .nav.mobile-open .dropdown-toggle {
+        color: #fbcaa5 !important;
+      }
+      
+      .nav.mobile-open .dropdown-menu {
+        background: rgba(21, 21, 21, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+        position: static !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        margin-top: 0.5rem !important;
+        box-shadow: none !important;
+      }
+      
+      .nav.mobile-open .dropdown-item {
+        color: #fbcaa5 !important;
+        padding: 0.75rem 1.5rem !important;
+      }
+      
+      .nav.mobile-open .dropdown-item:hover {
+        background: rgba(251, 202, 165, 0.15) !important;
+        color: #e97543 !important;
+      }
+    }
+
+    /* Open Trip Card CSS (Copied from open-trip.blade.php) */
+    .open-trip-card {
+      background: #2a2a2a;
+      border-radius: var(--border-radius-xl);
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: var(--transition-normal);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .open-trip-card:hover {
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+      transform: translateY(-0.5rem);
+    }
+    .open-trip-card .card-image {
+      position: relative;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      border-radius: var(--border-radius-lg);
+      margin: 0.75rem 0.75rem 0;
+    }
+    .open-trip-card .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+      border-radius: var(--border-radius-lg);
+    }
+    .open-trip-card:hover .card-image img {
+      transform: scale(1.1);
+    }
+    .open-trip-card .favorite-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      border: none;
+    }
+    .open-trip-card .favorite-btn:hover {
+      background: var(--color-white);
+      transform: scale(1.1);
+    }
+    .open-trip-card .favorite-btn svg {
+      width: 20px;
+      height: 20px;
+      color: var(--color-slate-400);
+    }
+    .open-trip-card .card-content {
+      padding: 1rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .open-trip-card .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.25rem;
+    }
+    .open-trip-card .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fbcaa5;
+      margin: 0;
+    }
+    .open-trip-card .card-duration {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 0.75rem;
+    }
+    .open-trip-card .card-amenities {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .open-trip-card .amenity {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15rem;
+    }
+    .open-trip-card .amenity svg {
+      width: 16px;
+      height: 16px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .open-trip-card .amenity span {
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .open-trip-card .amenity-more {
+      font-size: 0.7rem; color: var(--color-primary); font-weight: 500;
+    }
+    .open-trip-card .card-features {
+      margin-bottom: 0.75rem;
+      padding-left: 0;
+      list-style: none;
+      flex-grow: 1;
+    }
+    .open-trip-card .card-features li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 0.2rem;
+    }
+    .open-trip-card .card-features li::before {
+      content: '•';
+      color: var(--color-primary);
+      font-weight: bold;
+    }
+    .open-trip-card .card-price {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+    .open-trip-card .price-current {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #fbcaa5;
+    }
+    .open-trip-card .price-unit {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+    }
+    .open-trip-card .price-from {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.5);
+    }
+    .open-trip-card .card-schedule {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .open-trip-card .schedule-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .open-trip-card .schedule-item svg {
+      width: 14px; height: 14px; color: var(--color-primary);
+    }
+  </style>
 </head>
 <body>
   <!-- Header -->
@@ -91,67 +298,90 @@
 
         <nav class="nav">
           <!-- About Us - direct link -->
-          <a href="{{ route('about-us') }}" class="nav-link">About Us</a>
+          <a href="{{ route('about-us') }}" class="nav-link">{{ __('navigation.about_us') }}</a>
 
           <!-- Open Trip - no submenu -->
-          <a href="{{ route('open-trip') }}" class="nav-link">Open Trip</a>
+          <a href="{{ route('open-trip') }}" class="nav-link">{{ __('navigation.open_trip') }}</a>
           
           <!-- Mountain Trip with submenu -->
           <div class="dropdown">
             <a href="{{ route('mountain-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
-              Mountain Trip
+              {{ __('navigation.mountain_trip') }}
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
             </a>
             <div class="dropdown-menu">
-              <a href="{{ route('open-trip') }}" class="dropdown-item">Open Trip</a>
-              <a href="{{ route('mountain-trip') }}#private-trip" class="dropdown-item">Private Trip</a>
-              <a href="{{ route('mountain-trip') }}#one-day-trip" class="dropdown-item">One Day Trip</a>
-              <a href="{{ route('mountain-trip') }}#expedition-trip" class="dropdown-item">Expedition Trip</a>
-              <a href="{{ route('mountain-trip') }}#international-trip" class="dropdown-item">International Trip</a>
-              <a href="{{ route('mountain-trip') }}#custom-trip" class="dropdown-item">Custom Trip</a>
+              <a href="{{ route('open-trip') }}" class="dropdown-item">{{ __('navigation.open_trip') }}</a>
+              <a href="{{ route('mountain-trip') }}#private-trip" class="dropdown-item">{{ __('navigation.private_trip') }}</a>
+              <a href="{{ route('mountain-trip') }}#one-day-trip" class="dropdown-item">{{ __('navigation.one_day_trip') }}</a>
+              <a href="{{ route('mountain-trip') }}#expedition-trip" class="dropdown-item">{{ __('navigation.expedition_trip') }}</a>
+              <a href="{{ route('mountain-trip') }}#international-trip" class="dropdown-item">{{ __('navigation.international_trip') }}</a>
+              <a href="{{ route('mountain-trip') }}#custom-trip" class="dropdown-item">{{ __('navigation.custom_trip') }}</a>
             </div>
           </div>
 
           <!-- Outdoor Activity Trip with submenu -->
           <div class="dropdown">
             <a href="{{ route('outdoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
-              Outdoor Activity Trip
+              {{ __('navigation.outdoor_activity_trip') }}
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
             </a>
             <div class="dropdown-menu">
-              <a href="{{ route('outdoor-trip') }}#cultural-trip" class="dropdown-item">Cultural Trip</a>
-              <a href="{{ route('outdoor-trip') }}#one-day-outdoor-trip" class="dropdown-item">One Day Trip</a>
-              <a href="{{ route('outdoor-trip') }}#island-trip" class="dropdown-item">Island Trip</a>
-              <a href="{{ route('outdoor-trip') }}#camping-trip" class="dropdown-item">Camping</a>
-              <a href="{{ route('outdoor-trip') }}#outdoor-team-building" class="dropdown-item">Outdoor Team Building</a>
-              <a href="{{ route('outdoor-trip') }}#outdoor-custom-trip" class="dropdown-item">Outdoor Custom Trip</a>
+              <a href="{{ route('outdoor-trip') }}#cultural-trip" class="dropdown-item">{{ __('navigation.cultural_trip') }}</a>
+              <a href="{{ route('outdoor-trip') }}#one-day-outdoor-trip" class="dropdown-item">{{ __('navigation.one_day_trip') }}</a>
+              <a href="{{ route('outdoor-trip') }}#island-trip" class="dropdown-item">{{ __('navigation.island_trip') }}</a>
+              <a href="{{ route('outdoor-trip') }}#camping-trip" class="dropdown-item">{{ __('navigation.camping') }}</a>
+              <a href="{{ route('outdoor-trip') }}#outdoor-team-building" class="dropdown-item">{{ __('navigation.outdoor_team_building') }}</a>
+              <a href="{{ route('outdoor-trip') }}#outdoor-custom-trip" class="dropdown-item">{{ __('navigation.outdoor_custom_trip') }}</a>
             </div>
           </div>
 
           <!-- Indoor Activity Trip with submenu -->
           <div class="dropdown">
             <a href="{{ route('indoor-trip') }}" class="custom-dropdown-toggle dropdown-toggle">
-              Indoor Activity Trip
+              {{ __('navigation.indoor_activity_trip') }}
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6L8 10L12 6H4Z"/>
               </svg>
             </a>
             <div class="dropdown-menu">
-              <a href="{{ route('indoor-trip') }}#city-tour" class="dropdown-item">City Tour</a>
-              <a href="{{ route('indoor-trip') }}#company-gathering" class="dropdown-item">Company Gathering</a>
-              <a href="{{ route('indoor-trip') }}#outing-tour-travel" class="dropdown-item">Outing, Tour & Travel</a>
-              <a href="{{ route('indoor-trip') }}#mice-organizer" class="dropdown-item">MICE Organizer</a>
-              <a href="{{ route('indoor-trip') }}#indoor-team-building" class="dropdown-item">Indoor Team Building</a>
-              <a href="{{ route('indoor-trip') }}#indoor-custom-trip" class="dropdown-item">Indoor Custom Trip</a>
+              <a href="{{ route('indoor-trip') }}#city-tour" class="dropdown-item">{{ __('navigation.city_tour') }}</a>
+              <a href="{{ route('indoor-trip') }}#company-gathering" class="dropdown-item">{{ __('navigation.company_gathering') }}</a>
+              <a href="{{ route('indoor-trip') }}#outing-tour-travel" class="dropdown-item">{{ __('navigation.outing_tour_travel') }}</a>
+              <a href="{{ route('indoor-trip') }}#mice-organizer" class="dropdown-item">{{ __('navigation.mice_organizer') }}</a>
+              <a href="{{ route('indoor-trip') }}#indoor-team-building" class="dropdown-item">{{ __('navigation.indoor_team_building') }}</a>
+              <a href="{{ route('indoor-trip') }}#indoor-custom-trip" class="dropdown-item">{{ __('navigation.indoor_custom_trip') }}</a>
             </div>
           </div>
 
           <!-- Contact -->
-          <a href="#contact" class="nav-link">Contact</a>
+          <a href="#contact" class="nav-link">{{ __('navigation.contact') }}</a>
+          
+          <!-- Language Switcher -->
+          <div class="dropdown">
+            <a href="#" class="custom-dropdown-toggle dropdown-toggle" style="display: flex; align-items: center; gap: 0.5rem;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+              <span>{{ strtoupper(app()->getLocale()) }}</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M4 6L8 10L12 6H4Z"/>
+              </svg>
+            </a>
+            <div class="dropdown-menu">
+              <a href="{{ route('lang.switch', 'id') }}" class="dropdown-item {{ app()->getLocale() == 'id' ? 'active' : '' }}">
+                🇮🇩 Indonesia
+              </a>
+              <a href="{{ route('lang.switch', 'en') }}" class="dropdown-item {{ app()->getLocale() == 'en' ? 'active' : '' }}">
+                🇬🇧 English
+              </a>
+            </div>
+          </div>
           
           <a href="{{ route('login') }}" class="btn btn-primary">Book Now</a>
         </nav>
@@ -159,27 +389,58 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section id="home" class="hero">
+  <!-- Hero Section with Slider -->
+  <section id="home" class="hero hero-slider">
+    @if($heroSlides->count() > 0)
+    <div class="swiper heroSwiper">
+      <div class="swiper-wrapper">
+        @foreach($heroSlides as $slide)
+        <div class="swiper-slide">
+          <div class="hero-bg">
+            <img src="{{ asset($slide->background_image) }}" width="1080" alt="{{ $slide->title }}">
+            <div class="hero-overlay"></div>
+          </div>
+
+          <div class="hero-content container">
+            <div class="hero-badge fade-in">{{ $slide->badge_text }}</div>
+            <h1 class="hero-title fade-in">{{ $slide->title }}</h1>
+            <p class="hero-subtitle fade-in">{{ $slide->subtitle }}</p>
+            <div class="hero-cta fade-in">
+              <a href="#trips" class="btn btn-primary">{{ __('landing.start_adventure') }}</a>
+              <a href="#contact" class="btn btn-secondary">{{ __('general.contact_us') }}</a>
+            </div>
+          </div>
+        </div>
+        @endforeach
+      </div>
+      
+      <!-- Navigation Buttons -->
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+      
+      <!-- Pagination -->
+      <div class="swiper-pagination"></div>
+    </div>
+    @else
+    <!-- Fallback if no active slides -->
     <div class="hero-bg">
-      <!-- <img src="https://images.unsplash.com/photo-1680246638284-0a34ea41cc76?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb3VudGFpbiUyMGNhbXBpbmclMjBzdW5zZXQlMjB0cmVra2luZ3xlbnwxfHx8fDE3NjUxMjM3MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080" alt="Mountain camping"> -->
-      <!-- <img src="https://images.unsplash.com/photo-1680246638284-0a34ea41cc76?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb3VudGFpbiUyMGNhbXBpbmclMjBzdW5zZXQlMjB0cmVkkkingfHwxfHx8fDE3NjUxMjM3MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080" alt="Mountain camping"> -->
-      <img src="{{ asset($settings['hero_bg_image'] ?? 'images/Annapurna Basecamp.jpg') }}" width="1080" alt="Mountain camping" data-preview-key="hero_bg_image">
+      <img src="{{ asset('images/Annapurna Basecamp.jpg') }}" width="1080" alt="Mountain camping">
       <div class="hero-overlay"></div>
     </div>
-
     <div class="hero-content container">
-      <div class="hero-badge fade-in" data-preview-key="hero_badge">{{ $settings['hero_badge'] ?? 'Your Adventure Starts Here' }}</div>
-        <h1 class="hero-title fade-in" data-preview-key="hero_title">{{ $settings['hero_title'] ?? 'Discover the Unseen Beauty of Indonesia' }}</h1>
-        <p class="hero-subtitle fade-in" data-preview-key="hero_subtitle">{{ $settings['hero_subtitle'] ?? 'Expert-guided mountain expeditions and outdoor adventures tailored for every explorer.' }}</p>
-        <div class="hero-cta fade-in">
-          <a href="#trips" class="btn btn-primary">Start Your Journey</a>
-          <a href="#contact" class="btn btn-secondary">Contact Us</a>
-        </div>
-      <div class="scroll-indicator">
-        <div class="scroll-mouse">
-          <div class="scroll-wheel"></div>
-        </div>
+      <div class="hero-badge fade-in">Petualangan Anda Dimulai Di Sini</div>
+      <h1 class="hero-title fade-in">Jelajahi Alam. Temukan Petualangan.</h1>
+      <p class="hero-subtitle fade-in">Mountain Trip · Outdoor Adventure · Team Building · Custom Tour</p>
+      <div class="hero-cta fade-in">
+        <a href="#trips" class="btn btn-primary">{{ __('landing.start_adventure') }}</a>
+        <a href="#contact" class="btn btn-secondary">{{ __('general.contact_us') }}</a>
+      </div>
+    </div>
+    @endif
+    
+    <div class="scroll-indicator">
+      <div class="scroll-mouse">
+        <div class="scroll-wheel"></div>
       </div>
     </div>
   </section>
@@ -215,58 +476,102 @@
       </div>
 
       <div class="trips-grid">
+        @php
+            $iconMap = [
+              'crew' => ['path' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z', 'label' => 'Crew'],
+              'porters' => ['path' => 'M4 20V14M4 14V4C4 4 5 3 8 3S12 4 12 4V14M4 14H12M12 14V20', 'label' => 'Porters'],
+              'transport' => ['path' => 'M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 6h18v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6z', 'label' => 'Transport'],
+              'meals' => ['path' => 'M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7', 'label' => 'Meals'],
+              'campsite' => ['path' => 'M12 2L2 22h20L12 2zM12 18h.01', 'label' => 'Campsite'],
+              'insurance' => ['path' => 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', 'label' => 'Insurance'],
+              'first_aid' => ['path' => 'M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM12 8v8M8 12h8', 'label' => 'P3K'],
+              'snacks' => ['path' => 'M18 8h1a4 4 0 0 1 0 8h-1M5 8h12v10a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8z', 'label' => 'Snack'],
+              'souvenir' => ['path' => 'M20 12v10H4V12M2 7h20v5H2zM12 22V7', 'label' => 'Souvenir'],
+              'documentation' => ['path' => 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z', 'label' => 'Doc'],
+            ];
+        @endphp
         @foreach($trips as $trip)
-        <div class="trip-card animate-on-scroll">
-          <div class="trip-image">
-            <img src="{{ asset($trip->image) }}" width="1080" alt="{{ $trip->title }}">
-            @if($trip->is_popular)
-            <div class="trip-badge trip-badge-popular">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-                <polyline points="17 6 23 6 23 12"/>
+        <a href="{{ route('trip.detail', $trip->slug) }}" class="animate-on-scroll" style="text-decoration: none; color: inherit; display: block;">
+        <div class="open-trip-card">
+          <div class="card-image">
+            <img src="{{ $trip->thumbnail ? asset($trip->thumbnail) : asset('images/placeholder-trip.jpg') }}" alt="{{ $trip->title }}">
+            <!-- Favorite button removed for cleaner look on landing or can be added back -->
+            <button class="favorite-btn" aria-label="Add to favorites">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
               </svg>
-              Popular
-            </div>
-            @endif
-            <div class="trip-category">{{ $trip->category }}</div>
+            </button>
           </div>
-          <div class="trip-content">
-            <h3 class="trip-title">{{ $trip->title }}</h3>
-            <p class="trip-description">{{ $trip->description }}</p>
-            <div class="trip-details">
-              <div class="trip-detail">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <polyline points="12 6 12 12 16 14"/>
+          <div class="card-content">
+            <div class="card-header">
+              <h3 class="card-title">{{ $trip->title }}</h3>
+            </div>
+            <p class="card-duration">{{ $trip->duration }}</p>
+            
+            <div class="card-schedule">
+              <div class="schedule-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
                 </svg>
-                <span>{{ $trip->duration }}</span>
+                <span>{{ $trip->next_departure ? $trip->next_departure->start_date->format('d M Y') : 'TBA' }}</span>
               </div>
-              <div class="trip-detail">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                  <circle cx="12" cy="10" r="3"/>
+              <div class="schedule-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
-                <span>{{ $trip->difficulty }}</span>
+                <span>{{ $trip->next_departure ? ($trip->next_departure->capacity - $trip->next_departure->booked_count) . ' pax left' : 'Open' }}</span>
               </div>
             </div>
-            <div class="trip-footer">
-              <span class="trip-price">{{ $trip->price }}</span>
-              <a href="{{ route('login') }}" class="btn btn-primary btn-sm">
-                Book Now
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="5" y1="12" x2="19" y2="12"/>
-                  <polyline points="12 5 19 12 12 19"/>
-                </svg>
-              </a>
+            
+            <div class="card-amenities">
+              @php
+                $tripIncludes = $trip->includes ?? [];
+                $maxShow = 5;
+                $remaining = count($tripIncludes) - $maxShow;
+              @endphp
+              @foreach(array_slice($tripIncludes, 0, $maxShow) as $inc)
+                @if(isset($iconMap[$inc]))
+                <div class="amenity">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="{{ $iconMap[$inc]['path'] }}"/>
+                  </svg>
+                  <span>{{ $iconMap[$inc]['label'] }}</span>
+                </div>
+                @endif
+              @endforeach
+              @if($remaining > 0)
+                <span class="amenity-more">+{{ $remaining }}</span>
+              @endif
+            </div>
+
+            <ul class="card-features">
+              @if(!empty($trip->highlights))
+                @foreach(array_slice($trip->highlights, 0, 3) as $highlight)
+                <li>{{ $highlight }}</li>
+                @endforeach
+              @endif
+            </ul>
+
+            <div class="card-price">
+              <span class="price-from">Dari</span>
+              <span class="price-current">IDR {{ number_format($trip->from_price, 0, ',', '.') }}</span>
+              <span class="price-unit">/ pax</span>
             </div>
           </div>
         </div>
+        </a>
         @endforeach
       </div>
       
       <div class="section-cta animate-on-scroll">
         <a href="#contact" class="btn btn-dark">
-          Need a Custom Package?
+          {{ __('landing.need_custom_package') }}</
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="5" y1="12" x2="19" y2="12"/>
             <polyline points="12 5 19 12 12 19"/>
@@ -276,46 +581,139 @@
     </div>
   </section>
 
-  <!-- Services -->
-  <section class="section bg-dark">
-    <div class="container">
-      <div class="section-header animate-on-scroll">
-        <h2 class="section-title text-white" data-preview-key="services_title">{{ $settings['services_title'] ?? 'Our Services' }}</h2>
-        <p class="section-description text-light" data-preview-key="services_description">{{ $settings['services_description'] ?? 'Comprehensive outdoor and indoor adventure solutions tailored to your needs' }}</p>
+  <!-- Quote Section -->
+  <section class="quote-section">
+    <div class="quote-container">
+      <div class="quote-background">
+        <img src="{{ asset($settings['quote_background_image'] ?? 'images/quote-bg.jpg') }}" alt="Quote Background" data-preview-key="quote_background_image">
+        <div class="quote-overlay"></div>
       </div>
-
-      <div class="services-grid">
-        @foreach($services as $service)
-        <div class="service-card animate-on-scroll">
-          <div class="service-icon {{ $service->icon_bg_class }}">
-            {!! $service->icon !!}
-          </div>
-          <h3 class="service-title">{{ $service->title }}</h3>
-          <p class="service-description">{{ $service->description }}</p>
-          <ul class="service-features">
-            @if(is_array($service->features))
-            @foreach($service->features as $feature)
-            <li>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                <polyline points="22 4 12 14.01 9 11.01"/>
-              </svg>
-              <span>{{ $feature }}</span>
-            </li>
-            @endforeach
-            @endif
-          </ul>
-        </div>
-        @endforeach
-      </div>
-
-      <div class="custom-package-cta animate-on-scroll">
-        <h3 class="cta-title" data-preview-key="cta_title">{{ $settings['cta_title'] ?? 'Need a Custom Package?' }}</h3>
-        <p class="cta-description" data-preview-key="cta_description">{{ $settings['cta_description'] ?? 'Every adventure is unique. Let us craft a personalized itinerary that matches your vision, budget, and schedule.' }}</p>
-        <a href="#contact" class="btn btn-primary">Request Custom Quote</a>
+      <div class="quote-content">
+        <div class="quote-mark animate-on-scroll">"</div>
+        <blockquote class="quote-text animate-on-scroll" data-preview-key="quote_text">
+          {{ $settings['quote_text'] ?? 'The mountains are calling, and I must go. Every peak conquered is a story written, every trail walked is a memory made.' }}
+        </blockquote>
       </div>
     </div>
   </section>
+
+  <style>
+    .quote-section {
+      position: relative;
+      width: 100%;
+      background: #000;
+    }
+    
+    .quote-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      overflow: hidden;
+    }
+    
+    .quote-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .quote-background img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: grayscale(30%);
+    }
+    
+    .quote-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
+    }
+    
+    .quote-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 1100px;
+      text-align: center;
+      z-index: 10;
+      padding: 0 2rem;
+      box-sizing: border-box;
+    }
+    
+    .quote-mark {
+      font-size: 60px;
+      line-height: 1;
+      color: #e97543;
+      margin-bottom: 1rem;
+      display: block;
+      opacity: 0.9;
+    }
+    
+    .quote-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 3rem;
+      line-height: 1.1;
+      color: #fff;
+      font-weight: 900;
+      font-style: italic;
+      text-transform: uppercase;
+      margin: 0 auto;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      max-width: 100%;
+      word-wrap: break-word;
+      letter-spacing: -1px;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .quote-text {
+        font-size: 2.25rem;
+      }
+      .quote-content {
+        padding: 0 4rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .quote-container {
+        padding-bottom: 75%; /* Taller on mobile for better text fit */
+      }
+      .quote-mark {
+        font-size: 50px;
+        margin-bottom: 0.5rem;
+      }
+      .quote-text {
+        font-size: 1.5rem; /* Smaller font for mobile */
+        line-height: 1.3;
+      }
+      .quote-content {
+        padding: 0 1.5rem; /* More breathing room */
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .quote-container {
+        padding-bottom: 100%; /* More vertical space on small phones */
+      }
+      .quote-text {
+        font-size: 1.25rem;
+      }
+      .quote-content {
+        padding: 0 1.5rem;
+      }
+    }
+  </style>
 
   <!-- Gallery -->
   <section class="section bg-white">
@@ -341,7 +739,7 @@
 
 
   <!-- About -->
-  <section id="about" class="section bg-white">
+  <section id="about" class="section bg-white text-white" style="background-color: #151515 !important;">
     <div class="container">
       <div class="about-grid">
         <div class="about-image animate-on-scroll">
@@ -350,8 +748,17 @@
         </div>
 
         <div class="about-content animate-on-scroll">
-          <h2 class="about-title" data-preview-key="about_title">{{ $settings['about_title'] ?? 'About Monti Outdoor Service' }}</h2>
-          <div data-preview-key="about_text">{!! $settings['about_text'] !!}</div>
+          <h2 class="about-title text-white" data-preview-key="about_title">{{ $settings['about_title'] ?? 'About Monti Outdoor Service' }}</h2>
+          <div data-preview-key="about_text" class="about-text-content">{!! $settings['about_text'] !!}</div>
+          
+          <style>
+            .about-text-content, 
+            .about-text-content p, 
+            .about-text-content span, 
+            .about-text-content div {
+              color: rgba(255, 255, 255, 0.8) !important;
+            }
+          </style>
 
           <div class="values-grid">
             <div class="value-item">
@@ -360,9 +767,9 @@
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 </svg>
               </div>
-              <div>
-                <h4 class="value-title">Safety First</h4>
-                <p class="value-description">Certified guides & protocols</p>
+              <div class="value-content">
+                <h4 class="value-title text-white">Safety First</h4>
+                <p class="value-description" style="color: rgba(255, 255, 255, 0.7);">Certified guides & protocols</p>
               </div>
             </div>
 
@@ -372,9 +779,9 @@
                   <path d="M12 2a10 10 0 0 1 7.38 16.75L12 22l-7.38-3.25A10 10 0 0 1 12 2z"/>
                 </svg>
               </div>
-              <div>
-                <h4 class="value-title">Eco-Friendly</h4>
-                <p class="value-description">Leave No Trace principles</p>
+              <div class="value-content">
+                <h4 class="value-title text-white">Eco-Friendly</h4>
+                <p class="value-description" style="color: rgba(255, 255, 255, 0.7);">Leave No Trace principles</p>
               </div>
             </div>
 
@@ -387,9 +794,9 @@
                   <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
               </div>
-              <div>
-                <h4 class="value-title">Community</h4>
-                <p class="value-description">Supporting local communities</p>
+              <div class="value-content">
+                <h4 class="value-title text-white">Community</h4>
+                <p class="value-description" style="color: rgba(255, 255, 255, 0.7);">Supporting local communities</p>
               </div>
             </div>
 
@@ -399,9 +806,9 @@
                   <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
                 </svg>
               </div>
-              <div>
-                <h4 class="value-title">Excellence</h4>
-                <p class="value-description">Quality service & equipment</p>
+              <div class="value-content">
+                <h4 class="value-title text-white">Excellence</h4>
+                <p class="value-description" style="color: rgba(255, 255, 255, 0.7);">Quality service & equipment</p>
               </div>
             </div>
           </div>
@@ -595,7 +1002,6 @@
     </div>
   </section>
 
-  <!-- Footer -->
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
@@ -612,38 +1018,16 @@
             <span>Monti Outdoor</span>
           </div>
           <p class="footer-description" data-preview-key="global_footer_text">{{ $settings['global_footer_text'] ?? 'Your trusted partner for outdoor adventures and mountain expeditions across Indonesia.' }}</p>
-          <div class="footer-social">
-            @if(isset($settings['social_facebook']))
-            <a href="{{ $settings['social_facebook'] }}" class="social-link" aria-label="Facebook" data-preview-key="social_facebook" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-              </svg>
+          <div class="footer-social" style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <a href="https://www.instagram.com/monti.outdoorservice/" class="social-link" aria-label="Instagram" target="_blank" style="color: rgba(255,255,255,0.7);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </a>
-            @endif
-            @if(isset($settings['social_instagram']))
-            <a href="{{ $settings['social_instagram'] }}" class="social-link" aria-label="Instagram" data-preview-key="social_instagram" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-              </svg>
+            <a href="https://www.tiktok.com/@monti.outdoor.service" class="social-link" aria-label="TikTok" target="_blank" style="color: rgba(255,255,255,0.7);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
             </a>
-            @endif
-            @if(isset($settings['social_twitter']))
-            <a href="{{ $settings['social_twitter'] }}" class="social-link" aria-label="Twitter" data-preview-key="social_twitter" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
-              </svg>
+            <a href="https://www.youtube.com/@montioutdoorservice" class="social-link" aria-label="YouTube" target="_blank" style="color: rgba(255,255,255,0.7);">
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
             </a>
-            @endif
-            @if(isset($settings['social_tiktok']))
-            <a href="{{ $settings['social_tiktok'] }}" class="social-link" aria-label="TikTok" data-preview-key="social_tiktok" target="_blank">
-              <!-- TikTok Icon -->
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
-              </svg>
-            </a>
-            @endif
           </div>
         </div>
 
@@ -692,6 +1076,9 @@
     </div>
   </footer>
 
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  
   <script src="{{ asset('js/landing.js') }}"></script>
   @vite(['resources/js/landing-preview.js', 'resources/js/landing-ui-fixes.js'])
 </body>

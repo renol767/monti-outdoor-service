@@ -28,8 +28,8 @@ class TripContentController extends Controller
 
         return response()->json([
             'content' => $content,
-            'delta' => $content?->content_delta ?? [],
-            'html' => $content?->content_html ?? '',
+            'delta' => $content ? $content->getTranslations('content_delta') : ['id' => [], 'en' => []],
+            'html' => $content ? $content->getTranslations('content_html') : ['id' => '', 'en' => ''],
         ]);
     }
 
@@ -46,7 +46,7 @@ class TripContentController extends Controller
 
         $request->validate([
             'content_delta' => 'required|array',
-            'content_html' => 'nullable|string',
+            'content_html' => 'nullable|array',
         ]);
 
         // Get existing content to increment version

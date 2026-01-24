@@ -29,7 +29,14 @@
           <div class="col-md-8">
             <div class="mb-3">
               <label class="form-label" for="title">Trip Title <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" required placeholder="e.g., Mount Rinjani 4D3N Summit">
+              <div class="input-group mb-2">
+                  <span class="input-group-text">ID</span>
+                  <input type="text" class="form-control" name="title[id]" value="{{ old('title.id') }}" required placeholder="Judul Trip">
+              </div>
+              <div class="input-group">
+                  <span class="input-group-text">EN</span>
+                  <input type="text" class="form-control" name="title[en]" value="{{ old('title.en') }}" placeholder="Trip Title">
+              </div>
             </div>
           </div>
           <div class="col-md-4">
@@ -51,7 +58,14 @@
           <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label" for="destination">Destination</label>
-              <input type="text" class="form-control" id="destination" name="destination" value="{{ old('destination') }}" placeholder="e.g., Lombok, Indonesia">
+              <div class="input-group mb-2">
+                  <span class="input-group-text">ID</span>
+                  <input type="text" class="form-control" name="destination[id]" value="{{ old('destination.id') }}" placeholder="Lokasi">
+              </div>
+              <div class="input-group">
+                  <span class="input-group-text">EN</span>
+                  <input type="text" class="form-control" name="destination[en]" value="{{ old('destination.en') }}" placeholder="Location">
+              </div>
             </div>
           </div>
           <div class="col-md-3">
@@ -105,11 +119,11 @@
               <small class="text-muted">Recommended: Landscape (16:9). Required for Hero section.</small>
             </div>
           </div>
-          <div class="col-md-12">
+          <div class="col-md-6">
             <div class="mb-3">
-              <label class="form-label" for="trip_itinerary_pdf">Trip Itinerary PDF</label>
-              <input type="file" class="form-control" id="trip_itinerary_pdf" name="trip_itinerary_pdf" accept=".pdf">
-              <small class="text-muted">Upload PDF file for "Download Trip Detail" button.</small>
+               <label class="form-label" for="trip_itinerary_pdf">Trip Itinerary PDF</label>
+               <input type="file" class="form-control" id="trip_itinerary_pdf" name="trip_itinerary_pdf" accept=".pdf">
+               <small class="text-muted">Upload PDF file for "Download Trip Detail" button.</small>
             </div>
           </div>
         </div>
@@ -121,13 +135,27 @@
           <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label" for="meta_title">Meta Title</label>
-              <input type="text" class="form-control" id="meta_title" name="meta_title" value="{{ old('meta_title') }}">
+              <div class="input-group mb-2">
+                  <span class="input-group-text">ID</span>
+                  <input type="text" class="form-control" name="meta_title[id]" value="{{ old('meta_title.id') }}">
+              </div>
+              <div class="input-group">
+                  <span class="input-group-text">EN</span>
+                  <input type="text" class="form-control" name="meta_title[en]" value="{{ old('meta_title.en') }}">
+              </div>
             </div>
           </div>
           <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label" for="meta_description">Meta Description</label>
-              <textarea class="form-control" id="meta_description" name="meta_description" rows="1">{{ old('meta_description') }}</textarea>
+               <div class="input-group mb-2">
+                  <span class="input-group-text">ID</span>
+                  <textarea class="form-control" name="meta_description[id]" rows="2">{{ old('meta_description.id') }}</textarea>
+              </div>
+              <div class="input-group">
+                  <span class="input-group-text">EN</span>
+                  <textarea class="form-control" name="meta_description[en]" rows="2">{{ old('meta_description.en') }}</textarea>
+              </div>
             </div>
           </div>
         </div>

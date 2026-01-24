@@ -210,23 +210,23 @@
     .trip-hero {
       position: relative;
       width: 100%;
-      aspect-ratio: 16/9;
-      margin-top: 100px; /* Accounts for fixed header */
+      min-height: 100vh; /* Full viewport height */
+      margin-top: 0; /* Start from top to show navbar transparency */
       margin-bottom: 0;
-      border-radius: 0 0 24px 24px;
       overflow: hidden;
-    }
-    @media (min-width: 1024px) {
-        .trip-hero {
-            aspect-ratio: auto;
-            height: 600px; /* Limit height on large screens to avoid taking full fold */
-        }
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .trip-hero-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: bottom center; /* Anchor to bottom */
+      object-position: center;
+      z-index: 1;
     }
     .trip-hero-overlay {
       position: absolute;
@@ -234,13 +234,14 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
+      background: transparent;
       display: flex;
       flex-direction: column;
       align-items: center; /* Horiz Center */
       justify-content: center; /* Vert Center */
       text-align: center;
       padding: 3rem 1rem;
+      z-index: 2;
     }
     .hero-badge {
       background: #e97543;
@@ -266,6 +267,50 @@
       font-weight: 600;
       font-style: italic;
       margin-top: 0.5rem;
+    }
+
+    /* Transparent Navbar (like main page) */
+    .header {
+      background: transparent !important;
+      backdrop-filter: none !important;
+      box-shadow: none !important;
+      transition: all 0.3s ease;
+    }
+    
+    .header.scrolled {
+      background: rgba(42, 42, 42, 0.95) !important;
+      backdrop-filter: blur(10px) !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    /* Fix Mobile Menu Background (dark like main page) */
+    .nav.mobile-open {
+      background: rgba(30, 30, 30, 0.95) !important;
+      backdrop-filter: blur(10px) !important;
+    }
+    
+    /* Fix Mobile Submenu - Dark background with light text */
+    @media (max-width: 1023px) {
+      .nav.mobile-open .dropdown-menu {
+        background: rgba(21, 21, 21, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+        position: static !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        margin-top: 0.5rem !important;
+        box-shadow: none !important;
+      }
+      
+      .nav.mobile-open .dropdown-item {
+        color: #fbcaa5 !important;
+        padding: 0.75rem 1.5rem !important;
+      }
+      
+      .nav.mobile-open .dropdown-item:hover {
+        background: rgba(251, 202, 165, 0.15) !important;
+        color: #e97543 !important;
+      }
     }
 
     /* Modal Gallery */
@@ -419,7 +464,9 @@
     <div class="container">
       <div class="header-content">
         <div class="logo">
-          <img src="{{ asset($settings['global_logo'] ?? 'images/logo/Untitled-4.png') }}" alt="Logo" width="100">
+          <a href="{{ route('landing') }}">
+            <img src="{{ asset($settings['global_logo'] ?? 'images/logo/Untitled-4.png') }}" alt="Logo" width="100">
+          </a>
         </div>
 
         <button class="mobile-menu-btn" aria-label="Toggle menu">
@@ -491,6 +538,29 @@
 
           <!-- Contact -->
           <a href="{{ route('landing') }}#contact" class="nav-link">Contact</a>
+          
+          <!-- Language Switcher -->
+          <div class="dropdown">
+            <a href="#" class="custom-dropdown-toggle dropdown-toggle" style="display: flex; align-items: center; gap: 0.5rem;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+              <span>{{ strtoupper(app()->getLocale()) }}</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M4 6L8 10L12 6H4Z"/>
+              </svg>
+            </a>
+            <div class="dropdown-menu">
+              <a href="{{ route('lang.switch', 'id') }}" class="dropdown-item {{ app()->getLocale() == 'id' ? 'active' : '' }}">
+                🇮🇩 Indonesia
+              </a>
+              <a href="{{ route('lang.switch', 'en') }}" class="dropdown-item {{ app()->getLocale() == 'en' ? 'active' : '' }}">
+                🇬🇧 English
+              </a>
+            </div>
+          </div>
           
           <a href="{{ route('login') }}" class="btn btn-primary">Book Now</a>
         </nav>
@@ -670,7 +740,7 @@
              onclick="bookViaWhatsApp(event)"
              style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; width: 100%; padding: 1rem; background: #25D366; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; margin-bottom: 0.75rem;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Chat via WhatsApp
+            {{ __('general.contact_via_whatsapp') }}
           </a>
           
           <!-- Share Button -->
@@ -860,9 +930,8 @@
   <section style="background: #1e1e1e; padding: 2rem 0; border-top: 1px solid rgba(251, 202, 165, 0.2);">
     <div class="container" style="text-align: center;">
       <p style="color: #6b7280; margin: 0; font-size: 0.9rem;">
-        Dengan melakukan pemesanan, Anda dianggap telah membaca dan menyetujui 
-        <a href="{{ route('terms-conditions') }}" style="color: var(--color-primary); font-weight: 600; text-decoration: underline;">Syarat & Ketentuan</a> 
-        yang berlaku.
+        {{ __('general.booking_agreement') }} 
+        <a href="{{ route('terms-conditions') }}" style="color: var(--color-primary); font-weight: 600; text-decoration: underline;">{{ __('general.terms_conditions_title') }}</a>.
       </p>
     </div>
   </section>
@@ -884,27 +953,16 @@
             <span>Monti Outdoor</span>
           </div>
           <p class="footer-description">{{ $settings['global_footer_text'] ?? 'Your trusted partner for outdoor adventures and mountain expeditions across Indonesia.' }}</p>
-          <div class="footer-social">
-            @if(isset($settings['social_facebook']))
-            <a href="{{ $settings['social_facebook'] }}" class="social-link" aria-label="Facebook" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          <div class="footer-social" style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <a href="https://www.instagram.com/monti.outdoorservice/" class="social-link" aria-label="Instagram" target="_blank" style="color: rgba(255,255,255,0.7);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </a>
-            @endif
-            @if(isset($settings['social_instagram']))
-            <a href="{{ $settings['social_instagram'] }}" class="social-link" aria-label="Instagram" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            <a href="https://www.tiktok.com/@monti.outdoor.service" class="social-link" aria-label="TikTok" target="_blank" style="color: rgba(255,255,255,0.7);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
             </a>
-            @endif
-            @if(isset($settings['social_twitter']))
-            <a href="{{ $settings['social_twitter'] }}" class="social-link" aria-label="Twitter" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+            <a href="https://www.youtube.com/@montioutdoorservice" class="social-link" aria-label="YouTube" target="_blank" style="color: rgba(255,255,255,0.7);">
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
             </a>
-            @endif
-            @if(isset($settings['social_tiktok']))
-            <a href="{{ $settings['social_tiktok'] }}" class="social-link" aria-label="TikTok" target="_blank">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-            </a>
-            @endif
           </div>
         </div>
 

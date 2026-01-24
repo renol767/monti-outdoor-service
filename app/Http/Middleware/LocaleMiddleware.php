@@ -15,9 +15,15 @@ class LocaleMiddleware
    */
   public function handle(Request $request, Closure $next): Response
   {
-    // Locale is enabled and allowed to be change
-    if (session()->has('locale') && in_array(session()->get('locale'), ['en', 'fr', 'ar', 'de'])) {
-      app()->setLocale(session()->get('locale'));
+    // Get locale from session, default to 'id' (Indonesian)
+    $locale = session()->get('locale', 'id');
+    
+    // Locale is enabled and allowed to be changed
+    if (in_array($locale, ['en', 'id'])) {
+      app()->setLocale($locale);
+    } else {
+      // Fallback to Indonesian if invalid locale
+      app()->setLocale('id');
     }
 
     return $next($request);

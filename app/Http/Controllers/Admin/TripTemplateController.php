@@ -68,19 +68,22 @@ class TripTemplateController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'destination' => 'nullable|string|max:255',
+            'title' => 'required|array',
+            'title.id' => 'required|string|max:255',
+            'destination' => 'nullable|array',
             'category' => 'required|string|max:50',
             'duration_days' => 'required|integer|min:1',
             'duration_nights' => 'required|integer|min:0',
             'difficulty' => 'nullable|string|in:easy,moderate,hard,extreme',
             'thumbnail' => 'nullable|image|max:5120',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_description' => 'nullable|string',
+            'meta_title' => 'nullable|array',
+            'meta_description' => 'nullable|array',
             'trip_facts' => 'nullable|array',
         ]);
 
-        $validated['slug'] = Str::slug($request->title);
+        // Slug generation from Title ID
+        $titleId = $request->input('title.id');
+        $validated['slug'] = Str::slug($titleId);
         $validated['status'] = 'draft';
         $validated['created_by'] = auth()->id();
 
@@ -177,22 +180,26 @@ class TripTemplateController extends Controller
         $oldValues = $trip->toArray();
 
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'destination' => 'nullable|string|max:255',
+            'title' => 'required|array',
+            'title.id' => 'required|string|max:255',
+            'destination' => 'nullable|array',
             'category' => 'required|string|max:50',
             'duration_days' => 'required|integer|min:1',
             'duration_nights' => 'required|integer|min:0',
             'difficulty' => 'nullable|string|in:easy,moderate,hard,extreme',
             'thumbnail' => 'nullable|image|max:5120',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_description' => 'nullable|string',
+            'meta_title' => 'nullable|array',
+            'meta_description' => 'nullable|array',
             'status' => 'nullable|string|in:draft,published,archived',
             'trip_facts' => 'nullable|array',
         ]);
 
-        // Keep slug unless title changes significantly
-        if (Str::slug($request->title) !== $trip->slug && $request->title !== $trip->title) {
-            $newSlug = Str::slug($request->title);
+        // Keep slug unless title changes significantly (check ID title)
+        $titleId = $request->input('title.id');
+        $oldTitleId = $trip->getTranslation('title', 'id');
+        
+        if (Str::slug($titleId) !== $trip->slug && $titleId !== $oldTitleId) {
+            $newSlug = Str::slug($titleId);
             $originalSlug = $newSlug;
             $counter = 1;
             while (TripTemplate::where('slug', $newSlug)->where('id', '!=', $trip->id)->exists()) {
@@ -239,9 +246,24 @@ class TripTemplateController extends Controller
         // Handle includes (array of amenities)
         $validated['includes'] = $request->input('includes', []);
         
-        // Handle highlights (convert textarea lines to array)
-        $highlightsText = $request->input('highlights', '');
-        $validated['highlights'] = array_filter(array_map('trim', explode("\n", $highlightsText)));
+        // Handle highlights (localized array)
+        // Expected buffer: highlights[id] = "A\nB", highlights[en] = "C\nD"
+        if ($request->has('highlights') && is_array($request->highlights)) {
+             $formattedHighlights = [];
+             foreach ($request->highlights as $locale => $text) {
+                 if ($text) {
+                     $formattedHighlights[$locale] = array_values(array_filter(array_map('trim', explode("\n", $text))));
+                 }
+             }
+             $validated['highlights'] = $formattedHighlights;
+        } else {
+             // Fallback for legacy parsing if string
+             $highlightsText = $request->input('highlights', '');
+             if (is_string($highlightsText)) {
+                 // Assume default locale if string
+                 $validated['highlights'] = array_filter(array_map('trim', explode("\n", $highlightsText)));
+             }
+        }
 
         $trip->update($validated);
 

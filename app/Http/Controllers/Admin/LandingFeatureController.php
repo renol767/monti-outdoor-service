@@ -21,8 +21,10 @@ class LandingFeatureController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'title' => 'required|array',
+            'title.id' => 'required|string|max:255',
+            'description' => 'required|array',
+            'description.id' => 'required|string',
             'icon' => 'required|string', // SVG code
         ]);
 
@@ -39,8 +41,10 @@ class LandingFeatureController extends Controller
     public function update(Request $request, LandingFeature $feature)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'title' => 'required|array',
+            'title.id' => 'required|string|max:255',
+            'description' => 'required|array',
+            'description.id' => 'required|string',
             'icon' => 'required|string',
         ]);
 

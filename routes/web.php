@@ -169,13 +169,15 @@ Route::get('/', function () {
 // Original Landing Page (moved to /index-page)
 Route::get('/index-page', function () {
     $settings = \App\Models\LandingSetting::all()->pluck('value', 'key');
+    $heroSlides = \App\Models\HeroSlide::active()->ordered()->get();
     $features = \App\Models\LandingFeature::orderBy('order')->get();
-    $trips = \App\Models\LandingTrip::orderBy('order')->limit(6)->get();
+    // $trips = \App\Models\LandingTrip::orderBy('order')->limit(6)->get();
+    $trips = \App\Models\TripTemplate::published()->popular()->ordered()->limit(6)->get();
     $services = \App\Models\LandingService::orderBy('order')->get();
     $gallery = \App\Models\LandingGallery::orderBy('order')->get();
 
 
-    return view('welcome', compact('settings', 'features', 'trips', 'services', 'gallery'));
+    return view('welcome', compact('settings', 'heroSlides', 'features', 'trips', 'services', 'gallery'));
 })->name('landing');
 
 // About Us Page
@@ -366,6 +368,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     // Landing Page Customization
     Route::get('/landing-customization', [App\Http\Controllers\Admin\LandingPageController::class, 'index'])->name('landing-customization');
     Route::post('/landing-customization/settings', [App\Http\Controllers\Admin\LandingPageController::class, 'updateSettings'])->name('admin.landing.settings.update');
+    Route::post('/landing-customization/popular-trips', [App\Http\Controllers\Admin\LandingPageController::class, 'updatePopularTrips'])->name('admin.landing.popular-trips.update');
     
     // Trips Resource
     Route::resource('/trips', App\Http\Controllers\Admin\LandingTripController::class, ['as' => 'admin']);
@@ -378,6 +381,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     
     // Gallery Resource
     Route::resource('/gallery', App\Http\Controllers\Admin\LandingGalleryController::class, ['as' => 'admin']);
+    
+    // Hero Slides Management
+    Route::get('/hero-slides', [App\Http\Controllers\Admin\HeroSlideController::class, 'index'])->name('admin.hero-slides.index');
+    Route::get('/hero-slides/{slide}/edit', [App\Http\Controllers\Admin\HeroSlideController::class, 'edit'])->name('admin.hero-slides.edit');
+    Route::put('/hero-slides/{slide}', [App\Http\Controllers\Admin\HeroSlideController::class, 'update'])->name('admin.hero-slides.update');
+    Route::post('/hero-slides/{slide}/toggle-active', [App\Http\Controllers\Admin\HeroSlideController::class, 'toggleActive'])->name('admin.hero-slides.toggle-active');
     
     // Testimonials Resource
 
@@ -441,7 +450,7 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
 Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
 // locale
-Route::get('/lang/{locale}', [LanguageController::class, 'swap']);
+Route::get('/lang/{locale}', [\App\Http\Controllers\LanguageController::class, 'switch'])->name('lang.switch');
 
 // layout
 Route::get('/layouts/collapsed-menu', [CollapsedMenu::class, 'index'])->name('layouts-collapsed-menu');

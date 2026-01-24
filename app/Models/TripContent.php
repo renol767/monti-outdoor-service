@@ -8,19 +8,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TripContent extends Model
 {
-    use HasFactory;
+    use HasFactory, \Spatie\Translatable\HasTranslations;
+
+    public $translatable = ['content_html', 'content_delta'];
 
     protected $fillable = [
         'trip_template_id',
         'tab_type',
-        'content_delta',
         'content_html',
-        'version',
-        'updated_by',
+        'content_delta',
+        'is_active',
+        'sort_order',
     ];
 
     protected $casts = [
-        'content_delta' => 'array', // JSON cast
+        'is_active' => 'boolean',
+        // 'content_delta' => 'array', // Removed as handled by HasTranslations (or should be?)
+        // content_delta is JSON. Spatie handles it if it's in translatable.
+        // But Spatie expects the *value* of the translation to be the type.
+        // If content_delta is an array/object, Spatie supports it.
         'version' => 'integer',
     ];
 
