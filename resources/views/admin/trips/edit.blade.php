@@ -72,7 +72,7 @@
       <div class="tab-pane fade show active" id="tab-basic">
         <div class="card">
           <div class="card-body">
-            <form action="{{ route('admin.trip-management.update', $trip) }}" method="POST" enctype="multipart/form-data">
+            <form id="editTripForm" action="{{ route('admin.trip-management.update', $trip) }}" method="POST" enctype="multipart/form-data">
               @csrf
               @method('PUT')
               
@@ -185,11 +185,11 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label class="form-label small text-muted">Indonesia</label>
-                            <textarea class="form-control" name="highlights[id]" rows="4" placeholder="Misal:&#10;Pemandu Ahli&#10;Makan Termasuk">{{ implode("\n", $trip->getTranslation('highlights', 'id', false) ?? []) }}</textarea>
+                            <textarea class="form-control" name="highlights[id]" rows="4" placeholder="Misal:&#10;Pemandu Ahli&#10;Makan Termasuk">{{ is_array($hID = $trip->getTranslation('highlights', 'id', false)) ? implode("\n", \Illuminate\Support\Arr::flatten($hID)) : $hID }}</textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small text-muted">English</label>
-                            <textarea class="form-control" name="highlights[en]" rows="4" placeholder="e.g.:&#10;Expert Guide&#10;Meals Included">{{ implode("\n", $trip->getTranslation('highlights', 'en', false) ?? []) }}</textarea>
+                            <textarea class="form-control" name="highlights[en]" rows="4" placeholder="e.g.:&#10;Expert Guide&#10;Meals Included">{{ is_array($hEN = $trip->getTranslation('highlights', 'en', false)) ? implode("\n", \Illuminate\Support\Arr::flatten($hEN)) : $hEN }}</textarea>
                         </div>
                     </div>
                   </div>
@@ -585,7 +585,9 @@ document.addEventListener('DOMContentLoaded', function() {
     loadContent('overview');
     
     // Existing Trip Facts Handler (to inject enabled flag into shared data if needed)
-    document.querySelector('form[action*="update"]').addEventListener('submit', function(e) {
+    const editForm = document.getElementById('editTripForm');
+    if (editForm) {
+        editForm.addEventListener('submit', function(e) {
         // We handle form submission normally, Laravel will merge arrays
         // But we need to ensure "enabled" flag is propogated to both ID and EN structure if we want consistency?
         // Actually, backend saves the array as is.
@@ -637,7 +639,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         form.submit();
-    });
+        });
+    }
 
     // Image logic (Simplified for brevity, copying the crop logic is recommended but I'll skip full reimplementation here to keep artifact size down as user can reference previous file - but wait, I am overwriting!
     // I MUST include the cropping logic or it will break.

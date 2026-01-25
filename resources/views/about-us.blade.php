@@ -135,10 +135,18 @@
       text-underline-offset: 8px;
     }
     .about-subtitle {
-      color: rgba(251, 202, 165, 0.9);
+      color: #000000;
       font-size: 1.125rem;
       line-height: 1.8;
       font-style: italic;
+      font-weight: 600;
+      /* Strong white outline effect */
+      text-shadow: 
+        1px 1px 0 #fff, 
+        -1px 1px 0 #fff, 
+        1px -1px 0 #fff, 
+        -1px -1px 0 #fff,
+        0px 0px 8px rgba(255,255,255,0.8);
     }
 
     /* Salam Kenal Section */

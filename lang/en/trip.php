@@ -4,6 +4,7 @@ return [
     // Trip Details
     'duration' => 'Duration',
     'difficulty' => 'Difficulty',
+    'destination' => 'Destination',
     'capacity' => 'Capacity',
     'departure_date' => 'Departure Date',
     'next_departure' => 'Next Departure',

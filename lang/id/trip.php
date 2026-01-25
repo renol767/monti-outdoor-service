@@ -4,6 +4,7 @@ return [
     // Trip Details
     'duration' => 'Durasi',
     'difficulty' => 'Tingkat Kesulitan',
+    'destination' => 'Destinasi',
     'capacity' => 'Kapasitas',
     'departure_date' => 'Tanggal Keberangkatan',
     'next_departure' => 'Keberangkatan Berikutnya',

@@ -553,7 +553,7 @@
             <ul class="card-features">
               @if(!empty($trip->highlights))
                 @foreach(array_slice($trip->highlights, 0, 3) as $highlight)
-                <li>{{ $highlight }}</li>
+                <li>{{ is_array($highlight) ? implode(', ', \Illuminate\Support\Arr::flatten($highlight)) : $highlight }}</li>
                 @endforeach
               @endif
             </ul>

@@ -49,9 +49,9 @@ class HeroSlideController extends Controller
         
         try {
             $validated = $request->validate([
-                'badge_text' => 'required|string|max:100',
-                'title' => 'required|string|max:200',
-                'subtitle' => 'required|string|max:500',
+                'badge_text' => 'required|array',
+                'title' => 'required|array',
+                'subtitle' => 'required|array',
                 'background_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240', // 10MB
                 'is_active' => 'nullable', // Checkbox sends 'on' or nothing
             ]);

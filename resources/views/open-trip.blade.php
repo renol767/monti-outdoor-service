@@ -1194,11 +1194,11 @@
               @endif
             </div>
 
-            <div class="card-features-label">Destinasi:</div>
+            <div class="card-features-label">{{ __('trip.destination') }}:</div>
             <ul class="card-features">
               @if(!empty($trip->highlights))
                 @foreach(array_slice($trip->highlights, 0, 4) as $highlight)
-                <li>{{ $highlight }}</li>
+                <li>{{ is_array($highlight) ? implode(', ', \Illuminate\Support\Arr::flatten($highlight)) : $highlight }}</li>
                 @endforeach
               @else
                 <li>Expert guide included</li>
