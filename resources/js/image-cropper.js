@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const imageToCrop = document.getElementById('imageToCrop');
     let currentInputId = null;
     let aspectRatio = NaN; // Default to free
+    let originalMimeType = 'image/png'; // Default fallback
 
     // Listen for changes on file inputs with class 'crop-image'
     document.addEventListener('change', function (e) {
@@ -46,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
              const file = input.files[0];
 
              // Prevent loop: if the file is our cropped output, ignore
-             if (file.name === 'cropped_image.png') {
+             if (file.name === 'cropped_image.png' || file.name.startsWith('cropped_image.')) {
                  return;
              }
              
@@ -55,16 +56,21 @@ document.addEventListener('DOMContentLoaded', function () {
                  alert('Please upload an image file.');
                  return;
              }
+             
+             // Store original MIME type
+             originalMimeType = file.type;
+             console.log('Original MIME Type captured:', originalMimeType);
 
              // Check file size (Initial check, can be looser than server)
              // 15MB limit for pre-crop
-             if (file.size > 15 * 1024 * 1024) {
-                 alert('Please upload an image smaller than 10MB.');
+             if (file.size > 50 * 1024 * 1024) { // Updated to 50MB per user request context
+                 alert('Please upload an image smaller than 50MB.');
                  input.value = '';
                  return;
              }
 
              currentInputId = input.id || input.name; // Fallback to name if ID missing
+             console.log('Current Input ID set to:', currentInputId);
              
              // Determine Aspect Ratio from data attribute
              // data-ratio="16/9" or data-ratio="1" or data-ratio="free"
@@ -112,24 +118,63 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.getElementById('cropAndSave').addEventListener('click', function () {
-        if (!cropper) return;
+        console.log('Crop & Save clicked');
+        if (!cropper) {
+            console.error('Cropper instance is null');
+            return;
+        }
 
-        // Get cropped canvas
-        // Use decent dimensions for quality
-        const canvas = cropper.getCroppedCanvas({
-            width: 1200, // Max width, will scale down if needed or up if small
-            height: 1200, // Max height
-            minWidth: 256,
-            minHeight: 256,
+        // Find the input element again (by ID is safest, requires inputs to have IDs)
+        let inputElement = document.getElementById(currentInputId);
+        if(!inputElement) {
+            // Try finding by name if ID failed (less reliable if multiple inputs have same name)
+            inputElement = document.querySelector(`input[name="${currentInputId}"]`);
+        }
+        console.log('Target Input Element:', inputElement);
+
+        // Check if we should disable resizing (for Hero Slides/Quote)
+        const noResize = inputElement && inputElement.getAttribute('data-no-resize') === 'true';
+        console.log('No Resize Mode:', noResize);
+
+        let cropOptions = {
             imageSmoothingEnabled: true,
             imageSmoothingQuality: 'high',
-            fillColor: 'transparent', // Ensure transparency
-        });
+            fillColor: 'transparent',
+        };
 
+        // If no-resize is requested, don't set width/height limits
+        // This will crop at full resolution of the source image
+        if (!noResize) {
+            cropOptions.width = 1200;
+            cropOptions.height = 1200;
+            cropOptions.minWidth = 256;
+            cropOptions.minHeight = 256;
+        }
+
+        // Get cropped canvas
+        console.log('Generating canvas...');
+        const canvas = cropper.getCroppedCanvas(cropOptions);
+        
+        if (!canvas) {
+            console.error('Failed to generate canvas');
+            return;
+        }
+
+        console.log('Converting canvas to blob with type:', originalMimeType);
         canvas.toBlob(function (blob) {
-            // Create a new File object from the blob - Use PNG for transparency support
-            const fileName = 'cropped_image.png';
-            const file = new File([blob], fileName, { type: 'image/png' });
+            if (!blob) {
+                console.error('Blob creation failed');
+                return;
+            }
+            console.log('Blob created:', blob.size, blob.type);
+
+            // Determine extension based on MIME type
+            let ext = 'png';
+            if (originalMimeType === 'image/jpeg') ext = 'jpg';
+            if (originalMimeType === 'image/webp') ext = 'webp';
+            
+            const fileName = `cropped_image.${ext}`;
+            const file = new File([blob], fileName, { type: originalMimeType });
 
             // Find the input element again (by ID is safest, requires inputs to have IDs)
             let input = document.getElementById(currentInputId);
@@ -147,9 +192,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Trigger change event manually so previews/other listeners pick it up
                 const event = new Event('change', { bubbles: true });
                 input.dispatchEvent(event);
+                console.log('Input updated and change event dispatched');
+            } else {
+                console.error('Input element not updated - failed to find input');
             }
 
             cropModal.hide();
-        }, 'image/png'); // PNG format
+        }, originalMimeType, 0.9); // Use original MIME type
     });
 });

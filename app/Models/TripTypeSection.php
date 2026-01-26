@@ -16,8 +16,9 @@ class TripTypeSection extends Model
         'slug',
         'title',
         'subtitle',
-        'content_html',
-        'content_full',
+        'subtitle',
+        'content_html', // Highlight (no images allowed via UI, but safe to allow basic tags)
+        'content_full', // Full (images allowed)
         'images',
         'sort_order',
         'is_active',
@@ -27,6 +28,7 @@ class TripTypeSection extends Model
         'images' => 'array',
         'is_active' => 'boolean',
         'sort_order' => 'integer',
+        // content_full cast removed to prevent conflict with Translatable array
     ];
 
     // Categories

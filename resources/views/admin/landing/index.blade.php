@@ -302,7 +302,7 @@
                              <img src="{{ asset($quoteBg) }}" alt="Quote Background Preview" class="d-block rounded" style="max-height: 200px; width: auto;">
                          </div>
                       @endif
-                      <input type="file" class="form-control crop-image" name="quote_background_image" id="quote_background_image" accept="image/*" data-ratio="16/9">
+                      <input type="file" class="form-control crop-image" name="quote_background_image" id="quote_background_image" accept="image/*" data-ratio="16/9" data-no-resize="true">
                       <div class="form-text">Upload a landscape image (16:9 ratio recommended). The image will be used as background for the quote section.</div>
                   </div>
               </div>

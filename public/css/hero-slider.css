@@ -36,7 +36,7 @@
 .heroSwiper .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(30, 30, 30, 0.5), rgba(30, 30, 30, 0.3), rgba(30, 30, 30, 0.5));
+  background: linear-gradient(to bottom, rgba(30, 30, 30, 0.2), rgba(30, 30, 30, 0.2), rgba(30, 30, 30, 0.2));
 }
 
 .heroSwiper .hero-content {

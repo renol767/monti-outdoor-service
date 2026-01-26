@@ -108,9 +108,9 @@ class LandingPageController extends Controller
         foreach ($request->allFiles() as $key => $file) {
             if ($key === 'terms_conditions_images') continue; // Already handled above
             
-            // Validate size (10MB)
-            if ($file->getSize() > 10 * 1024 * 1024) {
-                return redirect()->back()->with('error', "Image for '{$key}' exceeds the maximum allowed size of 10MB.");
+            // Validate size (50MB)
+            if ($file->getSize() > 50 * 1024 * 1024) {
+                return redirect()->back()->with('error', "Image for '{$key}' exceeds the maximum allowed size of 50MB.");
             }
 
             $filename = time() . '_' . pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);

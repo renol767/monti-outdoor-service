@@ -52,7 +52,7 @@ class HeroSlideController extends Controller
                 'badge_text' => 'required|array',
                 'title' => 'required|array',
                 'subtitle' => 'required|array',
-                'background_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240', // 10MB
+                'background_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:51200', // 50MB
                 'is_active' => 'nullable', // Checkbox sends 'on' or nothing
             ]);
             Log::info('Validation passed');

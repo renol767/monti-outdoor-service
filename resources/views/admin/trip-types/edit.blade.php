@@ -319,19 +319,67 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   
+  // Custom Image Handler
+  function imageHandler() {
+      const input = document.createElement('input');
+      input.setAttribute('type', 'file');
+      input.setAttribute('accept', 'image/*');
+      input.click();
+
+      input.onchange = async () => {
+           const file = input.files[0];
+           if (/^image\//.test(file.type)) {
+               const formData = new FormData();
+               formData.append('image', file);
+               
+               try {
+                   const response = await fetch("{{ route('admin.trip-types.upload-image') }}", {
+                       method: 'POST',
+                       body: formData,
+                       headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" }
+                   });
+                   const data = await response.json();
+                   if (data.url) {
+                       const range = this.quill.getSelection(true);
+                       this.quill.insertEmbed(range.index, 'image', data.url);
+                   } else {
+                       alert('Image upload failed: ' + (data.error || 'Unknown error'));
+                   }
+               } catch (e) {
+                   console.error(e);
+                   alert('Image upload error');
+               }
+           }
+      };
+  }
+
   // Helper to init Quill
-  function initQuill(selector, placeholder, content) {
+  function initQuill(selector, placeholder, content, enableImage = false) {
+      let toolbar = [
+          [{ 'header': [1, 2, 3, false] }],
+          ['bold', 'italic', 'underline'],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          ['clean']
+      ];
+
+      let modules = {
+          toolbar: toolbar
+      };
+
+      if (enableImage) {
+          toolbar.push(['image']);
+          modules.toolbar = {
+              container: toolbar,
+              handlers: {
+                  image: imageHandler
+              }
+          };
+      }
+
       const quill = new Quill(selector, {
         theme: 'snow',
         placeholder: placeholder,
-        modules: {
-          toolbar: [
-            [{ 'header': [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            ['clean']
-          ]
-        }
+        modules: modules
       });
       if (content) {
         quill.clipboard.dangerouslyPasteHTML(content);
@@ -340,11 +388,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Init 4 Editors
-  const quillHighlightID = initQuill('#quillHighlightID', 'Ringkasan Bahasa Indonesia...', @json($section->getTranslation('content_html', 'id', false) ?? ''));
-  const quillFullID = initQuill('#quillFullID', 'Konten Lengkap Bahasa Indonesia...', @json($section->getTranslation('content_full', 'id', false) ?? ''));
+  const quillHighlightID = initQuill('#quillHighlightID', 'Ringkasan Bahasa Indonesia...', @json($section->getTranslation('content_html', 'id', false) ?? ''), false);
+  const quillFullID = initQuill('#quillFullID', 'Konten Lengkap Bahasa Indonesia...', @json($section->getTranslation('content_full', 'id', false) ?? ''), true);
   
-  const quillHighlightEN = initQuill('#quillHighlightEN', 'English Highlight...', @json($section->getTranslation('content_html', 'en', false) ?? ''));
-  const quillFullEN = initQuill('#quillFullEN', 'English Full Content...', @json($section->getTranslation('content_full', 'en', false) ?? ''));
+  const quillHighlightEN = initQuill('#quillHighlightEN', 'English Highlight...', @json($section->getTranslation('content_html', 'en', false) ?? ''), false);
+  const quillFullEN = initQuill('#quillFullEN', 'English Full Content...', @json($section->getTranslation('content_full', 'en', false) ?? ''), true);
 
 
   // Cropper logic (Keep existing)
@@ -431,11 +479,18 @@ document.addEventListener('DOMContentLoaded', function() {
   // Form submit
   document.getElementById('mainForm').addEventListener('submit', function(e) {
     // Sync Quill to Hidden
-    document.getElementById('contentHtmlID').value = quillHighlightID.root.innerHTML;
-    document.getElementById('contentFullID').value = quillFullID.root.innerHTML;
+    const htmlID = quillHighlightID.root.innerHTML;
+    const fullID = quillFullID.root.innerHTML;
+    const htmlEN = quillHighlightEN.root.innerHTML;
+    const fullEN = quillFullEN.root.innerHTML;
+
+    console.log('Syncing Content:', { htmlID, fullID, htmlEN, fullEN });
+
+    document.getElementById('contentHtmlID').value = htmlID;
+    document.getElementById('contentFullID').value = fullID;
     
-    document.getElementById('contentHtmlEN').value = quillHighlightEN.root.innerHTML;
-    document.getElementById('contentFullEN').value = quillFullEN.root.innerHTML;
+    document.getElementById('contentHtmlEN').value = htmlEN;
+    document.getElementById('contentFullEN').value = fullEN;
   });
 });
 </script>

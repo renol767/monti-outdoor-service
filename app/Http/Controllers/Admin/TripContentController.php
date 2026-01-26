@@ -98,4 +98,20 @@ class TripContentController extends Controller
             'contents' => $contents,
         ]);
     }
+    /**
+     * Upload image from Quill editor
+     */
+    public function uploadImage(Request $request, TripTemplate $trip)
+    {
+         $request->validate([
+             'image' => 'required|image|max:51200', // 50MB to match other limits
+         ]);
+
+         if ($request->hasFile('image')) {
+             $path = $request->file('image')->store('trip-content-images', 'public');
+             return response()->json(['url' => asset('storage/' . $path)]);
+         }
+
+         return response()->json(['error' => 'Upload failed'], 400);
+    }
 }

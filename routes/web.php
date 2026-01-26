@@ -428,6 +428,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/trip-management/{trip}/media', [App\Http\Controllers\Admin\TripMediaController::class, 'index'])->name('admin.trip-media.index');
     Route::post('/trip-management/{trip}/media', [App\Http\Controllers\Admin\TripMediaController::class, 'store'])->name('admin.trip-media.store');
     Route::put('/trip-media/{media}', [App\Http\Controllers\Admin\TripMediaController::class, 'update'])->name('admin.trip-media.update');
+    Route::post('/trip-management/{trip}/content/upload-image', [App\Http\Controllers\Admin\TripContentController::class, 'uploadImage'])->name('admin.trip-content.upload-image');
     Route::post('/trip-management/{trip}/media/reorder', [App\Http\Controllers\Admin\TripMediaController::class, 'reorder'])->name('admin.trip-media.reorder');
     Route::delete('/trip-media/{media}', [App\Http\Controllers\Admin\TripMediaController::class, 'destroy'])->name('admin.trip-media.destroy');
 
@@ -436,6 +437,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('/trip-types', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'store'])->name('admin.trip-types.store');
     Route::get('/trip-types/{section}/edit', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'edit'])->name('admin.trip-types.edit');
     Route::put('/trip-types/{section}', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'update'])->name('admin.trip-types.update');
+    Route::post('/trip-types/upload-image', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'uploadImage'])->name('admin.trip-types.upload-image');
     Route::delete('/trip-types/{section}', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'destroy'])->name('admin.trip-types.destroy');
 });
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\TripTypeSection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class TripTypeSectionController extends Controller
@@ -39,11 +40,13 @@ class TripTypeSectionController extends Controller
      */
     public function update(Request $request, TripTypeSection $section)
     {
+        Log::info('TripTypeSection Update HIT:', $request->all());
+
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'subtitle' => 'nullable|string|max:255',
-            'content_html' => 'nullable|string',
-            'content_full' => 'nullable|string',
+            'title' => 'required', // can be string or array
+            'subtitle' => 'nullable',
+            'content_html' => 'nullable',
+            'content_full' => 'nullable', // accept array or string
             'sort_order' => 'nullable|integer|min:0',
         ]);
 
@@ -64,7 +67,6 @@ class TripTypeSectionController extends Controller
                     $decodedImage = base64_decode($imageData);
                     
                     if ($decodedImage === false) {
-                        \Log::error("Failed to decode base64 for image $i");
                         continue;
                     }
                     
@@ -77,12 +79,9 @@ class TripTypeSectionController extends Controller
                     
                     if ($stored) {
                         $images[$i] = 'storage/' . $path;
-                        \Illuminate\Support\Facades\Log::info("Image $i saved to: $path");
-                    } else {
-                        \Illuminate\Support\Facades\Log::error("Failed to store image $i");
                     }
                 } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error("Error saving cropped image $i: " . $e->getMessage());
+                    // Silent fail or handle as needed
                 }
             }
             // Fallback to file upload
@@ -139,6 +138,23 @@ class TripTypeSectionController extends Controller
         return redirect()
             ->route('admin.trip-types.index', ['category' => $validated['category']])
             ->with('success', 'Section created successfully!');
+    }
+
+    /**
+     * Upload image from Quill editor
+     */
+    public function uploadImage(Request $request)
+    {
+         $request->validate([
+             'image' => 'required|image|max:51200', // 50MB
+         ]);
+
+         if ($request->hasFile('image')) {
+             $path = $request->file('image')->store('trip-section-content-images', 'public');
+             return response()->json(['url' => asset('storage/' . $path)]);
+         }
+
+         return response()->json(['error' => 'Upload failed'], 400);
     }
 
     /**

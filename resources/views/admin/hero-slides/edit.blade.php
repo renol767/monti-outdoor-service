@@ -102,7 +102,7 @@
 
               <input type="file" class="form-control crop-image @error('background_image') is-invalid @enderror" 
                      id="background_image" name="background_image" 
-                     accept="image/*" data-ratio="16/9">
+                     accept="image/*" data-ratio="16/9" data-no-resize="true">
               <div class="form-text">
                 <i class="ti tabler-info-circle me-1"></i>
                 Recommended size: 1920x1080px (16:9 ratio). Max file size: 5MB. Leave empty to keep current image.

@@ -515,8 +515,12 @@ document.addEventListener('DOMContentLoaded', function() {
         ['clean']
     ];
     
-    const quillID = new Quill('#quillEditorID', { theme: 'snow', placeholder: 'Konten Bahasa Indonesia...', modules: { toolbar: toolbarOptions } });
-    const quillEN = new Quill('#quillEditorEN', { theme: 'snow', placeholder: 'English Content...', modules: { toolbar: toolbarOptions } });
+    const modules = {
+        toolbar: toolbarOptions
+    };
+    
+    const quillID = new Quill('#quillEditorID', { theme: 'snow', placeholder: 'Konten Bahasa Indonesia...', modules: modules });
+    const quillEN = new Quill('#quillEditorEN', { theme: 'snow', placeholder: 'English Content...', modules: modules });
 
     let currentTab = 'overview';
     const contentCache = {};
