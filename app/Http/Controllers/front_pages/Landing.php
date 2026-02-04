@@ -10,6 +10,17 @@ class Landing extends Controller
   public function index()
   {
     $pageConfigs = ['myLayout' => 'front'];
-    return view('content.front-pages.landing-page', ['pageConfigs' => $pageConfigs]);
+
+    // Fetch Hero Sections
+    $mountainHero = \App\Models\TripTypeSection::where('slug', 'mountain-hero')->first();
+    $outdoorHero = \App\Models\TripTypeSection::where('slug', 'outdoor-hero')->first();
+    $indoorHero = \App\Models\TripTypeSection::where('slug', 'indoor-hero')->first();
+
+    return view('content.front-pages.landing-page', [
+        'pageConfigs' => $pageConfigs,
+        'mountainHero' => $mountainHero,
+        'outdoorHero' => $outdoorHero,
+        'indoorHero' => $indoorHero,
+    ]);
   }
 }

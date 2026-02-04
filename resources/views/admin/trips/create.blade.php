@@ -129,6 +129,106 @@
         </div>
 
         <hr class="my-4">
+
+        <!-- Trip Includes (Amenities shown on cards - KEY based) -->
+        <div class="row">
+          <div class="col-12">
+            <div class="mb-3">
+              <label class="form-label">Trip Includes (shown as icons)</label>
+              <div class="row g-3">
+                @foreach([
+                    'guide' => ['icon' => 'user-check', 'label' => 'Guide'],
+                    'tour_leader' => ['icon' => 'flag', 'label' => 'Tour Leader'],
+                    'local_guide' => ['icon' => 'map-pin', 'label' => 'Local Guide'],
+                    'porters' => ['icon' => 'backpack', 'label' => 'Porters'],
+                    'hotel' => ['icon' => 'building', 'label' => 'Hotel'],
+                    'homestay' => ['icon' => 'home', 'label' => 'Homestay'],
+                    'lodge' => ['icon' => 'home-2', 'label' => 'Lodge'],
+                    'meals' => ['icon' => 'tools-kitchen-2', 'label' => 'Meals'],
+                    'campsite' => ['icon' => 'tent', 'label' => 'Campsite Tenda'],
+                    'transport' => ['icon' => 'bus', 'label' => 'Transport Bus'],
+                    'transport_plane' => ['icon' => 'plane', 'label' => 'Transport Pesawat'],
+                    'transport_ojek' => ['icon' => 'motorbike', 'label' => 'Transport Ojek'],
+                    'transport_pickup' => ['icon' => 'truck', 'label' => 'Transport Pickup'],
+                    'transport_jeep' => ['icon' => 'car', 'label' => 'Transport Jeep'],
+                    'transport_ship' => ['icon' => 'speedboat', 'label' => 'Transport Kapal Laut'],
+                    'airport_transfer' => ['icon' => 'plane-arrival', 'label' => 'Airport Transfer'],
+                    'permit' => ['icon' => 'ticket', 'label' => 'Permit'],
+                    'insurance' => ['icon' => 'shield-check', 'label' => 'Insurance'],
+                    'first_aid' => ['icon' => 'first-aid-kit', 'label' => 'First Aid'],
+                    'technical_gears' => ['icon' => 'tools', 'label' => 'Technical Gears'],
+                    'snacks' => ['icon' => 'coffee', 'label' => 'Snack & Beverages'],
+                    'souvenir' => ['icon' => 'gift', 'label' => 'Souvenir'],
+                    'documentation' => ['icon' => 'camera', 'label' => 'Dokumentasi']
+                ] as $key => $meta)
+                <div class="col-md-3 col-6">
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="includes[]" value="{{ $key }}" id="inc-{{ $key }}">
+                    <label class="form-check-label" for="inc-{{ $key }}">
+                      <i class="ti tabler-{{ $meta['icon'] }} me-1"></i> {{ $meta['label'] }}
+                    </label>
+                  </div>
+                </div>
+                @endforeach
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-4">
+        
+        <!-- Trip Facts -->
+        <h6 class="text-muted mb-3">Trip Facts (Metrics)</h6>
+        <div class="alert alert-info py-2 mb-3">
+          <i class="ti tabler-info-circle me-1"></i> Enable the checkbox to display the metric. Provide values for both languages.
+        </div>
+        
+        @php
+            $metrics = [
+                'grade' => ['label' => 'Grade', 'placeholder' => 'III - Menengah / Medium'],
+                'distance' => ['label' => 'Distance', 'placeholder' => '5.2 KM'],
+                'max_altitude' => ['label' => 'Max Altitude', 'placeholder' => '3.142 mdpl'],
+                'duration' => ['label' => 'Duration (Text)', 'placeholder' => '2H 1M'],
+                'trekking_time' => ['label' => 'Trekking Time', 'placeholder' => '5-7 Jam / Hours'],
+                'elevation_gain' => ['label' => 'Elevation Gain', 'placeholder' => '1.200 m'],
+                'terrain' => ['label' => 'Terrain', 'placeholder' => 'Aspal / Paved'],
+                'trekking_day' => ['label' => 'Trekking Day', 'placeholder' => '3 Hari / Days'],
+                'accommodation' => ['label' => 'Accomodation Type', 'placeholder' => 'Tenda / Tent'],
+                'destinations' => ['label' => 'Destinations', 'placeholder' => 'Puncak / Summit'],
+                'climate' => ['label' => 'Climate', 'placeholder' => 'Tropis / Tropical']
+            ];
+        @endphp
+
+        <div class="row g-3">
+            @foreach($metrics as $key => $meta)
+            <div class="col-12 border rounded p-2 bg-light bg-opacity-10">
+                <div class="d-flex align-items-center mb-2">
+                    <div class="form-check me-3">
+                        <input class="form-check-input" type="checkbox" name="trip_facts_enabled[{{ $key }}]" value="1" {{ old("trip_facts_enabled.$key") ? 'checked' : '' }}>
+                        <label class="form-check-label fw-bold">{{ $meta['label'] }}</label>
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">ID</span>
+                            <input type="text" class="form-control" name="trip_facts[id][{{ $key }}][value]" 
+                                    value="{{ old("trip_facts.id.$key.value") }}" placeholder="{{ $meta['placeholder'] }}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">EN</span>
+                            <input type="text" class="form-control" name="trip_facts[en][{{ $key }}][value]" 
+                                    value="{{ old("trip_facts.en.$key.value") }}" placeholder="{{ $meta['placeholder'] }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        <hr class="my-4">
         <h6 class="text-muted mb-3">SEO Settings (Optional)</h6>
         
         <div class="row">
@@ -210,6 +310,40 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // 0. Trip Facts Form Handler (Matches edit.blade.php logic)
+    const createForm = document.querySelector('form[action="{{ route('admin.trip-management.store') }}"]');
+    if (createForm) {
+        createForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+            
+            const keys = ['grade', 'distance', 'max_altitude', 'duration', 'trekking_time', 'elevation_gain', 'terrain', 'trekking_day', 'accommodation', 'destinations', 'climate'];
+            
+            keys.forEach(key => {
+                const enabledCheckbox = form.querySelector(`input[name="trip_facts_enabled[${key}]"]`);
+                const enabled = enabledCheckbox ? (enabledCheckbox.checked ? '1' : '0') : '0';
+                
+                // Create hidden inputs for enabled logic to match backend expectations
+                // Backend likely expects array structure as defined or custom processing. 
+                // We'll mimic edit.blade.php approach to safe-guard structure.
+                
+                const hiddenId = document.createElement('input');
+                hiddenId.type = 'hidden';
+                hiddenId.name = `trip_facts[id][${key}][enabled]`;
+                hiddenId.value = enabled;
+                form.appendChild(hiddenId);
+                
+                const hiddenEn = document.createElement('input');
+                hiddenEn.type = 'hidden';
+                hiddenEn.name = `trip_facts[en][${key}][enabled]`;
+                hiddenEn.value = enabled;
+                form.appendChild(hiddenEn);
+            });
+            
+            form.submit();
+        });
+    }
+
     // Cropper Variables
     let cropper = null;
     const cropperModal = new bootstrap.Modal(document.getElementById('imageCropperModal'));

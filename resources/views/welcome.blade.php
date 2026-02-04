@@ -741,6 +741,7 @@
   <!-- About -->
   <section id="about" class="section bg-white text-white" style="background-color: #151515 !important;">
     <div class="container">
+      @php $locale = app()->getLocale(); @endphp
       <div class="about-grid">
         <div class="about-image animate-on-scroll">
           <img src="{{ asset($settings['about_image'] ?? 'images/Surya Kencana 2.jpg') }}" width="1080" alt="About Monti" data-preview-key="about_image">
@@ -748,15 +749,30 @@
         </div>
 
         <div class="about-content animate-on-scroll">
-          <h2 class="about-title text-white" data-preview-key="about_title">{{ $settings['about_title'] ?? 'About Monti Outdoor Service' }}</h2>
-          <div data-preview-key="about_text" class="about-text-content">{!! $settings['about_text'] !!}</div>
+          <h2 class="about-title text-white" data-preview-key="about_title_{{ $locale }}">{{ $settings['about_title_' . $locale] ?? ($settings['about_title_en'] ?? ($locale == 'id' ? ($settings['about_title'] ?? 'Tentang Monti Outdoor Service') : ($settings['about_title'] ?? 'About Monti Outdoor Service'))) }}</h2>
+          <div data-preview-key="about_text_{{ $locale }}" class="about-text-content">
+            @php
+              $rawText = $settings['about_text_' . $locale] ?? ($settings['about_text_en'] ?? ($settings['about_text'] ?? ''));
+              // Remove existing p tags if any to avoid double wrapping, or just strip tags if we want pure text
+              // But user might want bold keys. Let's strictly split by newline.
+              $paragraphs = preg_split('/\r\n|\r|\n/', $rawText);
+            @endphp
+            @foreach($paragraphs as $paragraph)
+              @if(trim($paragraph))
+                <p class="about-text-paragraph">{!! $paragraph !!}</p>
+              @endif
+            @endforeach
+          </div>
           
           <style>
-            .about-text-content, 
-            .about-text-content p, 
-            .about-text-content span, 
-            .about-text-content div {
+            .about-text-content {
               color: rgba(255, 255, 255, 0.8) !important;
+            }
+            .about-text-paragraph {
+              margin-bottom: 1.5rem;
+              line-height: 1.75;
+              font-size: 1.1rem;
+              color: rgba(255, 255, 255, 0.8);
             }
           </style>
 
@@ -768,8 +784,8 @@
                 </svg>
               </div>
               <div class="value-content">
-                <h4 class="value-title text-white">Safety First</h4>
-                <p class="value-description" style="color: rgba(255, 255, 255, 0.7);">Certified guides & protocols</p>
+                <h4 class="value-title text-white" data-preview-key="about_point_1_title_{{ $locale }}">{{ $settings['about_point_1_title_' . $locale] ?? ($settings['about_point_1_title_en'] ?? ($locale == 'id' ? 'Safety First' : 'Safety First')) }}</h4>
+                <p class="value-description" style="color: rgba(255, 255, 255, 0.7);" data-preview-key="about_point_1_desc_{{ $locale }}">{{ $settings['about_point_1_desc_' . $locale] ?? ($settings['about_point_1_desc_en'] ?? ($locale == 'id' ? 'Pemandu & protokol bersertifikat' : 'Certified guides & protocols')) }}</p>
               </div>
             </div>
 
@@ -780,8 +796,8 @@
                 </svg>
               </div>
               <div class="value-content">
-                <h4 class="value-title text-white">Eco-Friendly</h4>
-                <p class="value-description" style="color: rgba(255, 255, 255, 0.7);">Leave No Trace principles</p>
+                <h4 class="value-title text-white" data-preview-key="about_point_2_title_{{ $locale }}">{{ $settings['about_point_2_title_' . $locale] ?? ($settings['about_point_2_title_en'] ?? ($locale == 'id' ? 'Ramah Lingkungan' : 'Eco-Friendly')) }}</h4>
+                <p class="value-description" style="color: rgba(255, 255, 255, 0.7);" data-preview-key="about_point_2_desc_{{ $locale }}">{{ $settings['about_point_2_desc_' . $locale] ?? ($settings['about_point_2_desc_en'] ?? ($locale == 'id' ? 'Prinsip Tanpa Jejak' : 'Leave No Trace principles')) }}</p>
               </div>
             </div>
 
@@ -795,8 +811,8 @@
                 </svg>
               </div>
               <div class="value-content">
-                <h4 class="value-title text-white">Community</h4>
-                <p class="value-description" style="color: rgba(255, 255, 255, 0.7);">Supporting local communities</p>
+                <h4 class="value-title text-white" data-preview-key="about_point_3_title_{{ $locale }}">{{ $settings['about_point_3_title_' . $locale] ?? ($settings['about_point_3_title_en'] ?? ($locale == 'id' ? 'Komunitas' : 'Community')) }}</h4>
+                <p class="value-description" style="color: rgba(255, 255, 255, 0.7);" data-preview-key="about_point_3_desc_{{ $locale }}">{{ $settings['about_point_3_desc_' . $locale] ?? ($settings['about_point_3_desc_en'] ?? ($locale == 'id' ? 'Mendukung komunitas lokal' : 'Supporting local communities')) }}</p>
               </div>
             </div>
 
@@ -807,8 +823,8 @@
                 </svg>
               </div>
               <div class="value-content">
-                <h4 class="value-title text-white">Excellence</h4>
-                <p class="value-description" style="color: rgba(255, 255, 255, 0.7);">Quality service & equipment</p>
+                <h4 class="value-title text-white" data-preview-key="about_point_4_title_{{ $locale }}">{{ $settings['about_point_4_title_' . $locale] ?? ($settings['about_point_4_title_en'] ?? ($locale == 'id' ? 'Keunggulan' : 'Excellence')) }}</h4>
+                <p class="value-description" style="color: rgba(255, 255, 255, 0.7);" data-preview-key="about_point_4_desc_{{ $locale }}">{{ $settings['about_point_4_desc_' . $locale] ?? ($settings['about_point_4_desc_en'] ?? ($locale == 'id' ? 'Layanan & peralatan berkualitas' : 'Quality service & equipment')) }}</p>
               </div>
             </div>
           </div>
@@ -828,14 +844,14 @@
         <!-- Mountain Trip -->
         <article class="blog-card animate-on-scroll">
           <div class="blog-image">
-            <img src="{{ asset('assets/img/front-pages/hero/mountain-hero.jpg') }}" alt="Mountain Trip" style="height: 240px; object-fit: cover;">
+            <img src="{{ isset($mountainHero->images[0]) ? asset($mountainHero->images[0]) : asset('assets/img/front-pages/hero/mountain-hero.jpg') }}" alt="Mountain Trip" style="height: 240px; object-fit: cover;">
             <div class="blog-category">Mountain</div>
           </div>
           <div class="blog-content">
-            <h3 class="blog-title">Mountain Trip</h3>
-            <p class="blog-excerpt">Explore the majestic peaks of Indonesia. Available for Private, Open, and Expedition trips.</p>
+            <h3 class="blog-title">{{ $mountainHero->title ?? 'Mountain Trip' }}</h3>
+            <p class="blog-excerpt">{{ $mountainHero->subtitle ?? 'Explore the majestic peaks of Indonesia. Available for Private, Open, and Expedition trips.' }}</p>
             <a href="{{ route('mountain-trip') }}" class="blog-link">
-              Explore Mountain
+              Explore Mountain Trip
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="5" y1="12" x2="19" y2="12"/>
                 <polyline points="12 5 19 12 12 19"/>
@@ -847,14 +863,14 @@
         <!-- Outdoor Trip -->
         <article class="blog-card animate-on-scroll">
           <div class="blog-image">
-            <img src="{{ asset('assets/img/front-pages/hero/outdoor-hero.jpg') }}" alt="Outdoor Activity" style="height: 240px; object-fit: cover;">
+            <img src="{{ isset($outdoorHero->images[0]) ? asset($outdoorHero->images[0]) : asset('assets/img/front-pages/hero/outdoor-hero.jpg') }}" alt="Outdoor Activity" style="height: 240px; object-fit: cover;">
             <div class="blog-category">Outdoor</div>
           </div>
           <div class="blog-content">
-            <h3 class="blog-title">Outdoor Activity Trip</h3>
-            <p class="blog-excerpt">Experience thrilling outdoor adventures. From Island Trips to Camping and Team Building.</p>
+            <h3 class="blog-title">{{ $outdoorHero->title ?? 'Outdoor Activity Trip' }}</h3>
+            <p class="blog-excerpt">{{ $outdoorHero->subtitle ?? 'Experience thrilling outdoor adventures. From Island Trips to Camping and Team Building.' }}</p>
             <a href="{{ route('outdoor-trip') }}" class="blog-link">
-              Explore Outdoor
+              Explore Outdoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="5" y1="12" x2="19" y2="12"/>
                 <polyline points="12 5 19 12 12 19"/>
@@ -866,14 +882,14 @@
         <!-- Indoor Trip -->
         <article class="blog-card animate-on-scroll">
           <div class="blog-image">
-            <img src="{{ asset('assets/img/front-pages/hero/indoor-hero.jpg') }}" alt="Indoor Activity" style="height: 240px; object-fit: cover;">
+            <img src="{{ isset($indoorHero->images[0]) ? asset($indoorHero->images[0]) : asset('assets/img/front-pages/hero/indoor-hero.jpg') }}" alt="Indoor Activity" style="height: 240px; object-fit: cover;">
             <div class="blog-category">Indoor</div>
           </div>
           <div class="blog-content">
-            <h3 class="blog-title">Indoor Activity Trip</h3>
-            <p class="blog-excerpt">Exciting activities without going too far. City Tours, Gatherings, and MICE Organizer.</p>
+            <h3 class="blog-title">{{ $indoorHero->title ?? 'Indoor Activity Trip' }}</h3>
+            <p class="blog-excerpt">{{ $indoorHero->subtitle ?? 'Exciting activities without going too far. City Tours, Gatherings, and MICE Organizer.' }}</p>
             <a href="{{ route('indoor-trip') }}" class="blog-link">
-              Explore Indoor
+              Explore Indoor Activity Trip
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="5" y1="12" x2="19" y2="12"/>
                 <polyline points="12 5 19 12 12 19"/>
@@ -1015,9 +1031,9 @@
               <path d="M8 18L4 22V30H12V24H20V30H28V22L24 18L16 26L8 18Z" fill="#e97543"/>
             </svg>
             @endif
-            <span>Monti Outdoor</span>
+            <span>:MONTI Outdoor Service</span>
           </div>
-          <p class="footer-description" data-preview-key="global_footer_text">{{ $settings['global_footer_text'] ?? 'Your trusted partner for outdoor adventures and mountain expeditions across Indonesia.' }}</p>
+          <p class="footer-description">#ceritadialam<br>Your Trusted Travelling & Event Organizer Partner</p>
           <div class="footer-social" style="display: flex; gap: 1rem; margin-top: 1rem;">
             <a href="https://www.instagram.com/monti.outdoorservice/" class="social-link" aria-label="Instagram" target="_blank" style="color: rgba(255,255,255,0.7);">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
@@ -1045,7 +1061,7 @@
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
             <li><a href="{{ route('open-trip') }}">Open Trip</a></li>
-            <li><a href="{{ route('mountain-trip') }}"></a></li>
+            <li><a href="{{ route('mountain-trip') }}">Mountain Trip</a></li>
             <li><a href="{{ route('outdoor-trip') }}">Outdoor Activity Trip</a></li>
             <li><a href="{{ route('indoor-trip') }}">Indoor Activity Trip</a></li>
           </ul>

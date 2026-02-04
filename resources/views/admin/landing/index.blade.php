@@ -32,11 +32,7 @@
               <i class="ti tabler-map-pin me-1"></i> Trips
             </button>
           </li>
-          <li class="nav-item">
-            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-services" aria-controls="navs-services" aria-selected="false">
-               <i class="ti tabler-list me-1"></i> Services
-            </button>
-          </li>
+
           <li class="nav-item">
             <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-quote" aria-controls="navs-quote" aria-selected="false">
               <i class="ti tabler-quote me-1"></i> Quote
@@ -220,60 +216,7 @@
             </div>
           </div>
           
-           <!-- Services Tab -->
-          <div class="tab-pane fade" id="navs-services" role="tabpanel">
-             <div class="card mb-3">
-                <div class="card-body">
-                     <form action="{{ route('admin.landing.settings.update') }}" method="POST">
-                        @csrf
-                         <div class="row">
-                            @foreach($settings as $setting)
-                                @if(\Illuminate\Support\Str::startsWith($setting->key, 'services_'))
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">{{ $setting->label ?? ucfirst(str_replace('_', ' ', $setting->key)) }}</label>
-                                     <input type="text" class="form-control" name="{{ $setting->key }}" value="{{ $setting->value }}">
-                                </div>
-                                @endif
-                            @endforeach
-                         </div>
-                         <button type="submit" class="btn btn-primary">Save Section Title/Desc</button>
-                     </form>
-                </div>
-            </div>
-            <hr>
-             <div class="mb-3">
-                 <a href="{{ route('admin.services.create') }}" class="btn btn-primary">
-                    <i class="ti tabler-plus me-1"></i> Add New Service
-                 </a>
-            </div>
-             <div class="table-responsive text-nowrap">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach($services as $service)
-                  <tr>
-                    <td>{{ $service->title }}</td>
-                    <td>{{ \Illuminate\Support\Str::limit($service->description, 50) }}</td>
-                    <td>
-                        <a href="{{ route('admin.services.edit', $service->id) }}" class="btn btn-sm btn-icon item-edit"><i class="ti tabler-edit"></i></a>
-                        <form action="{{ route('admin.services.destroy', $service->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this service?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-icon item-trash"><i class="ti tabler-trash"></i></button>
-                        </form>
-                    </td>
-                  </tr>
-                  @endforeach
-                </tbody>
-              </table>
-             </div>
-          </div>
+
 
            <!-- Quote Tab -->
           <div class="tab-pane fade" id="navs-quote" role="tabpanel">
@@ -376,25 +319,126 @@
              <form action="{{ route('admin.landing.settings.update') }}" method="POST" enctype="multipart/form-data">
               @csrf
               <div class="row">
-                  @foreach($settings as $setting)
-                     @if(\Illuminate\Support\Str::startsWith($setting->key, 'about_'))
-                    <div class="col-md-12 mb-3">
-                      <label class="form-label" for="{{ $setting->key }}">{{ $setting->label ?? ucfirst(str_replace('_', ' ', $setting->key)) }}</label>
-                      @if($setting->type == 'image')
-                         @if($setting->value)
-                            <div class="mb-2">
-                                <img src="{{ asset($setting->value) }}" alt="Preview" class="d-block rounded" style="max-height: 200px; width: auto;">
-                            </div>
-                         @endif
-                         <input type="file" class="form-control crop-image" name="{{ $setting->key }}" id="{{ $setting->key }}" accept="image/*" data-ratio="4/3">
-                      @elseif($setting->type == 'textarea' || $setting->key == 'about_text') <!-- Force textarea for about text even if type is not strictly set -->
-                        <textarea class="form-control" name="{{ $setting->key }}" id="{{ $setting->key }}" rows="8">{{ $setting->value }}</textarea>
-                      @else
-                        <input type="text" class="form-control" name="{{ $setting->key }}" id="{{ $setting->key }}" value="{{ $setting->value }}">
+                  <!-- About Section Title -->
+                  <div class="col-md-12 mb-3">
+                      <label class="form-label">About Section Title (ID)</label>
+                      <input type="text" class="form-control mb-2" name="about_title_id" value="{{ $settings->where('key', 'about_title_id')->first()->value ?? ($settings->where('key', 'about_title')->first()->value ?? 'About Monti Outdoor Service') }}" placeholder="Bahasa Indonesia">
+                      
+                      <label class="form-label">About Section Title (EN)</label>
+                      <input type="text" class="form-control" name="about_title_en" value="{{ $settings->where('key', 'about_title_en')->first()->value ?? 'About Monti Outdoor Service' }}" placeholder="English">
+                  </div>
+                  
+                  <!-- About Section Image -->
+                  <div class="col-md-12 mb-3">
+                      <label class="form-label">About Section Image</label>
+                      @php $aboutImg = $settings->where('key', 'about_image')->first()->value ?? ''; @endphp
+                      @if($aboutImg)
+                         <div class="mb-2">
+                             <img src="{{ asset($aboutImg) }}" alt="Preview" class="d-block rounded" style="max-height: 200px; width: auto;">
+                         </div>
                       @endif
-                    </div>
-                     @endif
-                  @endforeach
+                      <input type="file" class="form-control crop-image" name="about_image" id="about_image" accept="image/*" data-ratio="4/3">
+                  </div>
+                  
+                  <!-- About Us Text -->
+                  <div class="col-md-12 mb-3">
+                      <label class="form-label">About Us Text (ID - HTML Allowed)</label>
+                      <textarea class="form-control mb-3" name="about_text_id" id="about_text_id" rows="8" placeholder="Bahasa Indonesia">{{ $settings->where('key', 'about_text_id')->first()->value ?? ($settings->where('key', 'about_text')->first()->value ?? '') }}</textarea>
+                      
+                      <label class="form-label">About Us Text (EN - HTML Allowed)</label>
+                      <textarea class="form-control" name="about_text_en" id="about_text_en" rows="8" placeholder="English">{{ $settings->where('key', 'about_text_en')->first()->value ?? '' }}</textarea>
+                  </div>
+              </div>
+              
+              <div class="row mt-4">
+                  <div class="col-12 mb-3">
+                      <h5 class="fw-semibold">Key Points (Values)</h5>
+                      <hr>
+                  </div>
+                  
+                  <!-- Point 1: Safety First -->
+                  <div class="col-md-6 mb-3">
+                      <div class="card bg-light border">
+                          <div class="card-body">
+                              <h6 class="card-title text-primary"><i class="ti tabler-shield-check me-1"></i> Point 1 (Safety)</h6>
+                              <div class="mb-2">
+                                  <label class="form-label">Title (ID)</label>
+                                  <input type="text" class="form-control mb-2" name="about_point_1_title_id" value="{{ $settings->where('key', 'about_point_1_title_id')->first()->value ?? 'Safety First' }}" placeholder="Bahasa Indonesia">
+                                  <label class="form-label">Title (EN)</label>
+                                  <input type="text" class="form-control" name="about_point_1_title_en" value="{{ $settings->where('key', 'about_point_1_title_en')->first()->value ?? 'Safety First' }}" placeholder="English">
+                              </div>
+                              <div>
+                                  <label class="form-label">Description (ID)</label>
+                                  <input type="text" class="form-control mb-2" name="about_point_1_desc_id" value="{{ $settings->where('key', 'about_point_1_desc_id')->first()->value ?? 'Pemandu & protokol bersertifikat' }}" placeholder="Bahasa Indonesia">
+                                  <label class="form-label">Description (EN)</label>
+                                  <input type="text" class="form-control" name="about_point_1_desc_en" value="{{ $settings->where('key', 'about_point_1_desc_en')->first()->value ?? 'Certified guides & protocols' }}" placeholder="English">
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- Point 2: Eco-Friendly -->
+                  <div class="col-md-6 mb-3">
+                      <div class="card bg-light border">
+                          <div class="card-body">
+                              <h6 class="card-title text-success"><i class="ti tabler-leaf me-1"></i> Point 2 (Eco)</h6>
+                              <div class="mb-2">
+                                  <label class="form-label">Title (ID)</label>
+                                  <input type="text" class="form-control mb-2" name="about_point_2_title_id" value="{{ $settings->where('key', 'about_point_2_title_id')->first()->value ?? 'Ramah Lingkungan' }}" placeholder="Bahasa Indonesia">
+                                  <label class="form-label">Title (EN)</label>
+                                  <input type="text" class="form-control" name="about_point_2_title_en" value="{{ $settings->where('key', 'about_point_2_title_en')->first()->value ?? 'Eco-Friendly' }}" placeholder="English">
+                              </div>
+                              <div>
+                                  <label class="form-label">Description (ID)</label>
+                                  <input type="text" class="form-control mb-2" name="about_point_2_desc_id" value="{{ $settings->where('key', 'about_point_2_desc_id')->first()->value ?? 'Prinsip Tanpa Jejak' }}" placeholder="Bahasa Indonesia">
+                                  <label class="form-label">Description (EN)</label>
+                                  <input type="text" class="form-control" name="about_point_2_desc_en" value="{{ $settings->where('key', 'about_point_2_desc_en')->first()->value ?? 'Leave No Trace principles' }}" placeholder="English">
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- Point 3: Community -->
+                  <div class="col-md-6 mb-3">
+                      <div class="card bg-light border">
+                          <div class="card-body">
+                              <h6 class="card-title text-info"><i class="ti tabler-users me-1"></i> Point 3 (Community)</h6>
+                              <div class="mb-2">
+                                  <label class="form-label">Title (ID)</label>
+                                  <input type="text" class="form-control mb-2" name="about_point_3_title_id" value="{{ $settings->where('key', 'about_point_3_title_id')->first()->value ?? 'Komunitas' }}" placeholder="Bahasa Indonesia">
+                                  <label class="form-label">Title (EN)</label>
+                                  <input type="text" class="form-control" name="about_point_3_title_en" value="{{ $settings->where('key', 'about_point_3_title_en')->first()->value ?? 'Community' }}" placeholder="English">
+                              </div>
+                              <div>
+                                  <label class="form-label">Description (ID)</label>
+                                  <input type="text" class="form-control mb-2" name="about_point_3_desc_id" value="{{ $settings->where('key', 'about_point_3_desc_id')->first()->value ?? 'Mendukung komunitas lokal' }}" placeholder="Bahasa Indonesia">
+                                  <label class="form-label">Description (EN)</label>
+                                  <input type="text" class="form-control" name="about_point_3_desc_en" value="{{ $settings->where('key', 'about_point_3_desc_en')->first()->value ?? 'Supporting local communities' }}" placeholder="English">
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- Point 4: Excellence -->
+                  <div class="col-md-6 mb-3">
+                      <div class="card bg-light border">
+                          <div class="card-body">
+                              <h6 class="card-title text-warning"><i class="ti tabler-award me-1"></i> Point 4 (Excellence)</h6>
+                              <div class="mb-2">
+                                  <label class="form-label">Title (ID)</label>
+                                  <input type="text" class="form-control mb-2" name="about_point_4_title_id" value="{{ $settings->where('key', 'about_point_4_title_id')->first()->value ?? 'Keunggulan' }}" placeholder="Bahasa Indonesia">
+                                  <label class="form-label">Title (EN)</label>
+                                  <input type="text" class="form-control" name="about_point_4_title_en" value="{{ $settings->where('key', 'about_point_4_title_en')->first()->value ?? 'Excellence' }}" placeholder="English">
+                              </div>
+                              <div>
+                                  <label class="form-label">Description (ID)</label>
+                                  <input type="text" class="form-control mb-2" name="about_point_4_desc_id" value="{{ $settings->where('key', 'about_point_4_desc_id')->first()->value ?? 'Layanan & peralatan berkualitas' }}" placeholder="Bahasa Indonesia">
+                                  <label class="form-label">Description (EN)</label>
+                                  <input type="text" class="form-control" name="about_point_4_desc_en" value="{{ $settings->where('key', 'about_point_4_desc_en')->first()->value ?? 'Quality service & equipment' }}" placeholder="English">
+                              </div>
+                          </div>
+                      </div>
+                  </div>
               </div>
               <button type="submit" class="btn btn-primary">Save Changes</button>
              </form>

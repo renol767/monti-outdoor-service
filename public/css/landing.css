@@ -671,11 +671,11 @@ button {
 }
 
 .feature-card {
-  background: rgba(21, 21, 21, 0.5);
+  background: #C5B097;
   padding: 1.5rem;
   border-radius: var(--border-radius-xl);
   box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(251, 202, 165, 0.2);
+  border: 1px solid rgba(41, 31, 25, 0.1);
   transition: var(--transition-normal);
 }
 
@@ -716,7 +716,7 @@ button {
 }
 
 .feature-title {
-  color: var(--color-theme-text);
+  color: #291F19;
   margin-bottom: 0.75rem;
   font-size: 1.125rem;
 }
@@ -728,7 +728,7 @@ button {
 }
 
 .feature-description {
-  color: var(--color-theme-text-light);
+  color: #3E322A;
   line-height: 1.75;
   font-size: 0.875rem;
 }

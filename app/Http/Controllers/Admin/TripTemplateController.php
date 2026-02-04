@@ -8,6 +8,7 @@ use App\Models\TripDeparture;
 use App\Models\TripContent;
 use App\Models\TripMedia;
 use App\Models\AuditLog;
+use App\Models\Addon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -70,6 +71,7 @@ class TripTemplateController extends Controller
         $validated = $request->validate([
             'title' => 'required|array',
             'title.id' => 'required|string|max:255',
+            'title.en' => 'nullable|string|max:255',
             'destination' => 'nullable|array',
             'category' => 'required|string|max:50',
             'duration_days' => 'required|integer|min:1',
@@ -129,6 +131,9 @@ class TripTemplateController extends Controller
             $validated['slug'] = $originalSlug . '-' . $counter++;
         }
 
+        // Handle includes (array of amenities)
+        $validated['includes'] = $request->input('includes', []);
+
         $trip = TripTemplate::create($validated);
 
         // Log action
@@ -168,7 +173,10 @@ class TripTemplateController extends Controller
         // Get content by tab type
         $contents = $trip->contents->keyBy('tab_type');
 
-        return view('admin.trips.edit', compact('trip', 'contents'));
+        // Get available addons
+        $addons = Addon::where('is_active', true)->get();
+
+        return view('admin.trips.edit', compact('trip', 'contents', 'addons'));
     }
 
     /**
@@ -182,6 +190,7 @@ class TripTemplateController extends Controller
         $validated = $request->validate([
             'title' => 'required|array',
             'title.id' => 'required|string|max:255',
+            'title.en' => 'nullable|string|max:255',
             'destination' => 'nullable|array',
             'category' => 'required|string|max:50',
             'duration_days' => 'required|integer|min:1',

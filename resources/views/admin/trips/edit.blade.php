@@ -152,13 +152,26 @@
                     <div class="row g-3">
                       @php $includes = $trip->includes ?? []; @endphp
                       @foreach([
-                          'crew' => ['icon' => 'users-group', 'label' => 'Professional Crew'],
+                          'guide' => ['icon' => 'user-check', 'label' => 'Guide'],
+                          'tour_leader' => ['icon' => 'flag', 'label' => 'Tour Leader'],
+                          'local_guide' => ['icon' => 'map-pin', 'label' => 'Local Guide'],
                           'porters' => ['icon' => 'backpack', 'label' => 'Porters'],
-                          'transport' => ['icon' => 'bus', 'label' => 'Transport Bus'],
+                          'hotel' => ['icon' => 'building', 'label' => 'Hotel'],
+                          'homestay' => ['icon' => 'home', 'label' => 'Homestay'],
+                          'lodge' => ['icon' => 'home-2', 'label' => 'Lodge'],
                           'meals' => ['icon' => 'tools-kitchen-2', 'label' => 'Meals'],
                           'campsite' => ['icon' => 'tent', 'label' => 'Campsite Tenda'],
-                          'insurance' => ['icon' => 'shield-check', 'label' => 'Perijinan / Asuransi'],
-                          'first_aid' => ['icon' => 'first-aid-kit', 'label' => 'P3K'],
+                          'transport' => ['icon' => 'bus', 'label' => 'Transport Bus'],
+                          'transport_plane' => ['icon' => 'plane', 'label' => 'Transport Pesawat'],
+                          'transport_ojek' => ['icon' => 'motorbike', 'label' => 'Transport Ojek'],
+                          'transport_pickup' => ['icon' => 'truck', 'label' => 'Transport Pickup'],
+                          'transport_jeep' => ['icon' => 'car', 'label' => 'Transport Jeep'],
+                          'transport_ship' => ['icon' => 'speedboat', 'label' => 'Transport Kapal Laut'],
+                          'airport_transfer' => ['icon' => 'plane-arrival', 'label' => 'Airport Transfer'],
+                          'permit' => ['icon' => 'ticket', 'label' => 'Permit'],
+                          'insurance' => ['icon' => 'shield-check', 'label' => 'Insurance'],
+                          'first_aid' => ['icon' => 'first-aid-kit', 'label' => 'First Aid'],
+                          'technical_gears' => ['icon' => 'tools', 'label' => 'Technical Gears'],
                           'snacks' => ['icon' => 'coffee', 'label' => 'Snack & Beverages'],
                           'souvenir' => ['icon' => 'gift', 'label' => 'Souvenir'],
                           'documentation' => ['icon' => 'camera', 'label' => 'Dokumentasi']
@@ -271,7 +284,11 @@
                     'duration' => ['label' => 'Duration (Text)', 'placeholder' => '2H 1M'],
                     'trekking_time' => ['label' => 'Trekking Time', 'placeholder' => '5-7 Jam / Hours'],
                     'elevation_gain' => ['label' => 'Elevation Gain', 'placeholder' => '1.200 m'],
-                    'terrain' => ['label' => 'Terrain', 'placeholder' => 'Aspal / Paved']
+                    'terrain' => ['label' => 'Terrain', 'placeholder' => 'Aspal / Paved'],
+                    'trekking_day' => ['label' => 'Trekking Day', 'placeholder' => '3 Hari / Days'],
+                    'accommodation' => ['label' => 'Accomodation Type', 'placeholder' => 'Tenda / Tent'],
+                    'destinations' => ['label' => 'Destinations', 'placeholder' => 'Puncak / Summit'],
+                    'climate' => ['label' => 'Climate', 'placeholder' => 'Tropis / Tropical']
                 ];
               @endphp
 
@@ -430,8 +447,52 @@
                     </tbody>
                 </table>
                 @endif
+
+                <hr class="my-3">
+
+                <h6>Add-ons</h6>
+                <form action="{{ route('admin.departure-addons.store', $departure) }}" method="POST" class="row g-2 mb-3">
+                  @csrf
+                  <div class="col-md-5">
+                    <select name="addon_id" class="form-select form-select-sm" required>
+                        <option value="">Select Addon...</option>
+                        @foreach($addons as $addon)
+                            <option value="{{ $addon->id }}">{{ $addon->name }} ({{ number_format($addon->default_price) }})</option>
+                        @endforeach
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <input type="number" class="form-control form-control-sm" name="max_qty" placeholder="Max Qty" min="1">
+                  </div>
+                  <div class="col-md-1">
+                    <button type="submit" class="btn btn-sm btn-outline-primary w-100">Add</button>
+                  </div>
+                </form>
+
+                @if($departure->addons->count())
+                <table class="table table-sm">
+                    <thead><tr><th>Addon</th><th>Price</th><th>Max Qty</th><th>Action</th></tr></thead>
+                    <tbody>
+                        @foreach($departure->addons as $dAddon)
+                        <tr>
+                            <td>{{ $dAddon->addon->name }}</td>
+                            <td>{{ number_format($dAddon->price) }}</td>
+                            <td>{{ $dAddon->max_qty ?? 'Unl.' }}</td>
+                            <td>
+                                <form action="{{ route('admin.departure-addons.destroy', $dAddon) }}" method="POST" class="d-inline">
+                                    @csrf @method('DELETE')
+                                    <button class="btn btn-icon btn-sm text-danger"><i class="ti tabler-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                @endif
              </div>
         </div>
+        
+
         @endforeach
       </div>
 
@@ -492,10 +553,74 @@
                  </div>
              </div>
          </div>
+       <!-- Tracking Map Section -->
+       <div class="card mb-4">
+           <div class="card-header d-flex justify-content-between">
+               <h5 class="mb-0">Tracking Map</h5>
+               <label for="trackingMapUpload" class="btn btn-primary btn-sm"><i class="ti tabler-upload"></i> Upload</label>
+               <input type="file" id="trackingMapUpload" accept="image/*" class="d-none">
+           </div>
+           <div class="card-body">
+               <div class="row g-3" id="trackingMapGrid">
+                   @foreach($trip->media->where('media_type', 'tracking_map') as $image)
+                   <div class="col-md-4 col-6 position-relative">
+                       <img src="{{ asset($image->file_path) }}" class="img-fluid rounded" style="height:200px; width:100%; object-fit:cover;">
+                       <button class="btn btn-icon btn-sm btn-danger position-absolute top-0 end-0 m-1 btn-delete-media" data-id="{{ $image->id }}"><i class="ti tabler-trash"></i></button>
+                   </div>
+                   @endforeach
+               </div>
+           </div>
+       </div>
+
+       <!-- Gear Lists Section -->
+       <div class="card mb-4">
+           <div class="card-header d-flex justify-content-between">
+               <h5 class="mb-0">Gear Lists</h5>
+               <label for="gearListUpload" class="btn btn-primary btn-sm"><i class="ti tabler-upload"></i> Upload</label>
+               <input type="file" id="gearListUpload" accept="image/*" class="d-none">
+           </div>
+           <div class="card-body">
+               <div class="row g-3" id="gearListGrid">
+                   @foreach($trip->media->where('media_type', 'gear_list') as $image)
+                   <div class="col-md-4 col-6 position-relative">
+                       <img src="{{ asset($image->file_path) }}" class="img-fluid rounded" style="height:200px; width:100%; object-fit:cover;">
+                       <button class="btn btn-icon btn-sm btn-danger position-absolute top-0 end-0 m-1 btn-delete-media" data-id="{{ $image->id }}"><i class="ti tabler-trash"></i></button>
+                   </div>
+                   @endforeach
+               </div>
+           </div>
+       </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Modals for Departures -->
+@foreach($trip->departures as $departure)
+<div class="modal fade" id="editCapacityModal-{{ $departure->id }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Capacity</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{{ route('admin.departures.update-capacity', $departure) }}" method="POST">
+        @csrf
+        <div class="modal-body">
+            <div class="mb-3">
+                <label class="form-label">Total Capacity</label>
+                <input type="number" name="capacity" class="form-control" value="{{ $departure->capacity }}" required min="1">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+@endforeach
 
 <!-- Scripts (Quill, Cropper) -->
 <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
@@ -607,7 +732,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const factsID = {};
         const factsEN = {};
         
-        const keys = ['grade', 'distance', 'max_altitude', 'duration', 'trekking_time', 'elevation_gain', 'terrain'];
+        const keys = ['grade', 'distance', 'max_altitude', 'duration', 'trekking_time', 'elevation_gain', 'terrain', 'trekking_day', 'accommodation', 'destinations', 'climate'];
         
         keys.forEach(key => {
             const enabled = form.querySelector(`input[name="trip_facts_enabled[${key}]"]`).checked;
@@ -673,6 +798,30 @@ document.addEventListener('DOMContentLoaded', function() {
              Array.from(e.target.files).forEach(f => formData.append('file', f));
              formData.append('media_type', 'gallery');
              // fetch to upload
+             await fetch(`/admin/trip-management/${tripId}/media`, { method: 'POST', body: formData, headers: {'X-CSRF-TOKEN': csrfToken} });
+             location.reload();
+        });
+    }
+
+    // Tracking Map Upload
+    const trackingMapUpload = document.getElementById('trackingMapUpload');
+    if(trackingMapUpload) {
+        trackingMapUpload.addEventListener('change', async (e) => {
+             const formData = new FormData();
+             Array.from(e.target.files).forEach(f => formData.append('file', f));
+             formData.append('media_type', 'tracking_map');
+             await fetch(`/admin/trip-management/${tripId}/media`, { method: 'POST', body: formData, headers: {'X-CSRF-TOKEN': csrfToken} });
+             location.reload();
+        });
+    }
+
+    // Gear List Upload
+    const gearListUpload = document.getElementById('gearListUpload');
+    if(gearListUpload) {
+        gearListUpload.addEventListener('change', async (e) => {
+             const formData = new FormData();
+             Array.from(e.target.files).forEach(f => formData.append('file', f));
+             formData.append('media_type', 'gear_list');
              await fetch(`/admin/trip-management/${tripId}/media`, { method: 'POST', body: formData, headers: {'X-CSRF-TOKEN': csrfToken} });
              location.reload();
         });

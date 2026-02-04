@@ -176,8 +176,12 @@ Route::get('/index-page', function () {
     $services = \App\Models\LandingService::orderBy('order')->get();
     $gallery = \App\Models\LandingGallery::orderBy('order')->get();
 
+    // Fetch Hero Sections for Cards
+    $mountainHero = \App\Models\TripTypeSection::where('slug', 'mountain-hero')->first();
+    $outdoorHero = \App\Models\TripTypeSection::where('slug', 'outdoor-hero')->first();
+    $indoorHero = \App\Models\TripTypeSection::where('slug', 'indoor-hero')->first();
 
-    return view('welcome', compact('settings', 'heroSlides', 'features', 'trips', 'services', 'gallery'));
+    return view('welcome', compact('settings', 'heroSlides', 'features', 'trips', 'services', 'gallery', 'mountainHero', 'outdoorHero', 'indoorHero'));
 })->name('landing');
 
 // About Us Page
@@ -434,6 +438,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
     // Trip Type Sections
     Route::get('/trip-types', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'index'])->name('admin.trip-types.index');
+    Route::post('/trip-types/update-hero', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'updateHero'])->name('admin.trip-types.update-hero');
     Route::post('/trip-types', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'store'])->name('admin.trip-types.store');
     Route::get('/trip-types/{section}/edit', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'edit'])->name('admin.trip-types.edit');
     Route::put('/trip-types/{section}', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'update'])->name('admin.trip-types.update');

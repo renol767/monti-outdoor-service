@@ -41,11 +41,31 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
     .product-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 2rem;
+    }
+    
+    /* Trip Facts Grid */
+    .trip-facts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      padding: 1.5rem;
+      background: transparent;
+    }
+    @media (min-width: 768px) {
+      .trip-facts-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .trip-facts-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
     }
     @media (min-width: 992px) {
       .product-grid {
@@ -62,6 +82,20 @@
       position: sticky;
       top: 100px;
       color: #fbcaa5; /* Text color */
+    }
+    .content-image-limit {
+      max-width: 80%;
+      height: auto;
+      max-height: 80vh;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+      border-radius: 8px;
+    }
+    @media (max-width: 768px) {
+        .content-image-limit {
+            max-width: 100%;
+        }
     }
     .booking-panel h4 {
       color: #fbcaa5 !important;
@@ -772,25 +806,36 @@
         @if($trip->includes && count($trip->includes) > 0)
         @php
           $includeIcons = [
-            'crew' => ['icon' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75', 'label' => 'Prof. Crew'],
-            'porters' => ['icon' => 'M4 20V14M4 14V4C4 4 5 3 8 3C11 3 12 4 12 4V14M4 14H12M12 14V20M16 20V8L20 4V20', 'label' => 'Porters'],
-            'transport' => ['icon' => 'M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 6h18v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6zM6 21v-3M18 21v-3', 'label' => 'Transport'],
-            'meals' => ['icon' => 'M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7', 'label' => 'Meals'],
-            'campsite' => ['icon' => 'M12 2L2 22h20L12 2zM12 18h.01', 'label' => 'Campsite'],
-            'insurance' => ['icon' => 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM9 12l2 2 4-4', 'label' => 'Insurance'],
-            'first_aid' => ['icon' => 'M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM12 8v8M8 12h8', 'label' => 'P3K'],
-            'snacks' => ['icon' => 'M18 8h1a4 4 0 0 1 0 8h-1M5 8h12v10a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8zM5 2v3M9 2v3M13 2v3', 'label' => 'Snack'],
-            'souvenir' => ['icon' => 'M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 1 0 0-5C13 2 12 7 12 7z', 'label' => 'Souvenir'],
-            'documentation' => ['icon' => 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z', 'label' => 'Doc'],
+            'guide' => ['icon' => 'user-check', 'label' => 'Guide'],
+            'tour_leader' => ['icon' => 'flag', 'label' => 'Tour Leader'],
+            'local_guide' => ['icon' => 'map-pin', 'label' => 'Local Guide'],
+            'porters' => ['icon' => 'backpack', 'label' => 'Porters'],
+            'hotel' => ['icon' => 'building', 'label' => 'Hotel'],
+            'homestay' => ['icon' => 'home', 'label' => 'Homestay'],
+            'lodge' => ['icon' => 'home-2', 'label' => 'Lodge'],
+            'meals' => ['icon' => 'tools-kitchen-2', 'label' => 'Meals'],
+            'campsite' => ['icon' => 'tent', 'label' => 'Campsite'],
+            'transport' => ['icon' => 'bus', 'label' => 'Bus'],
+            'transport_plane' => ['icon' => 'plane', 'label' => 'Pesawat'],
+            'transport_ojek' => ['icon' => 'motorbike', 'label' => 'Ojek'],
+            'transport_pickup' => ['icon' => 'truck', 'label' => 'Pickup'],
+            'transport_jeep' => ['icon' => 'car', 'label' => 'Jeep'],
+            'transport_ship' => ['icon' => 'speedboat', 'label' => 'Kapal'],
+            'airport_transfer' => ['icon' => 'plane-arrival', 'label' => 'Transfer'],
+            'permit' => ['icon' => 'ticket', 'label' => 'Permit'],
+            'insurance' => ['icon' => 'shield-check', 'label' => 'Insurance'],
+            'first_aid' => ['icon' => 'first-aid-kit', 'label' => 'First Aid'],
+            'technical_gears' => ['icon' => 'tools', 'label' => 'Gears'],
+            'snacks' => ['icon' => 'coffee', 'label' => 'Snack'],
+            'souvenir' => ['icon' => 'gift', 'label' => 'Souvenir'],
+            'documentation' => ['icon' => 'camera', 'label' => 'Doc'],
           ];
         @endphp
         <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; padding: 1.5rem; background: transparent; border-bottom: 1px solid rgba(255,255,255,0.1);">
           @foreach($trip->includes as $include)
           @if(isset($includeIcons[$include]))
           <div style="text-align: center; min-width: 60px;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 0.25rem; display: block;">
-              <path d="{{ $includeIcons[$include]['icon'] }}"/>
-            </svg>
+            <i class="ti ti-{{ $includeIcons[$include]['icon'] }}" style="font-size: 24px; color: var(--color-primary); margin-bottom: 0.25rem; display: block;"></i>
             <span style="font-size: 0.7rem; color: #d1d5db; display: block;">{{ $includeIcons[$include]['label'] }}</span>
           </div>
           @endif
@@ -839,18 +884,18 @@
         </div>
 
         <div class="content-panel" id="panel-gear-list">
-          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <div style="display: flex; flex-direction: column; gap: 1.5rem; align-items: center;">
             @foreach($trip->gearLists as $image)
-            <div style="width: 100%; border-radius: 8px; overflow: hidden; background: #2f2f2f;">
-              <img src="{{ asset($image->file_path) }}" alt="Gear List" style="width: 100%; height: auto; display: block;" onclick="window.open(this.src, '_blank')">
+            <div style="width: 100%; text-align: center;">
+              <img src="{{ asset($image->file_path) }}" alt="Gear List" class="content-image-limit" onclick="window.open(this.src, '_blank')">
             </div>
             @endforeach
           </div>
         </div>
 
-        <div class="content-panel" id="panel-map">
+        <div class="content-panel" id="panel-map" style="text-align: center;">
           @if($trackingMap)
-          <img src="{{ asset($trackingMap->file_path) }}" alt="Tracking Map" style="width: 100%; border-radius: 8px;">
+          <img src="{{ asset($trackingMap->file_path) }}" alt="Tracking Map" class="content-image-limit">
           @endif
         </div>
       </div>
@@ -861,39 +906,22 @@
         @php
             $facts = $trip->trip_facts;
             $factConfig = [
-                'grade' => [
-                    'label' => 'Grade', 
-                    'path' => 'M3 13a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6zm6-8a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V5zm6 8a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-6z'
-                ],
-                'distance' => [
-                    'label' => 'Distance', 
-                    'path' => 'M19 12l-7-7-7 7M12 19V5'
-                ],
-                'max_altitude' => [
-                    'label' => 'Max Altitude', 
-                    'path' => 'M3 20h18L12 4l-9 16z M14.5 11a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z'
-                ],
-                'duration' => [
-                    'label' => 'Duration', 
-                    'path' => 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z M16 2v4 M8 2v4 M4 11h16'
-                ],
-                'trekking_time' => [
-                    'label' => 'Trekking Time', 
-                    'path' => 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0-18 0 M12 7v5l3 3'
-                ],
-                'elevation_gain' => [
-                    'label' => 'Elevation Gain', 
-                    'path' => 'M3 17l6-6 4 4 8-8 M14 7h7v7'
-                ],
-                'terrain' => [
-                    'label' => 'Terrain', 
-                    'path' => 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0-18 0 M9 10a3.5 3.5 0 0 0 7 0 M9 14a3.5 3.5 0 0 1 7 0'
-                ],
+                'grade' => ['label' => 'Grade', 'icon' => 'chart-bar'],
+                'distance' => ['label' => 'Distance', 'icon' => 'ruler-2'],
+                'max_altitude' => ['label' => 'Max Altitude', 'icon' => 'mountain'],
+                'duration' => ['label' => 'Duration', 'icon' => 'clock'],
+                'trekking_time' => ['label' => 'Trekking Time', 'icon' => 'walk'],
+                'elevation_gain' => ['label' => 'Elevation Gain', 'icon' => 'trending-up'],
+                'terrain' => ['label' => 'Terrain', 'icon' => 'shoe'],
+                'trekking_day' => ['label' => 'Trekking Day', 'icon' => 'calendar'],
+                'accommodation' => ['label' => 'Accomodation', 'icon' => 'building-cottage'],
+                'destinations' => ['label' => 'Destinations', 'icon' => 'map-pin'],
+                'climate' => ['label' => 'Climate', 'icon' => 'sun'],
             ];
             
             // Filter enabled facts
             $enabledFacts = [];
-            foreach(['grade', 'distance', 'max_altitude', 'duration', 'trekking_time', 'elevation_gain', 'terrain'] as $key) {
+            foreach(array_keys($factConfig) as $key) {
                 if(data_get($facts, $key.'.enabled')) {
                     $enabledFacts[] = $key;
                 }
@@ -901,13 +929,11 @@
         @endphp
         
         @if(count($enabledFacts) > 0)
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1.25rem; padding: 1.5rem; background: transparent;">
+        <div class="trip-facts-grid">
             @foreach($enabledFacts as $key)
-                <div style="display: flex; align-items: start; gap: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
                     <div style="color: var(--color-primary); min-width: 36px;">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="{{ $factConfig[$key]['path'] ?? '' }}"/>
-                        </svg>
+                        <i class="ti ti-{{ $factConfig[$key]['icon'] ?? 'circle' }}" style="font-size: 24px;"></i>
                     </div>
                     <div>
                         <small style="color: #9ca3af; display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">
@@ -950,9 +976,9 @@
               <path d="M8 18L4 22V30H12V24H20V30H28V22L24 18L16 26L8 18Z" fill="#e97543"/>
             </svg>
             @endif
-            <span>Monti Outdoor</span>
+            <span>:MONTI Outdoor Service</span>
           </div>
-          <p class="footer-description">{{ $settings['global_footer_text'] ?? 'Your trusted partner for outdoor adventures and mountain expeditions across Indonesia.' }}</p>
+          <p class="footer-description">#ceritadialam<br>Your Trusted Travelling & Event Organizer Partner</p>
           <div class="footer-social" style="display: flex; gap: 1rem; margin-top: 1rem;">
             <a href="https://www.instagram.com/monti.outdoorservice/" class="social-link" aria-label="Instagram" target="_blank" style="color: rgba(255,255,255,0.7);">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
@@ -980,7 +1006,7 @@
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
             <li><a href="{{ route('open-trip') }}">Open Trip</a></li>
-            <li><a href="{{ route('mountain-trip') }}"></a></li>
+            <li><a href="{{ route('mountain-trip') }}">Mountain Trip</a></li>
             <li><a href="{{ route('outdoor-trip') }}">Outdoor Activity Trip</a></li>
             <li><a href="{{ route('indoor-trip') }}">Indoor Activity Trip</a></li>
           </ul>

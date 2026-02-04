@@ -42,6 +42,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
     /* Fix Mobile Menu Background (dark like main page) */
     .nav.mobile-open {
@@ -403,6 +404,13 @@
       position: relative;
     }
 
+    @media (min-width: 1024px) {
+      .trips-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 1.5rem;
+      }
+    }
+
     /* Trip Cards Grid */
 
     .trips-section-title {
@@ -717,26 +725,27 @@
     .empty-state {
       text-align: center;
       padding: 4rem 2rem;
-      background: var(--color-white);
+      background: #2a2a2a;
       border-radius: var(--border-radius-xl);
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .empty-state svg {
       width: 80px;
       height: 80px;
       margin-bottom: 1.5rem;
-      color: var(--color-slate-300);
+      color: rgba(255, 255, 255, 0.2);
     }
 
     .empty-state h3 {
       font-size: 1.25rem;
-      color: var(--color-slate-700);
+      color: #fbcaa5;
       margin-bottom: 0.5rem;
     }
 
     .empty-state p {
-      color: var(--color-slate-500);
+      color: rgba(255, 255, 255, 0.7);
       margin-bottom: 1.5rem;
     }
 
@@ -1152,31 +1161,42 @@
               </div>
             </div>
             
-            <div class="card-amenities">
+              <div class="card-amenities">
               @php
                 $iconMap = [
-                  'crew' => ['path' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z', 'label' => 'Crew'],
-                  'porters' => ['path' => 'M4 20V14M4 14V4C4 4 5 3 8 3S12 4 12 4V14M4 14H12M12 14V20', 'label' => 'Porters'],
-                  'transport' => ['path' => 'M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 6h18v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6z', 'label' => 'Transport'],
-                  'meals' => ['path' => 'M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7', 'label' => 'Meals'],
-                  'campsite' => ['path' => 'M12 2L2 22h20L12 2zM12 18h.01', 'label' => 'Campsite'],
-                  'insurance' => ['path' => 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', 'label' => 'Insurance'],
-                  'first_aid' => ['path' => 'M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM12 8v8M8 12h8', 'label' => 'P3K'],
-                  'snacks' => ['path' => 'M18 8h1a4 4 0 0 1 0 8h-1M5 8h12v10a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8z', 'label' => 'Snack'],
-                  'souvenir' => ['path' => 'M20 12v10H4V12M2 7h20v5H2zM12 22V7', 'label' => 'Souvenir'],
-                  'documentation' => ['path' => 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z', 'label' => 'Doc'],
+                  'guide' => ['icon' => 'user-check', 'label' => 'Guide'],
+                  'tour_leader' => ['icon' => 'flag', 'label' => 'Tour Leader'],
+                  'local_guide' => ['icon' => 'map-pin', 'label' => 'Local Guide'],
+                  'porters' => ['icon' => 'backpack', 'label' => 'Porters'],
+                  'hotel' => ['icon' => 'building', 'label' => 'Hotel'],
+                  'homestay' => ['icon' => 'home', 'label' => 'Homestay'],
+                  'lodge' => ['icon' => 'home-2', 'label' => 'Lodge'],
+                  'meals' => ['icon' => 'tools-kitchen-2', 'label' => 'Meals'],
+                  'campsite' => ['icon' => 'tent', 'label' => 'Campsite'],
+                  'transport' => ['icon' => 'bus', 'label' => 'Transport'],
+                  'transport_plane' => ['icon' => 'plane', 'label' => 'Pesawat'],
+                  'transport_ojek' => ['icon' => 'motorbike', 'label' => 'Ojek'],
+                  'transport_pickup' => ['icon' => 'truck', 'label' => 'Pickup'],
+                  'transport_jeep' => ['icon' => 'car', 'label' => 'Jeep'],
+                  'transport_ship' => ['icon' => 'speedboat', 'label' => 'Kapal'],
+                  'airport_transfer' => ['icon' => 'plane-arrival', 'label' => 'Transfer'],
+                  'permit' => ['icon' => 'ticket', 'label' => 'Permit'],
+                  'insurance' => ['icon' => 'shield-check', 'label' => 'Insurance'],
+                  'first_aid' => ['icon' => 'first-aid-kit', 'label' => 'First Aid'],
+                  'technical_gears' => ['icon' => 'tools', 'label' => 'Gears'],
+                  'snacks' => ['icon' => 'coffee', 'label' => 'Snack'],
+                  'souvenir' => ['icon' => 'gift', 'label' => 'Souvenir'],
+                  'documentation' => ['icon' => 'camera', 'label' => 'Doc'],
                 ];
                 $tripIncludes = $trip->includes ?? [];
-                $maxShow = 7;
+                $maxShow = 5;
                 $totalIncludes = count($tripIncludes);
                 $remaining = $totalIncludes - $maxShow;
               @endphp
               @foreach(array_slice($tripIncludes, 0, $maxShow) as $inc)
                 @if(isset($iconMap[$inc]))
                 <div class="amenity">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="{{ $iconMap[$inc]['path'] }}"/>
-                  </svg>
+                  <i class="ti ti-{{ $iconMap[$inc]['icon'] }}" style="font-size: 16px; color: rgba(255, 255, 255, 0.6);"></i>
                   <span>{{ $iconMap[$inc]['label'] }}</span>
                 </div>
                 @endif
@@ -1301,9 +1321,9 @@
               <path d="M8 18L4 22V30H12V24H20V30H28V22L24 18L16 26L8 18Z" fill="#e97543"/>
             </svg>
             @endif
-            <span>Monti Outdoor</span>
+            <span>:MONTI Outdoor Service</span>
           </div>
-          <p class="footer-description">{{ $settings['global_footer_text'] ?? 'Your trusted partner for outdoor adventures and mountain expeditions across Indonesia.' }}</p>
+          <p class="footer-description">#ceritadialam<br>Your Trusted Travelling & Event Organizer Partner</p>
           <div class="footer-social" style="display: flex; gap: 1rem; margin-top: 1rem;">
             <a href="https://www.instagram.com/monti.outdoorservice/" class="social-link" aria-label="Instagram" target="_blank" style="color: rgba(255,255,255,0.7);">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
@@ -1331,7 +1351,7 @@
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
             <li><a href="{{ route('open-trip') }}">Open Trip</a></li>
-            <li><a href="{{ route('mountain-trip') }}"></a></li>
+            <li><a href="{{ route('mountain-trip') }}">Mountain Trip</a></li>
             <li><a href="{{ route('outdoor-trip') }}">Outdoor Activity Trip</a></li>
             <li><a href="{{ route('indoor-trip') }}">Indoor Activity Trip</a></li>
           </ul>

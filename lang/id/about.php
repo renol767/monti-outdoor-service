@@ -7,9 +7,9 @@ return [
         'subtitle' => 'Bagi Kami, ALAM adalah lebih dari sekedar profesi, GUNUNG adalah rumah, serta kehangatan antara Anda dan Kami untuk menikmati waktu bersama adalah anugrah...',
     ],
     'intro' => [
-        'title' => 'Salam Kenal..!!',
+        'title' => 'Salam Kenal.',
         'p1' => 'Inilah Kami, MONTI Outdoor Service... Partner yang akan membawa petualangan dan perjalanan Anda menjadi seru, menyenangkan dan berkesan...',
-        'p2' => 'MONTI Outdoor Service dibentuk oleh sekelompok anak muda yang syarat akan pengalaman serta memiliki jiwa petualang dan solidaritas yang luar biasa. Didirikan sejak Maret 2022 dengan manajemen yang simpel dan professional, MONTI Outdoor Service dapat menjadi andalan Anda dalam mengelola semua perjalanan dan petualangan yang aman, nyaman dan terjangkau.',
+        'p2' => 'MONTI Outdoor Service dibentuk oleh sekelompok anak muda yang sarat akan pengalaman serta memiliki jiwa petualang dan solidaritas yang luar biasa. Didirikan sejak Maret 2022 dengan manajemen yang simpel dan professional, MONTI Outdoor Service dapat menjadi andalan Anda dalam mengelola semua perjalanan dan petualangan yang aman, nyaman dan terjangkau.',
         'p3' => 'Dengan mengedepankan kepercayaan dan kekeluargaan, MONTI Outdoor Service memberikan servis yang mewah dan eksklusif yang dapat disesuaikan dengan kemampuan dan kondisi Anda. Kami akan memberikan kepada Anda bagaimana rasanya berdiri di puncak gunung tertinggi dan membawa Anda kembali turun dengan aman.',
     ],
     'quote' => [

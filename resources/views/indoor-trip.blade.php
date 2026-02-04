@@ -395,17 +395,37 @@
   </header>
 
   <!-- Hero Section -->
+  @php
+      $heroSection = $sections->firstWhere('slug', 'indoor-hero');
+      $displaySections = $sections->where('slug', '!=', 'indoor-hero');
+      
+      // Default fallback
+      $heroBg = asset('assets/img/front-pages/hero/indoor-hero.jpg');
+      $heroTitle = __('trip.indoor');
+      $heroSubtitle = __('content.hero.indoor_trip.tagline');
+      
+      if ($heroSection) {
+          if ($heroSection->image) $heroBg = asset($heroSection->image);
+          if (!empty($heroSection->images) && isset($heroSection->images[0])) {
+             $heroBg = asset($heroSection->images[0]);
+          }
+          
+          if ($heroSection->title) $heroTitle = $heroSection->title;
+          if ($heroSection->subtitle) $heroSubtitle = $heroSection->subtitle;
+      }
+  @endphp
   <section class="mt-hero">
-    <div class="hero-bg"></div>
+    <div class="hero-bg" style="background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('{{ $heroBg }}') no-repeat bottom; background-size: cover;"></div>
     <div class="hero-content container">
       <span class="mt-badge">Indoor Activity Trip</span>
-      <h1 class="mt-title">{{ __('trip.indoor') }}</h1>
-      <p class="mt-subtitle">{{ __('content.hero.indoor_trip.tagline') }}</p> 
+      <h1 class="mt-title">{{ $heroTitle }}</h1>
+      <p class="mt-subtitle">{{ $heroSubtitle }}</p>
     </div>
   </section>
 
   <!-- Trip Sections -->
-  @foreach($sections as $index => $section)
+  <!-- Trip Sections -->
+  @foreach($displaySections as $index => $section)
   <section class="trip-section" id="{{ $section->slug }}">
     <div class="container">
       <div class="trip-section-grid">
@@ -495,9 +515,9 @@
               <path d="M8 18L4 22V30H12V24H20V30H28V22L24 18L16 26L8 18Z" fill="#e97543"/>
             </svg>
             @endif
-            <span>Monti Outdoor</span>
+            <span>:MONTI Outdoor Service</span>
           </div>
-          <p class="footer-description">{{ $settings['global_footer_text'] ?? 'Your trusted partner for outdoor adventures and mountain expeditions across Indonesia.' }}</p>
+          <p class="footer-description">#ceritadialam<br>Your Trusted Travelling & Event Organizer Partner</p>
           <div class="footer-social" style="display: flex; gap: 1rem; margin-top: 1rem;">
             <a href="https://www.instagram.com/monti.outdoorservice/" class="social-link" aria-label="Instagram" target="_blank" style="color: rgba(255,255,255,0.7);">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
@@ -525,7 +545,7 @@
           <h4 class="footer-heading">Services</h4>
           <ul class="footer-links">
             <li><a href="{{ route('open-trip') }}">Open Trip</a></li>
-            <li><a href="{{ route('mountain-trip') }}"></a></li>
+            <li><a href="{{ route('mountain-trip') }}">Mountain Trip</a></li>
             <li><a href="{{ route('outdoor-trip') }}">Outdoor Activity Trip</a></li>
             <li><a href="{{ route('indoor-trip') }}">Indoor Activity Trip</a></li>
           </ul>

@@ -226,7 +226,6 @@ class TripDepartureController extends Controller
     {
         $validated = $request->validate([
             'addon_id' => 'required|exists:addons,id',
-            'price' => 'required|integer|min:0',
             'max_qty' => 'nullable|integer|min:1',
         ]);
 
@@ -237,6 +236,10 @@ class TripDepartureController extends Controller
 
         $validated['departure_id'] = $departure->id;
         $validated['is_active'] = true;
+
+        // Auto-fill price from Addon master
+        $addon = Addon::find($validated['addon_id']);
+        $validated['price'] = $addon->default_price;
 
         DepartureAddon::create($validated);
 

@@ -17,13 +17,94 @@ class TripTypeSectionController extends Controller
     {
         $category = $request->get('category', 'mountain');
         
+        // Fetch standard sections (excluding hero)
         $sections = TripTypeSection::byCategory($category)
+            ->where('slug', '!=', $category . '-hero')
             ->ordered()
             ->get();
+            
+        // Fetch hero section specifically
+        $heroSection = TripTypeSection::byCategory($category)
+            ->where('slug', $category . '-hero')
+            ->first();
         
         $categories = TripTypeSection::categories();
         
-        return view('admin.trip-types.index', compact('sections', 'category', 'categories'));
+        return view('admin.trip-types.index', compact('sections', 'heroSection', 'category', 'categories'));
+    }
+
+    /**
+     * Update or Create the Hero Section
+     */
+    public function updateHero(Request $request)
+    {
+        $category = $request->input('category');
+        $slug = $category . '-hero';
+        
+        $validated = $request->validate([
+            'category' => 'required|string|in:mountain,outdoor,indoor',
+            'title_id' => 'required|string|max:255',
+            'title_en' => 'required|string|max:255',
+            'subtitle_id' => 'nullable|string|max:255',
+            'subtitle_en' => 'nullable|string|max:255',
+            'hero_image' => 'nullable|image|max:10240', // 10MB max
+        ]);
+
+        // Find or create the hero section
+        $section = TripTypeSection::firstOrNew([
+            'slug' => $slug,
+            'category' => $category
+        ]);
+
+        // If new, set defaults
+        if (!$section->exists) {
+            $section->sort_order = 0; // Top priority
+            $section->is_active = true;
+        }
+
+        // Save translations
+        $section->title = [
+            'id' => $validated['title_id'],
+            'en' => $validated['title_en'],
+        ];
+        
+        $section->subtitle = [
+            'id' => $validated['subtitle_id'] ?? '',
+            'en' => $validated['subtitle_en'] ?? '',
+        ];
+        
+        // Handle Image Upload (Cropped Base64)
+        if ($request->filled('cropped_hero_image')) {
+            $base64Image = $request->input('cropped_hero_image');
+            
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
+                $data = substr($base64Image, strpos($base64Image, ',') + 1);
+                $type = strtolower($type[1]); // jpg, png, etc.
+                
+                if (!in_array($type, ['jpg', 'jpeg', 'png', 'gif'])) {
+                   $type = 'jpg'; // Default fallback
+                }
+
+                $data = base64_decode($data);
+                if ($data !== false) {
+                    $filename = $slug . '_' . time() . '.' . $type;
+                    $path = 'trip-types/' . $filename;
+                    
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->put($path, $data)) {
+                         // Hero uses the first image slot
+                        $images = $section->images ?? [];
+                        $images[0] = 'storage/' . $path;
+                        $section->images = $images;
+                    }
+                }
+            }
+        }
+
+        $section->save();
+
+        return redirect()
+            ->route('admin.trip-types.index', ['category' => $category])
+            ->with('success', 'Hero section updated successfully!');
     }
 
     /**
