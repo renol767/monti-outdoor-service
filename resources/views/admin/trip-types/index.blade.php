@@ -27,6 +27,17 @@
   </div>
   @endif
 
+  @if($errors->any())
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <ul class="mb-0">
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  @endif
+
   <!-- Sections List -->
   <div class="card">
     <div class="card-body">
@@ -115,7 +126,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Create Section</button>
+          <button type="button" class="btn btn-primary">Create Section</button>
         </div>
       </form>
     </div>
@@ -144,15 +155,21 @@
             <div class="row">
                 <div class="col-md-6 mb-2">
                     <label class="form-label small text-muted">Indonesian (ID)</label>
-                    <input type="text" class="form-control" name="title_id" required 
+                    <input type="text" class="form-control @error('title_id') is-invalid @enderror" name="title_id" required 
                            placeholder="Judul dalam Bahasa Indonesia"
-                           value="{{ $heroSection ? $heroSection->getTranslation('title', 'id', false) : '' }}">
+                           value="{{ old('title_id', $heroSection ? $heroSection->getTranslation('title', 'id', false) : '') }}">
+                    @error('title_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="col-md-6 mb-2">
                     <label class="form-label small text-muted">English (EN)</label>
-                    <input type="text" class="form-control" name="title_en" required 
+                    <input type="text" class="form-control @error('title_en') is-invalid @enderror" name="title_en" required 
                            placeholder="Title in English"
-                           value="{{ $heroSection ? $heroSection->getTranslation('title', 'en', false) : '' }}">
+                           value="{{ old('title_en', $heroSection ? $heroSection->getTranslation('title', 'en', false) : '') }}">
+                    @error('title_en')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
           </div>
@@ -162,15 +179,21 @@
             <div class="row">
                 <div class="col-md-6 mb-2">
                     <label class="form-label small text-muted">Indonesian (ID)</label>
-                    <input type="text" class="form-control" name="subtitle_id" 
+                    <input type="text" class="form-control @error('subtitle_id') is-invalid @enderror" name="subtitle_id" 
                            placeholder="Deskripsi singkat..."
-                           value="{{ $heroSection ? $heroSection->getTranslation('subtitle', 'id', false) : '' }}">
+                           value="{{ old('subtitle_id', $heroSection ? $heroSection->getTranslation('subtitle', 'id', false) : '') }}">
+                    @error('subtitle_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="col-md-6 mb-2">
                     <label class="form-label small text-muted">English (EN)</label>
-                    <input type="text" class="form-control" name="subtitle_en" 
+                    <input type="text" class="form-control @error('subtitle_en') is-invalid @enderror" name="subtitle_en" 
                            placeholder="Short tagline..."
-                           value="{{ $heroSection ? $heroSection->getTranslation('subtitle', 'en', false) : '' }}">
+                           value="{{ old('subtitle_en', $heroSection ? $heroSection->getTranslation('subtitle', 'en', false) : '') }}">
+                    @error('subtitle_en')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
           </div>
@@ -190,11 +213,10 @@
 
           <div class="mb-3">
             <label class="form-label">Upload New Image</label>
-            <input type="file" class="form-control" id="heroImageInput" accept="image/*">
-            <input type="hidden" name="cropped_hero_image" id="croppedHeroImage">
+            <input type="file" class="form-control crop-image" id="hero_image" name="hero_image" accept="image/*" data-ratio="2.4" data-no-resize="true">
             <div class="form-text">Recommended size: 1920x800px. Max 10MB.</div>
             
-            <!-- Preview after crop -->
+            <!-- Restore Preview -->
             <div id="newImagePreview" class="mt-2 d-none">
                 <p class="small text-muted mb-1">New Image Preview:</p>
                 <img src="" class="img-fluid rounded border" style="max-height: 150px; width: 100%; object-fit: cover;">
@@ -210,88 +232,26 @@
   </div>
 </div>
 
-<!-- Crop Modal -->
-<div class="modal fade" id="cropModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Crop Image</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="img-container" style="max-height: 400px; display: flex; justify-content: center; background: #f8f9fa;">
-          <img id="cropperImage" style="max-width: 100%; max-height: 400px;">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="cropBtn">
-          <i class="ti tabler-crop me-1"></i> Crop & Apply
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
 @section('page-script')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const heroInput = document.getElementById('heroImageInput');
-  const cropModal = new bootstrap.Modal(document.getElementById('cropModal'));
-  const cropperImage = document.getElementById('cropperImage');
-  let cropper = null;
-
-  heroInput.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        cropperImage.src = e.target.result;
-        cropModal.show();
-        
-        // Init cropper after modal show
-        setTimeout(() => {
-            if (cropper) cropper.destroy();
-            cropper = new Cropper(cropperImage, {
-                aspectRatio: 1920 / 800, // Landscape
-                viewMode: 2,
-                autoCropArea: 1
-            });
-        }, 300);
-      }
-      reader.readAsDataURL(file);
-    }
-    // Reset value so same file can be selected again if cancelled
-    this.value = ''; 
-  });
-
-  document.getElementById('cropBtn').addEventListener('click', function() {
-    if (!cropper) return;
-    
-    // Get cropped canvas
-    const canvas = cropper.getCroppedCanvas({
-        maxWidth: 1920,
-        maxHeight: 1200 // Allow some height
-    });
-    
-    // Convert to base64
-    const base64 = canvas.toDataURL('image/jpeg', 0.85);
-    
-    // Set hidden input
-    document.getElementById('croppedHeroImage').value = base64;
-    
-    // Show preview
+    const heroInput = document.getElementById('hero_image');
     const previewContainer = document.getElementById('newImagePreview');
     const previewImg = previewContainer.querySelector('img');
-    previewImg.src = base64;
-    previewContainer.classList.remove('d-none');
-    
-    // Close modal
-    cropModal.hide();
-    cropper.destroy();
-    cropper = null;
-  });
+
+    if(heroInput) {
+        heroInput.addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewContainer.classList.remove('d-none');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
 });
 </script>
 @endsection

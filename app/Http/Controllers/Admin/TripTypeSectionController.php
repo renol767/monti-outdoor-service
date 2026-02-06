@@ -73,8 +73,19 @@ class TripTypeSectionController extends Controller
             'en' => $validated['subtitle_en'] ?? '',
         ];
         
-        // Handle Image Upload (Cropped Base64)
-        if ($request->filled('cropped_hero_image')) {
+        // Handle Image Upload (Standard File Upload from Cropper)
+        if ($request->hasFile('hero_image')) {
+            $file = $request->file('hero_image');
+            $filename = $slug . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('trip-types', $filename, 'public');
+            
+            // Hero uses the first image slot
+            $images = $section->images ?? [];
+            $images[0] = 'storage/' . $path;
+            $section->images = $images;
+        }
+        // Legacy: Handle Base64 (Keep for backward compatibility if needed)
+        elseif ($request->filled('cropped_hero_image')) {
             $base64Image = $request->input('cropped_hero_image');
             
             if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {

@@ -223,8 +223,7 @@
                       <img src="" alt="Cropped preview" class="rounded" style="max-height: 100px;">
                       <small class="d-block text-success mt-1"><i class="ti tabler-check"></i> New thumbnail ready</small>
                     </div>
-                    <input type="file" class="form-control" id="thumbnailInput" accept="image/*">
-                    <input type="hidden" name="thumbnail_cropped" id="thumbnailCroppedData">
+                    <input type="file" class="form-control crop-image" id="thumbnailInput" name="thumbnail" accept="image/*" data-ratio="4/5" data-no-resize="true">
                     <small class="text-muted">Recommended: 4:5 ratio.</small>
                   </div>
                 </div>
@@ -241,8 +240,7 @@
                              <span class="text-success ms-2"><i class="ti tabler-check"></i> Ready</span>
                         </div>
                     </div>
-                    <input type="file" class="form-control" id="landscapeInput" accept="image/*" onchange="showCropper(this, 'landscape')">
-                    <input type="hidden" name="thumbnail_landscape_cropped" id="landscapeCroppedData">
+                    <input type="file" class="form-control crop-image" id="landscapeInput" name="thumbnail_landscape" accept="image/*" data-ratio="16/9" data-no-resize="true">
                     <small class="text-muted">Recommended: Landscape (16:9).</small>
                   </div>
                 </div>
@@ -771,21 +769,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Image logic (Simplified for brevity, copying the crop logic is recommended but I'll skip full reimplementation here to keep artifact size down as user can reference previous file - but wait, I am overwriting!
-    // I MUST include the cropping logic or it will break.
-    // I will include a condensed version.
-    
-    // ... (Cropper logic similar to previous file)
-    let cropper = null;
-    const thumbnailInput = document.getElementById('thumbnailInput');
-    const landscapeInput = document.getElementById('landscapeInput');
-    
-    // Basic file read and text update for now (assuming simplified flow or I should copy paste full logic)
-    // For this task, I'll ensure the input names match what Controller expects specificially for cropping if needed.
-    // The previous file had extensive cropping modal. I should probably copy it if I want to maintain functionality.
-    // I will try to restore basic cropping if possible.
-    
-    // (Restituting basic gallery upload logic)
+    // Image Previews for Standard Uploads
+    function setupImagePreview(inputId, previewContainerId) {
+        const input = document.getElementById(inputId);
+        const previewContainer = document.getElementById(previewContainerId);
+        
+        if (input && previewContainer) {
+            const previewImg = previewContainer.querySelector('img');
+            
+            input.addEventListener('change', function(e) {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if(previewImg) previewImg.src = e.target.result;
+                        previewContainer.classList.remove('d-none');
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    }
+
+    setupImagePreview('thumbnailInput', 'croppedThumbnailPreview');
+    setupImagePreview('landscapeInput', 'croppedLandscapePreview');
+
+    // Gallery Upload (Standard)
     const galleryUpload = document.getElementById('galleryUpload');
     if(galleryUpload) {
         galleryUpload.addEventListener('change', async (e) => {
