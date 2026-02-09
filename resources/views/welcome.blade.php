@@ -532,27 +532,43 @@
             <div class="card-amenities">
               @php
                 $tripIncludes = $trip->includes ?? [];
+                // Filter only includes that have icons in the map
+                $validIncludes = array_filter($tripIncludes, function($inc) use ($iconMap) {
+                    return isset($iconMap[$inc]);
+                });
+                
                 $maxShow = 5;
-                $remaining = count($tripIncludes) - $maxShow;
+                $totalValid = count($validIncludes);
+                $remaining = $totalValid - $maxShow;
               @endphp
-              @foreach(array_slice($tripIncludes, 0, $maxShow) as $inc)
-                @if(isset($iconMap[$inc]))
-                <div class="amenity">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="{{ $iconMap[$inc]['path'] }}"/>
-                  </svg>
-                  <span>{{ $iconMap[$inc]['label'] }}</span>
-                </div>
-                @endif
-              @endforeach
-              @if($remaining > 0)
-                <span class="amenity-more">+{{ $remaining }}</span>
+              
+              @if($totalValid > 0)
+                  @foreach(array_slice($validIncludes, 0, $maxShow) as $inc)
+                    <div class="amenity">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="{{ $iconMap[$inc]['path'] }}"/>
+                      </svg>
+                      <span>{{ $iconMap[$inc]['label'] }}</span>
+                    </div>
+                  @endforeach
+                  
+                  @if($remaining > 0)
+                    <span class="amenity-more">+{{ $remaining }}</span>
+                  @endif
+              @else
+                  <div class="amenity">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span>{{ $trip->duration }}</span>
+                  </div>
               @endif
             </div>
 
+            <div class="card-features-label" style="font-size: 0.75rem; color: var(--color-primary); font-weight: 600; margin-bottom: 0.25rem;">{{ __('trip.destination') }}:</div>
             <ul class="card-features">
               @if(!empty($trip->highlights))
-                @foreach(array_slice($trip->highlights, 0, 3) as $highlight)
+                @foreach(array_slice($trip->highlights, 0, 4) as $highlight)
                 <li>{{ is_array($highlight) ? implode(', ', \Illuminate\Support\Arr::flatten($highlight)) : $highlight }}</li>
                 @endforeach
               @endif

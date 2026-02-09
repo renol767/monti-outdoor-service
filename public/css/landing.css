@@ -1325,7 +1325,7 @@ button {
 }
 
 .about-text {
-  color: var(--color-slate-600);
+  color: rgba(255, 255, 255, 0.8);
   margin-bottom: 1.5rem;
   line-height: 1.75;
   font-size: 0.875rem;
@@ -1333,12 +1333,14 @@ button {
 
 @media (min-width: 768px) {
   .about-text {
+    color: rgba(255, 255, 255, 0.8);
     font-size: 1rem;
   }
 }
 
 @media (min-width: 1024px) {
   .about-text {
+    color: rgba(255, 255, 255, 0.8);
     font-size: 1.125rem;
   }
 }

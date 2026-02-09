@@ -1068,14 +1068,14 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 17l2-4 3 2 4-6 4 6 3-2 2 4H3z"/><circle cx="12" cy="5" r="2"/>
             </svg>
-            <span>{{ __('trip.outdoor') }}</span>
+            <span>{{ __('navigation.island_trip') }}</span>
           </button>
           <button class="kategori-tab" data-kategori="city">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 21h18M5 21V7l8-4v18M13 21V9l6 2v10"/>
               <path d="M9 9h1M9 13h1M9 17h1M17 13h1M17 17h1"/>
             </svg>
-            <span>{{ __('trip.indoor') }}</span>
+            <span>{{ __('navigation.city_tour') }}</span>
           </button>
           <button class="kategori-tab" data-kategori="oneday">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1189,18 +1189,24 @@
                   'documentation' => ['icon' => 'camera', 'label' => 'Doc'],
                 ];
                 $tripIncludes = $trip->includes ?? [];
+                
+                // Filter only includes that have icons in the map
+                $validIncludes = array_filter($tripIncludes, function($inc) use ($iconMap) {
+                    return isset($iconMap[$inc]);
+                });
+
                 $maxShow = 5;
-                $totalIncludes = count($tripIncludes);
-                $remaining = $totalIncludes - $maxShow;
+                $totalValid = count($validIncludes);
+                $remaining = $totalValid - $maxShow;
               @endphp
-              @foreach(array_slice($tripIncludes, 0, $maxShow) as $inc)
-                @if(isset($iconMap[$inc]))
+              
+              @foreach(array_slice($validIncludes, 0, $maxShow) as $inc)
                 <div class="amenity">
                   <i class="ti ti-{{ $iconMap[$inc]['icon'] }}" style="font-size: 16px; color: rgba(255, 255, 255, 0.6);"></i>
                   <span>{{ $iconMap[$inc]['label'] }}</span>
                 </div>
-                @endif
               @endforeach
+              
               @if($remaining > 0)
                 <span class="amenity-more">+{{ $remaining }}</span>
               @endif
