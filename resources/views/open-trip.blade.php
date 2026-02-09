@@ -1123,7 +1123,7 @@
         <div class="trips-grid" id="tripsGrid">
         @foreach($trips as $trip)
         <a href="{{ route('trip.detail', $trip->slug) }}" class="open-trip-card-link" style="text-decoration: none; color: inherit;">
-        <div class="open-trip-card" data-category="{{ strtolower(str_replace(' ', '', $trip->category)) }}" data-departures="{{ implode(',', $trip->departure_months ?? []) }}" data-title="{{ strtolower($trip->title) }}" data-timestamp="{{ $trip->created_at ? $trip->created_at->timestamp : 0 }}">
+        <div class="open-trip-card" data-category="{{ strtolower(str_replace(' ', '', $trip->category)) }}" data-departures="{{ implode(',', $trip->departure_months ?? []) }}" data-title="{{ strtolower($trip->title) }}" data-timestamp="{{ $trip->created_at ? $trip->created_at->timestamp : 0 }}" data-departure-timestamp="{{ $trip->departure_timestamp ?? 9999999999 }}">
           <div class="card-image">
             <img src="{{ asset($trip->image) }}" alt="{{ $trip->title }}" loading="lazy">
             <button class="favorite-btn" aria-label="Add to favorites" data-trip-id="{{ $trip->id }}">
@@ -1562,10 +1562,10 @@
             } else if (sortValue === 'price-high') {
               return priceB - priceA;
             } else if (sortValue === 'newest') {
-              // Sort by timestamp
-              const timeA = parseInt(a.dataset.timestamp) || 0;
-              const timeB = parseInt(b.dataset.timestamp) || 0;
-              return timeB - timeA;
+              // Sort by departure timestamp (Ascending - Smallest/Earliest first)
+              const timeA = parseInt(a.dataset.departureTimestamp) || 9999999999;
+              const timeB = parseInt(b.dataset.departureTimestamp) || 9999999999;
+              return timeA - timeB;
             }
             return 0;
           });

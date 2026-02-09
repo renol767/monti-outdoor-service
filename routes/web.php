@@ -281,6 +281,7 @@ Route::get('/open-trip', function () {
                 'rating_count' => $trip->rating_count,
                 'next_departure' => $nextDeparture ? $nextDeparture->start_date->format('d M Y') : null,
                 'departure_date' => $nextDeparture ? $nextDeparture->start_date->format('d M Y') : 'TBD',
+                'departure_timestamp' => $nextDeparture ? $nextDeparture->start_date->timestamp : 9999999999, // Push TBD to end
                 'available_pax' => $nextDeparture ? ($nextDeparture->capacity - $nextDeparture->booked_count) : 0,
                 'capacity' => $nextDeparture ? $nextDeparture->capacity : null,
                 'booked_count' => $nextDeparture ? $nextDeparture->booked_count : 0,
@@ -289,7 +290,8 @@ Route::get('/open-trip', function () {
                 'departure_months' => $departureMonths,
                 'created_at' => $trip->created_at,
             ];
-        });
+        })
+        ->sortBy('departure_timestamp');
 
     // Also get categories for filter
     $categories = \App\Models\TripTemplate::where('status', 'published')
