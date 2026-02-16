@@ -161,13 +161,8 @@ use App\Http\Controllers\charts\ChartJs;
 use App\Http\Controllers\maps\Leaflet;
 use App\Http\Controllers\SessionAuthController;
 
-// Coming Soon Page (Public - Root)
+// Landing Page (Public - Root)
 Route::get('/', function () {
-    return view('coming-soon');
-})->name('home');
-
-// Original Landing Page (moved to /index-page)
-Route::get('/index-page', function () {
     $settings = \App\Models\LandingSetting::all()->pluck('value', 'key');
     $heroSlides = \App\Models\HeroSlide::active()->ordered()->get();
     $features = \App\Models\LandingFeature::orderBy('order')->get();
