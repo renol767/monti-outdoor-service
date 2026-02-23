@@ -179,5 +179,31 @@ async function logout() {
     
     window.location.href = '/logout-session';
 }
+
+// Live avatar preview on file select
+document.getElementById('upload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+        // If there's an existing <img#uploadedAvatar>, update it
+        let img = document.getElementById('uploadedAvatar');
+        if (img) {
+            img.src = ev.target.result;
+        } else {
+            // Replace the initials avatar div with an img
+            const avatarDiv = document.querySelector('.avatar.avatar-xl');
+            if (avatarDiv) {
+                const newImg = document.createElement('img');
+                newImg.id = 'uploadedAvatar';
+                newImg.src = ev.target.result;
+                newImg.alt = 'user-avatar';
+                newImg.className = 'd-block w-px-100 h-px-100 rounded';
+                avatarDiv.replaceWith(newImg);
+            }
+        }
+    };
+    reader.readAsDataURL(file);
+});
 </script>
 @endsection

@@ -88,11 +88,22 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     /**
      * Check if user is regular user
-     *
-     * @return bool
      */
     public function isUser(): bool
     {
         return $this->role === 'user';
+    }
+
+    /**
+     * Get profile photo URL (used by navbar)
+     */
+    public function getProfilePhotoUrlAttribute(): string
+    {
+        if ($this->avatar) {
+            return asset($this->avatar);
+        }
+        // Fallback: initials avatar
+        $name = urlencode(substr($this->name, 0, 2));
+        return 'https://ui-avatars.com/api/?name=' . $name . '&background=e97543&color=fff&size=128';
     }
 }
