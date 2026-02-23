@@ -402,7 +402,7 @@ use Illuminate\Support\Facades\Route;
                   John Doe
                   @endif
                 </h6>
-                <small class="text-body-secondary">Admin</small>
+                <small class="text-body-secondary">{{ ucfirst(Auth::user()->role ?? 'User') }}</small>
               </div>
             </div>
           </a>
@@ -410,17 +410,20 @@ use Illuminate\Support\Facades\Route;
         <li>
           <div class="dropdown-divider my-1 mx-n2"></div>
         </li>
+        @if(Auth::check() && Auth::user()->isAdmin())
         <li>
           <a class="dropdown-item"
             href="{{ Route::has('profile.show') ? route('profile.show') : url('pages/profile-user') }}">
             <i class="icon-base ti tabler-user me-3 icon-md"></i><span class="align-middle">My Profile</span> </a>
         </li>
+        @endif
         {{-- @if (Auth::check() && Laravel\Jetstream\Jetstream::hasApiFeatures())
         <li>
           <a class="dropdown-item" href="{{ route('api-tokens.index') }}">
             <i class="icon-base ti tabler-settings me-3 icon-md"></i><span class="align-middle">API Tokens</span> </a>
         </li>
         @endif --}}
+        @if(Auth::check() && Auth::user()->isAdmin())
         <li>
           <a class="dropdown-item" href="{{ url('pages/account-settings-billing') }}">
             <span class="d-flex align-items-center align-middle">
@@ -430,6 +433,7 @@ use Illuminate\Support\Facades\Route;
             </span>
           </a>
         </li>
+        @endif
         {{-- @if (Auth::User() && Laravel\Jetstream\Jetstream::hasTeamFeatures())
         <li>
           <div class="dropdown-divider my-1 mx-n2"></div>
