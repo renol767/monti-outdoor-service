@@ -79,6 +79,9 @@
     .nav.mobile-open {
       background: rgba(30, 30, 30, 0.95) !important;
       backdrop-filter: blur(10px) !important;
+      overflow-y: auto !important;
+      max-height: 100dvh !important;
+      padding-bottom: 10rem !important;
     }
     
     /* Fix Mobile Menu Text Color */
