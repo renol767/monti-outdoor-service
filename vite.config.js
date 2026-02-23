@@ -5,7 +5,7 @@ import fg from 'fast-glob'
 const inputs = fg.sync([
   'resources/css/**/*.css',
   'resources/js/**/*.js',
-  'resources/assets/vendor/**/main.scss'
+  'resources/sass/app.scss'
 ])
 
 export default defineConfig({
