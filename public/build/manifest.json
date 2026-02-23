@@ -56,5 +56,10 @@
     "name": "laravel-user-management",
     "src": "resources/js/laravel-user-management.js",
     "isEntry": true
+  },
+  "resources/sass/app.scss": {
+    "file": "assets/app-LGZ8W9wj.css",
+    "src": "resources/sass/app.scss",
+    "isEntry": true
   }
 }
