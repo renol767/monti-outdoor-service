@@ -9,7 +9,7 @@
       <div class="card">
         <div class="card-body">
           <h4 class="card-title mb-4">
-            <i class="ti ti-user-shield me-2"></i>Admin Dashboard
+            <i class="ti tabler-user-shield me-2"></i>Admin Dashboard
           </h4>
           <div class="alert alert-primary" role="alert">
             <h5 class="alert-heading mb-2">Welcome, {{ auth()->user()->name }}!</h5>
