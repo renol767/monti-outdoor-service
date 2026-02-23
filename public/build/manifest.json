@@ -4,6 +4,11 @@
     "src": "resources/css/app.css",
     "isEntry": true
   },
+  "resources/css/landing-ui-fixes.css": {
+    "file": "assets/landing-ui-fixes-WVJXCGuZ.css",
+    "src": "resources/css/landing-ui-fixes.css",
+    "isEntry": true
+  },
   "resources/js/app.js": {
     "file": "assets/app-CpXlUCUj.js",
     "name": "app",
