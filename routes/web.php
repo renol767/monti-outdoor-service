@@ -445,9 +445,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
 // User Dashboard Routes (Requires session auth and role:user)
 Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('user.dashboard');
-    })->name('user.dashboard');
+    Route::get('/dashboard', [\App\Http\Controllers\UserDashboardController::class, 'index'])->name('user.dashboard');
+    Route::get('/profile', [\App\Http\Controllers\UserDashboardController::class, 'profile'])->name('user.profile');
+    Route::post('/profile', [\App\Http\Controllers\UserDashboardController::class, 'updateProfile'])->name('user.profile.update');
+    Route::post('/password', [\App\Http\Controllers\UserDashboardController::class, 'updatePassword'])->name('user.password.update');
 });
 
 // Vuexy Demo Routes (keep existing)
@@ -647,3 +648,24 @@ Route::get('/maps/leaflet', [Leaflet::class, 'index'])->name('maps-leaflet');
 // laravel example
 Route::get('/laravel/user-management', [UserManagement::class, 'UserManagement'])->name('laravel-example-user-management');
 Route::resource('/user-list', UserManagement::class);
+
+Route::get('/dashboard', function () {
+    if (auth()->check()) {
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif (auth()->user()->role === 'user') {
+            return redirect('/');
+        }
+    }
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+use App\Http\Controllers\ProfileController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

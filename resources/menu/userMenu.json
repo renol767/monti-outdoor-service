@@ -7,16 +7,28 @@
       "slug": "user.dashboard"
     },
     {
-      "url": "#",
-      "name": "My Bookings",
-      "icon": "menu-icon icon-base ti tabler-ticket",
-      "slug": "user-bookings"
+      "url": "user/profile",
+      "name": "My Profile",
+      "icon": "menu-icon icon-base ti tabler-user",
+      "slug": "user.profile"
     },
     {
       "url": "#",
-      "name": "My Profile",
-      "icon": "menu-icon icon-base ti tabler-user",
-      "slug": "user-profile"
+      "name": "My Invoice",
+      "icon": "menu-icon icon-base ti tabler-file-invoice",
+      "slug": "user.invoice"
+    },
+    {
+      "url": "#",
+      "name": "My Transaction",
+      "icon": "menu-icon icon-base ti tabler-receipt",
+      "slug": "user.transaction"
+    },
+    {
+      "url": "#",
+      "name": "My Wishlist",
+      "icon": "menu-icon icon-base ti tabler-heart",
+      "slug": "user.wishlist"
     }
   ]
 }

@@ -23,97 +23,6 @@ $customizerHidden = 'customizer-hide';
 @endsection
 
 @section('page-script')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('formAuthentication');
-    const errorDiv = document.getElementById('error-message');
-    
-    const passwordToggles = document.querySelectorAll('.form-password-toggle');
-    
-    passwordToggles.forEach((toggle, index) => {
-        const input = toggle.querySelector('#password');
-        const icon = toggle.querySelector('togglePassword');
-
-        if (!input || !icon) return;
-
-        icon.addEventListener('click', () => {
-          const iconEl = icon.querySelector('i');
-
-          if (input.type === 'password') {
-            input.type = 'text';
-            iconEl.classList.remove('tabler-eye-off');
-            iconEl.classList.add('tabler-eye');
-          } else {
-            input.type = 'password';
-            iconEl.classList.remove('tabler-eye');
-            iconEl.classList.add('tabler-eye-off');
-          }
-        });
-    });
-    
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        
-        errorDiv.style.display = 'none';
-        errorDiv.textContent = '';
-        
-        try {
-            const response = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                credentials: 'same-origin',
-                body: JSON.stringify({ email, password })
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok) {
-                // Store token and user data for API calls
-                localStorage.setItem('token', data.access_token);
-                localStorage.setItem('user', JSON.stringify(data.user));
-                localStorage.setItem('role', data.role);
-                
-                // Now login for session (web auth)
-                const sessionResponse = await fetch('/login-session', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('[name="_token"]').value
-                    },
-                    credentials: 'same-origin',
-                    body: JSON.stringify({ email, password })
-                });
-                
-                if (sessionResponse.ok) {
-                    // Redirect based on role
-                    if (data.role === 'admin') {
-                        window.location.href = '/admin/dashboard';
-                    } else {
-                        window.location.href = '/user/dashboard';
-                    }
-                } else {
-                    errorDiv.textContent = 'Session creation failed';
-                    errorDiv.style.display = 'block';
-                }
-            } else {
-                errorDiv.textContent = data.error || 'Invalid credentials';
-                errorDiv.style.display = 'block';
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            errorDiv.textContent = 'An error occurred. Please try again.';
-            errorDiv.style.display = 'block';
-        }
-    });
-});
-</script>
 @endsection
 
 @section('content')
@@ -133,32 +42,47 @@ document.addEventListener('DOMContentLoaded', function() {
           <h4 class="mb-1">Welcome to Monti Outdoor! 👋</h4>
           <p class="mb-6">Please sign-in to your account and start your adventure</p>
 
-          <div id="error-message" class="alert alert-danger" style="display: none;" role="alert"></div>
+          @if(session('status'))
+            <div class="alert alert-success mb-4" role="alert">
+                {{ session('status') }}
+            </div>
+          @endif
 
-          <form id="formAuthentication" class="mb-4">
+          <form id="formAuthentication" class="mb-4" method="POST" action="{{ route('login') }}">
             @csrf
             <div class="mb-6 form-control-validation">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" name="email"
-                placeholder="Enter your email" autofocus required />
+              <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email"
+                placeholder="Enter your email" value="{{ old('email') }}" autofocus required autocomplete="username" />
+              @error('email')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
             </div>
             <div class="mb-6 form-password-toggle form-control-validation">
               <label class="form-label" for="password">Password</label>
               <div class="input-group input-group-merge">
-                <input type="password" id="password" class="form-control" name="password"
+                <input type="password" id="password" class="form-control @error('password') is-invalid @enderror" name="password"
                   placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                  aria-describedby="password" required />
+                  aria-describedby="password" required autocomplete="current-password" />
                 <span id="togglePassword" class="input-group-text cursor-pointer user-select-none" style="cursor: pointer;">
                   <i class="ti tabler-eye-off" style="font-size: 1.25rem;"></i>
                 </span>
+                @error('password')
+                  <div class="invalid-feedback" style="display:block;">{{ $message }}</div>
+                @enderror
               </div>
             </div>
             <div class="my-8">
               <div class="d-flex justify-content-between">
                 <div class="form-check mb-0 ms-2">
-                  <input class="form-check-input" type="checkbox" id="remember-me" />
-                  <label class="form-check-label" for="remember-me"> Remember Me </label>
+                  <input class="form-check-input" type="checkbox" id="remember_me" name="remember" />
+                  <label class="form-check-label" for="remember_me"> Remember Me </label>
                 </div>
+                @if (\Illuminate\Support\Facades\Route::has('password.request'))
+                  <a href="{{ route('password.request') }}">
+                    <p class="mb-0">Forgot Password?</p>
+                  </a>
+                @endif
               </div>
             </div>
             <div class="mb-6">

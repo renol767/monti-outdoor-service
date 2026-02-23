@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Vite;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +30,23 @@ class AppServiceProvider extends ServiceProvider
                 ];
             }
             return [];
+        });
+
+        VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
+            return (new MailMessage)
+                ->subject('Verify your email address - Monti Outdoor Service')
+                ->view('emails.verify-email', ['url' => $url, 'user' => $notifiable]);
+        });
+
+        ResetPassword::toMailUsing(function (object $notifiable, string $token) {
+            $url = url(route('password.reset', [
+                'token' => $token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ], false));
+
+            return (new MailMessage)
+                ->subject('Reset Password Request - Monti Outdoor Service')
+                ->view('emails.reset-password', ['url' => $url, 'user' => $notifiable]);
         });
     }
 }
