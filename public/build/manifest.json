@@ -9,10 +9,52 @@
     "src": "resources/css/landing-ui-fixes.css",
     "isEntry": true
   },
+  "resources/js/admin-preview-handler.js": {
+    "file": "assets/admin-preview-handler-AfjtLr51.js",
+    "name": "admin-preview-handler",
+    "src": "resources/js/admin-preview-handler.js",
+    "isEntry": true
+  },
   "resources/js/app.js": {
-    "file": "assets/app-CpXlUCUj.js",
+    "file": "assets/app-D-GzOo2x.js",
     "name": "app",
     "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/bootstrap.js"
+    ]
+  },
+  "resources/js/bootstrap.js": {
+    "file": "assets/bootstrap-T1DpEqax.js",
+    "name": "bootstrap",
+    "src": "resources/js/bootstrap.js",
+    "isEntry": true
+  },
+  "resources/js/image-cropper.js": {
+    "file": "assets/image-cropper-tY6UcKpP.js",
+    "name": "image-cropper",
+    "src": "resources/js/image-cropper.js",
+    "isEntry": true,
+    "css": [
+      "assets/image-cropper-bJDYUdy1.css"
+    ]
+  },
+  "resources/js/landing-preview.js": {
+    "file": "assets/landing-preview-sKXYksq5.js",
+    "name": "landing-preview",
+    "src": "resources/js/landing-preview.js",
+    "isEntry": true
+  },
+  "resources/js/landing-ui-fixes.js": {
+    "file": "assets/landing-ui-fixes-DqPckvBX.js",
+    "name": "landing-ui-fixes",
+    "src": "resources/js/landing-ui-fixes.js",
+    "isEntry": true
+  },
+  "resources/js/laravel-user-management.js": {
+    "file": "assets/laravel-user-management-Cxu_LAn_.js",
+    "name": "laravel-user-management",
+    "src": "resources/js/laravel-user-management.js",
     "isEntry": true
   }
 }

@@ -1,11 +1,17 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
+import { defineConfig } from 'vite'
+import laravel from 'laravel-vite-plugin'
+import fg from 'fast-glob'
+
+const inputs = fg.sync([
+  'resources/css/**/*.css',
+  'resources/js/**/*.js',
+])
 
 export default defineConfig({
-    plugins: [
-        laravel({
-            input: ['resources/css/app.css', 'resources/css/landing-ui-fixes.css', 'resources/js/app.js'],
-            refresh: true,
-        }),
-    ],
-});
+  plugins: [
+    laravel({
+      input: inputs,
+      refresh: true,
+    }),
+  ],
+})
