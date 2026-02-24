@@ -30,8 +30,9 @@
 <div class="row g-4 mt-3">
     <!-- Quick Links -->
     <div class="col-md-3">
-        <a href="{{ route('user.profile') }}" class="card bg-label-secondary h-100" style="text-decoration: none;">
+        <div class="card bg-label-secondary h-100 position-relative">
             <div class="card-body">
+                <a href="{{ route('user.profile') }}" class="stretched-link" style="text-decoration: none;"></a>
                 <div class="d-flex align-items-center">
                     <div class="avatar me-3">
                         <span class="avatar-initial rounded bg-label-secondary">
@@ -44,7 +45,7 @@
                     </div>
                 </div>
             </div>
-        </a>
+        </div>
     </div>
 
     <!-- My Invoice -->
@@ -89,8 +90,9 @@
 
     <!-- My Wishlist -->
     <div class="col-md-3">
-        <div class="card bg-label-danger h-100 pointer-events-none opacity-75">
+        <div class="card bg-label-danger h-100 position-relative">
             <div class="card-body">
+                <a href="{{ route('user.wishlist') }}" class="stretched-link" style="text-decoration: none;"></a>
                 <div class="d-flex align-items-center mb-2">
                     <div class="avatar me-3">
                         <span class="avatar-initial rounded bg-label-danger">
@@ -102,7 +104,6 @@
                         <small>Daftar trip impian</small>
                     </div>
                 </div>
-                <div class="badge bg-label-dark mt-2 w-100">Segera Hadir</div>
             </div>
         </div>
     </div>

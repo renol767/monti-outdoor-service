@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
@@ -105,5 +106,13 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         // Fallback: initials avatar
         $name = urlencode(substr($this->name, 0, 2));
         return 'https://ui-avatars.com/api/?name=' . $name . '&background=e97543&color=fff&size=128';
+    }
+
+    /**
+     * Get the user's wishlists.
+     */
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
     }
 }

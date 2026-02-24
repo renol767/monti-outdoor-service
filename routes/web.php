@@ -449,7 +449,12 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
     Route::get('/profile', [\App\Http\Controllers\UserDashboardController::class, 'profile'])->name('user.profile');
     Route::post('/profile', [\App\Http\Controllers\UserDashboardController::class, 'updateProfile'])->name('user.profile.update');
     Route::post('/password', [\App\Http\Controllers\UserDashboardController::class, 'updatePassword'])->name('user.password.update');
+    // Wishlist Routes
+    Route::get('/wishlist', [\App\Http\Controllers\User\WishlistController::class, 'index'])->name('user.wishlist');
 });
+
+// User Wishlist Toggle (API logic, auth required but any role can technically add, though mostly it's for 'user')
+Route::middleware(['auth'])->post('/user/wishlist/toggle', [\App\Http\Controllers\User\WishlistController::class, 'toggle'])->name('user.wishlist.toggle');
 
 // Vuexy Demo Routes (keep existing)
 Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');

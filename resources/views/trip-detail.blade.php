@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
+@php
+  // Get user wishlist IDs if logged in
+  $userWishlistIds = auth()->check() ? auth()->user()->wishlists->pluck('trip_template_id')->toArray() : [];
+@endphp
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1148,6 +1152,63 @@
         
         this.classList.add('active');
         document.getElementById('panel-' + this.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Favorite button toggle with Backend / LocalStorage fallback
+    @auth
+        const isUserLoggedIn = true;
+    @else
+        const isUserLoggedIn = false;
+    @endauth
+    
+    document.querySelectorAll('.favorite-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!isUserLoggedIn) {
+            window.location.href = "{{ route('login') }}";
+            return;
+        }
+        
+        const tripId = this.dataset.tripId;
+        const button = this;
+        const isActive = this.classList.contains('active');
+        
+        // Optimistic UI update
+        this.classList.toggle('active');
+        
+        fetch('{{ route("user.wishlist.toggle") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                trip_template_id: tripId
+            })
+        })
+        .then(response => {
+            if(!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(data => {
+            // Success
+            if(typeof toastr !== 'undefined') {
+                if(data.status === 'added') toastr.success(data.message);
+                if(data.status === 'removed') toastr.info(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error toggling wishlist:', error);
+            // Revert on failure
+            button.classList.toggle('active');
+            if(typeof toastr !== 'undefined') {
+                toastr.error('Terjadi kesalahan saat menyimpan wishlist.');
+            }
+        });
       });
     });
 

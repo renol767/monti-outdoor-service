@@ -25,7 +25,7 @@
       "slug": "user.transaction"
     },
     {
-      "url": "#",
+      "url": "user/wishlist",
       "name": "My Wishlist",
       "icon": "menu-icon icon-base ti tabler-heart",
       "slug": "user.wishlist"

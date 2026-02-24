@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
+@php
+  // Get user wishlist IDs if logged in
+  $userWishlistIds = auth()->check() ? auth()->user()->wishlists->pluck('trip_template_id')->toArray() : [];
+@endphp
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1122,16 +1126,18 @@
         <!-- Cards grid that overlaps into hero -->
         <div class="trips-grid" id="tripsGrid">
         @foreach($trips as $trip)
-        <a href="{{ route('trip.detail', $trip->slug) }}" class="open-trip-card-link" style="text-decoration: none; color: inherit;">
-        <div class="open-trip-card" data-category="{{ strtolower(str_replace(' ', '', $trip->category)) }}" data-departures="{{ implode(',', $trip->departure_months ?? []) }}" data-title="{{ strtolower($trip->title) }}" data-timestamp="{{ $trip->created_at ? $trip->created_at->timestamp : 0 }}" data-departure-timestamp="{{ $trip->departure_timestamp ?? 9999999999 }}">
+        <div class="open-trip-card position-relative" data-category="{{ strtolower(str_replace(' ', '', $trip->category)) }}" data-departures="{{ implode(',', $trip->departure_months ?? []) }}" data-title="{{ strtolower($trip->title) }}" data-timestamp="{{ $trip->created_at ? $trip->created_at->timestamp : 0 }}" data-departure-timestamp="{{ $trip->departure_timestamp ?? 9999999999 }}">
           <div class="card-image">
-            <img src="{{ asset($trip->image) }}" alt="{{ $trip->title }}" loading="lazy">
-            <button class="favorite-btn" aria-label="Add to favorites" data-trip-id="{{ $trip->id }}">
+            <a href="{{ route('trip.detail', $trip->slug) }}" class="open-trip-card-link-img d-block" style="text-decoration: none; color: inherit;">
+               <img src="{{ asset($trip->image) }}" alt="{{ $trip->title }}" loading="lazy">
+            </a>
+            <button class="favorite-btn {{ in_array($trip->id, $userWishlistIds) ? 'active' : '' }}" aria-label="Add to favorites" data-trip-id="{{ $trip->id }}" style="z-index: 10;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
               </svg>
             </button>
           </div>
+          <a href="{{ route('trip.detail', $trip->slug) }}" class="open-trip-card-link" style="text-decoration: none; color: inherit; display: block; flex-grow: 1;">
           <div class="card-content">
             <div class="card-header">
               <h3 class="card-title">{{ $trip->title }}</h3>
@@ -1239,8 +1245,8 @@
               <span class="price-unit">/ pax</span>
             </div>
           </div>
+          </a>
         </div>
-        </a>
         @endforeach
 
         <!-- Skeleton Cards (hidden by default, shown during loading) -->
@@ -1506,38 +1512,64 @@
       });
     });
 
-    // Favorite button toggle with localStorage
+    // Favorite button toggle with Backend / LocalStorage fallback
+    @auth
+        const isUserLoggedIn = true;
+    @else
+        const isUserLoggedIn = false;
+    @endauth
+    
     document.querySelectorAll('.favorite-btn').forEach(btn => {
-      const tripId = btn.dataset.tripId;
-      
-      // Check if already favorited
-      const favorites = JSON.parse(localStorage.getItem('tripFavorites') || '[]');
-      if (favorites.includes(tripId)) {
-        btn.classList.add('active');
-      }
+      // NOTE: Using backend data for active state if logged in.
+      // If NOT logged in, we preserve localStorage fallback for now (or redirect to login).
+      // As per implementation plan, redirecting to login.
       
       btn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         
-        this.classList.toggle('active');
-        
-        // Save to localStorage
-        const favorites = JSON.parse(localStorage.getItem('tripFavorites') || '[]');
-        const tripId = this.dataset.tripId;
-        
-        if (this.classList.contains('active')) {
-          if (!favorites.includes(tripId)) {
-            favorites.push(tripId);
-          }
-        } else {
-          const index = favorites.indexOf(tripId);
-          if (index > -1) {
-            favorites.splice(index, 1);
-          }
+        if (!isUserLoggedIn) {
+            window.location.href = "{{ route('login') }}";
+            return;
         }
         
-        localStorage.setItem('tripFavorites', JSON.stringify(favorites));
+        const tripId = this.dataset.tripId;
+        const button = this;
+        const isActive = this.classList.contains('active');
+        
+        // Optimistic UI update
+        this.classList.toggle('active');
+        
+        fetch('{{ route("user.wishlist.toggle") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                trip_template_id: tripId
+            })
+        })
+        .then(response => {
+            if(!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(data => {
+            // Success, do nothing more since UI is optimistically updated
+            if(typeof toastr !== 'undefined') {
+                if(data.status === 'added') toastr.success(data.message);
+                if(data.status === 'removed') toastr.info(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error toggling wishlist:', error);
+            // Revert on failure
+            button.classList.toggle('active');
+            if(typeof toastr !== 'undefined') {
+                toastr.error('Terjadi kesalahan saat menyimpan wishlist.');
+            }
+        });
       });
     });
 

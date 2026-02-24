@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
+@php
+  // Get user wishlist IDs if logged in
+  $userWishlistIds = auth()->check() ? auth()->user()->wishlists->pluck('trip_template_id')->toArray() : [];
+@endphp
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -172,6 +176,10 @@
       width: 20px;
       height: 20px;
       color: var(--color-slate-400);
+    }
+    .open-trip-card .favorite-btn.active svg {
+      fill: var(--color-primary);
+      color: var(--color-primary);
     }
     .open-trip-card .card-content {
       padding: 1rem;
@@ -403,7 +411,7 @@
                   <a href="{{ route('user.profile') }}" class="dropdown-item">My Profile</a>
                   <a href="#" class="dropdown-item">My Invoice</a>
                   <a href="#" class="dropdown-item">My Transaction</a>
-                  <a href="#" class="dropdown-item">My Wishlist</a>
+                  <a href="{{ route('user.wishlist') }}" class="dropdown-item">My Wishlist</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                     @csrf
@@ -534,17 +542,19 @@
             ];
         @endphp
         @foreach($trips as $trip)
-        <a href="{{ route('trip.detail', $trip->slug) }}" class="animate-on-scroll" style="text-decoration: none; color: inherit; display: block;">
-        <div class="open-trip-card">
+        <div class="open-trip-card position-relative">
           <div class="card-image">
-            <img src="{{ $trip->thumbnail ? asset($trip->thumbnail) : asset('images/placeholder-trip.jpg') }}" alt="{{ $trip->title }}">
-            <!-- Favorite button removed for cleaner look on landing or can be added back -->
-            <button class="favorite-btn" aria-label="Add to favorites">
+            <a href="{{ route('trip.detail', $trip->slug) }}" class="d-block" style="text-decoration: none; color: inherit;">
+              <img src="{{ $trip->thumbnail ? asset($trip->thumbnail) : asset('images/placeholder-trip.jpg') }}" alt="{{ $trip->title }}">
+            </a>
+            <!-- Favorite button -->
+            <button class="favorite-btn {{ in_array($trip->id, $userWishlistIds) ? 'active' : '' }}" aria-label="Add to favorites" data-trip-id="{{ $trip->id }}" style="z-index: 10;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
               </svg>
             </button>
           </div>
+          <a href="{{ route('trip.detail', $trip->slug) }}" style="text-decoration: none; color: inherit; display: block; flex-grow: 1;">
           <div class="card-content">
             <div class="card-header">
               <h3 class="card-title">{{ $trip->title }}</h3>
@@ -621,8 +631,8 @@
               <span class="price-unit">/ pax</span>
             </div>
           </div>
+          </a>
         </div>
-        </a>
         @endforeach
       </div>
       
@@ -1150,6 +1160,65 @@
   </footer>
 
   <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Favorite button toggle with Backend
+        @auth
+          const isUserLoggedIn = true;
+        @else
+          const isUserLoggedIn = false;
+        @endauth
+        
+        document.querySelectorAll('.favorite-btn').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (!isUserLoggedIn) {
+                window.location.href = "{{ route('login') }}";
+                return;
+            }
+            
+            const tripId = this.dataset.tripId;
+            const button = this;
+            
+            // Optimistic UI update
+            this.classList.toggle('active');
+            
+            fetch('{{ route("user.wishlist.toggle") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    trip_template_id: tripId
+                })
+            })
+            .then(response => {
+                if(!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                if(typeof toastr !== 'undefined') {
+                    if(data.status === 'added') toastr.success(data.message);
+                    if(data.status === 'removed') toastr.info(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error toggling wishlist:', error);
+                button.classList.toggle('active');
+                if(typeof toastr !== 'undefined') {
+                    toastr.error('Terjadi kesalahan saat menyimpan wishlist.');
+                }
+            });
+          });
+        });
+    });
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   
   <script src="{{ asset('js/landing.js') }}"></script>
