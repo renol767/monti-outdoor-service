@@ -19,6 +19,18 @@
       "slug": "admin.hero-slides.index"
     },
     {
+      "url": "admin/orders",
+      "name": "Orders",
+      "icon": "menu-icon icon-base ti tabler-shopping-cart",
+      "slug": "admin.orders.index"
+    },
+    {
+      "url": "admin/customers",
+      "name": "Customers",
+      "icon": "menu-icon icon-base ti tabler-users",
+      "slug": "admin.customers.index"
+    },
+    {
       "name": "Trip Management",
       "icon": "menu-icon icon-base ti tabler-map-2",
       "slug": "trip-management",

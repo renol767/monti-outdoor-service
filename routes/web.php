@@ -362,14 +362,19 @@ Route::middleware('guest')->group(function () {
 
 // Admin Dashboard Routes (Requires session auth and role:admin)
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
 
     // Landing Page Customization
     Route::get('/landing-customization', [App\Http\Controllers\Admin\LandingPageController::class, 'index'])->name('landing-customization');
     Route::post('/landing-customization/settings', [App\Http\Controllers\Admin\LandingPageController::class, 'updateSettings'])->name('admin.landing.settings.update');
     Route::post('/landing-customization/popular-trips', [App\Http\Controllers\Admin\LandingPageController::class, 'updatePopularTrips'])->name('admin.landing.popular-trips.update');
+
+    // Admin Order Management
+    Route::resource('/orders', App\Http\Controllers\Admin\OrderController::class, ['as' => 'admin'])->only(['index', 'show']);
+    Route::post('/orders/{order}/cancel', [App\Http\Controllers\Admin\OrderController::class, 'cancel'])->name('admin.orders.cancel');
+
+    // Admin Customer CRM
+    Route::resource('/customers', App\Http\Controllers\Admin\CustomerController::class, ['as' => 'admin'])->only(['index', 'show']);
     
     // Trips Resource
     Route::resource('/trips', App\Http\Controllers\Admin\LandingTripController::class, ['as' => 'admin']);
@@ -451,10 +456,22 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
     Route::post('/password', [\App\Http\Controllers\UserDashboardController::class, 'updatePassword'])->name('user.password.update');
     // Wishlist Routes
     Route::get('/wishlist', [\App\Http\Controllers\User\WishlistController::class, 'index'])->name('user.wishlist');
+    
+    // Invoice and Transaction Routes
+    Route::get('/invoice', [\App\Http\Controllers\UserDashboardController::class, 'invoice'])->name('user.invoice');
+    Route::get('/transaction', [\App\Http\Controllers\UserDashboardController::class, 'transaction'])->name('user.transaction');
+
+    // Checkout Routes
+    Route::get('/checkout/{departure}/{variant}', [\App\Http\Controllers\User\CheckoutController::class, 'show'])->name('checkout.form');
+    Route::post('/checkout/{departure}/{variant}', [\App\Http\Controllers\User\CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/invoice/{orderNumber}', [\App\Http\Controllers\User\CheckoutController::class, 'invoice'])->name('checkout.invoice');
 });
 
 // User Wishlist Toggle (API logic, auth required but any role can technically add, though mostly it's for 'user')
 Route::middleware(['auth'])->post('/user/wishlist/toggle', [\App\Http\Controllers\User\WishlistController::class, 'toggle'])->name('user.wishlist.toggle');
+
+// Midtrans Webhook (API, no auth)
+Route::post('/webhook/midtrans', [\App\Http\Controllers\WebhookController::class, 'midtrans'])->name('webhook.midtrans');
 
 // Vuexy Demo Routes (keep existing)
 Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');

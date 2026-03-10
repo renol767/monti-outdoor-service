@@ -20,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'check.route.access' => \App\Http\Middleware\CheckAdminRouteAccess::class,
         ]);
         
+        $middleware->validateCsrfTokens(except: [
+            'webhook/midtrans',
+        ]);
+
         // Apply route access check to all web routes
         $middleware->web(append: [
             \App\Http\Middleware\CheckAdminRouteAccess::class,

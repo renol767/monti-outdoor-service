@@ -50,8 +50,9 @@
 
     <!-- My Invoice -->
     <div class="col-md-3">
-        <div class="card bg-label-primary h-100 pointer-events-none opacity-75">
+        <div class="card bg-label-primary h-100 position-relative">
             <div class="card-body">
+                <a href="{{ route('user.invoice') }}" class="stretched-link" style="text-decoration: none;"></a>
                 <div class="d-flex align-items-center mb-2">
                     <div class="avatar me-3">
                         <span class="avatar-initial rounded bg-label-primary">
@@ -63,15 +64,15 @@
                         <small>Tagihan belanja Anda</small>
                     </div>
                 </div>
-                <div class="badge bg-label-dark mt-2 w-100">Segera Hadir</div>
             </div>
         </div>
     </div>
 
     <!-- My Transaction -->
     <div class="col-md-3">
-        <div class="card bg-label-success h-100 pointer-events-none opacity-75">
+        <div class="card bg-label-success h-100 position-relative">
             <div class="card-body">
+                <a href="{{ route('user.transaction') }}" class="stretched-link" style="text-decoration: none;"></a>
                 <div class="d-flex align-items-center mb-2">
                     <div class="avatar me-3">
                         <span class="avatar-initial rounded bg-label-success">
@@ -83,7 +84,6 @@
                         <small>Riwayat pembayaran</small>
                     </div>
                 </div>
-                <div class="badge bg-label-dark mt-2 w-100">Segera Hadir</div>
             </div>
         </div>
     </div>

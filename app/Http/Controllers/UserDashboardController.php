@@ -87,4 +87,31 @@ class UserDashboardController extends Controller
 
         return redirect()->back()->with('status', 'password-updated');
     }
+
+    /**
+     * Show User Invoices
+     */
+    public function invoice()
+    {
+        $orders = \App\Models\Order::with(['departure.tripTemplate'])
+            ->where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        return view('user.invoice', compact('orders'));
+    }
+
+    /**
+     * Show User Transactions
+     */
+    public function transaction()
+    {
+        $orders = \App\Models\Order::with(['departure.tripTemplate'])
+            ->where('user_id', auth()->id())
+            ->whereIn('status', ['paid', 'refunded', 'cancelled'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        return view('user.transaction', compact('orders'));
+    }
 }

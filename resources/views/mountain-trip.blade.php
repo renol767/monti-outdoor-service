@@ -387,7 +387,33 @@
             </div>
           </div>
           
-          <a href="{{ route('login') }}" class="btn btn-primary">Book Now</a>
+          @auth
+            <div class="dropdown">
+              <a href="#" class="btn btn-primary custom-dropdown-toggle dropdown-toggle" style="display: flex; align-items: center; gap: 0.5rem; color: #fff;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>{{ explode(' ', auth()->user()->name)[0] }}</span>
+              </a>
+              <div class="dropdown-menu">
+                @if(auth()->user()->isAdmin())
+                  <a href="{{ route('admin.dashboard') }}" class="dropdown-item">Admin Dashboard</a>
+                @else
+                  <a href="{{ route('user.profile') }}" class="dropdown-item">My Profile</a>
+                  <a href="#" class="dropdown-item">My Invoice</a>
+                  <a href="#" class="dropdown-item">My Transaction</a>
+                  <a href="{{ route('user.wishlist') }}" class="dropdown-item">My Wishlist</a>
+                @endif
+                <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                    @csrf
+                    <button type="submit" class="dropdown-item" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; font-size: 15px; padding-top: 8px; padding-bottom: 8px;">Logout</button>
+                </form>
+              </div>
+            </div>
+          @else
+            <a href="{{ route('login') }}" class="btn btn-primary">Book Now</a>
+          @endauth
         </nav>
       </div>
     </div>

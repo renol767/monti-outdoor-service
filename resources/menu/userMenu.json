@@ -13,13 +13,13 @@
       "slug": "user.profile"
     },
     {
-      "url": "#",
+      "url": "user/invoice",
       "name": "My Invoice",
       "icon": "menu-icon icon-base ti tabler-file-invoice",
       "slug": "user.invoice"
     },
     {
-      "url": "#",
+      "url": "user/transaction",
       "name": "My Transaction",
       "icon": "menu-icon icon-base ti tabler-receipt",
       "slug": "user.transaction"

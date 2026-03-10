@@ -419,23 +419,41 @@
                 </div>
             </div>
              <div class="card-body">
-                <h6>Pricing Variants</h6>
-                <form action="{{ route('admin.variants.store', $departure) }}" method="POST" class="row g-2 mb-3">
+                <h6>Pricing Variants & Discounts</h6>
+                <form action="{{ route('admin.variants.store', $departure) }}" method="POST" class="row g-2 mb-3 align-items-center">
                   @csrf
                   <div class="col-md-3"><input type="text" class="form-control form-control-sm" name="name" placeholder="Variant name" required></div>
-                  <div class="col-md-2"><input type="number" class="form-control form-control-sm" name="base_price" placeholder="Price" required></div>
-                  <div class="col-md-1"><button type="submit" class="btn btn-sm btn-outline-primary w-100">Add</button></div>
+                  <div class="col-md-2"><input type="number" class="form-control form-control-sm" name="base_price" placeholder="Base Price" required></div>
+                  <div class="col-md-2">
+                    <select name="discount_type" class="form-select form-select-sm">
+                      <option value="fixed">Fixed Diskon</option>
+                      <option value="percent">Persen Diskon (%)</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2"><input type="number" class="form-control form-control-sm" name="discount_value" placeholder="Nilai Diskon (Opsional)" min="0" value="0"></div>
+                  <!-- Hidden dates as they are not needed for now unless specified -->
+                  <div class="col-md-2"><button type="submit" class="btn btn-sm btn-outline-primary w-100">Add Variant</button></div>
                 </form>
+
                 @if($departure->variants->count())
+                <div class="table-responsive">
                 <table class="table table-sm">
-                    <thead><tr><th>Variant</th><th>Price</th><th>Action</th></tr></thead>
+                    <thead><tr><th>Variant</th><th>Base Price</th><th>Diskon</th><th>Final Price</th><th>Action</th></tr></thead>
                     <tbody>
                         @foreach($departure->variants as $variant)
                         <tr>
                             <td>{{ $variant->name }}</td>
-                            <td>{{ number_format($variant->base_price) }}</td>
+                            <td>Rp {{ number_format($variant->base_price, 0, ',', '.') }}</td>
                             <td>
-                                <form action="{{ route('admin.variants.destroy', $variant) }}" method="POST" class="d-inline">
+                                @if($variant->calculated_discount > 0)
+                                    <span class="text-danger">- {{ $variant->discount_type == 'percent' ? $variant->discount_value . '%' : 'Rp ' . number_format($variant->discount_value, 0, ',', '.') }}</span>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </td>
+                            <td class="fw-bold text-primary">Rp {{ number_format($variant->final_price, 0, ',', '.') }}</td>
+                            <td>
+                                <form action="{{ route('admin.variants.destroy', $variant) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus varian ini?');">
                                     @csrf @method('DELETE')
                                     <button class="btn btn-icon btn-sm text-danger"><i class="ti tabler-trash"></i></button>
                                 </form>
@@ -444,6 +462,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                </div>
                 @endif
 
                 <hr class="my-3">
