@@ -6,28 +6,47 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::table('departure_variants', function (Blueprint $table) {
-            // Options: fixed, percentage
-            $table->string('discount_type')->nullable()->after('pax_limit')->default('fixed');
-            $table->decimal('discount_value', 12, 2)->nullable()->after('discount_type')->default(0);
-            
-            // To limit max discount amount if type is percentage
-            $table->decimal('max_discount', 12, 2)->nullable()->after('discount_value');
+
+            if (!Schema::hasColumn('departure_variants', 'discount_type')) {
+                $table->string('discount_type')
+                    ->nullable()
+                    ->default('fixed')
+                    ->after('pax_limit');
+            }
+
+            if (!Schema::hasColumn('departure_variants', 'discount_value')) {
+                $table->decimal('discount_value', 12, 2)
+                    ->nullable()
+                    ->default(0)
+                    ->after('discount_type');
+            }
+
+            if (!Schema::hasColumn('departure_variants', 'max_discount')) {
+                $table->decimal('max_discount', 12, 2)
+                    ->nullable()
+                    ->after('discount_value');
+            }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('departure_variants', function (Blueprint $table) {
-            $table->dropColumn(['discount_type', 'discount_value', 'max_discount']);
+
+            if (Schema::hasColumn('departure_variants', 'discount_type')) {
+                $table->dropColumn('discount_type');
+            }
+
+            if (Schema::hasColumn('departure_variants', 'discount_value')) {
+                $table->dropColumn('discount_value');
+            }
+
+            if (Schema::hasColumn('departure_variants', 'max_discount')) {
+                $table->dropColumn('max_discount');
+            }
         });
     }
 };
