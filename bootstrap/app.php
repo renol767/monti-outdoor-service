@@ -30,5 +30,13 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->reportable(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e) {
+            \Illuminate\Support\Facades\Log::warning('404 Not Found triggered', [
+                'url' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'user_id' => auth()->id() ?? 'guest',
+                'message' => $e->getMessage(),
+            ]);
+        });
     })->create();

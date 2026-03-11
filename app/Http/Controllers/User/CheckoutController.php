@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Midtrans\Config;
 use Midtrans\Snap;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
@@ -26,8 +27,19 @@ class CheckoutController extends Controller
 
     public function show(TripDeparture $departure, DepartureVariant $variant)
     {
+        Log::info('Checkout show accessed', [
+            'user_id' => auth()->id(),
+            'departure_id' => $departure->id,
+            'variant_id' => $variant->id,
+            'variant_departure_id' => $variant->departure_id
+        ]);
+
         // Ensure the variant belongs to the departure
         if ($variant->departure_id !== $departure->id) {
+            Log::warning('Checkout show aborted 404 due to mismatch', [
+                'departure_id' => $departure->id,
+                'variant_departure_id' => $variant->departure_id
+            ]);
             abort(404);
         }
 
