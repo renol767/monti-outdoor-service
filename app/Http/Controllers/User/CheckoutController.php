@@ -34,8 +34,8 @@ class CheckoutController extends Controller
             'variant_departure_id' => $variant->departure_id
         ]);
 
-        // Ensure the variant belongs to the departure
-        if ($variant->departure_id !== $departure->id) {
+        // Ensure the variant belongs to the departure (loose comparison because DB might return string)
+        if ($variant->departure_id != $departure->id) {
             Log::warning('Checkout show aborted 404 due to mismatch', [
                 'departure_id' => $departure->id,
                 'variant_departure_id' => $variant->departure_id
@@ -51,6 +51,12 @@ class CheckoutController extends Controller
 
     public function process(Request $request, TripDeparture $departure, DepartureVariant $variant)
     {
+        Log::info('Checkout process accessed', [
+            'user_id' => auth()->id(),
+            'departure_id' => $departure->id,
+            'variant_id' => $variant->id,
+            'variant_departure_id' => $variant->departure_id
+        ]);
         // Validate request
         $validated = $request->validate([
             'pax' => 'required|integer|min:1',
@@ -64,7 +70,14 @@ class CheckoutController extends Controller
             'addons.*.quantity' => 'required|integer|min:1',
         ]);
 
-        // Begin transaction
+        // Ensure the variant belongs to the departure
+        if ($variant->departure_id != $departure->id) {
+            Log::warning('Checkout process aborted 404 due to mismatch', [
+                'departure_id' => $departure->id,
+                'variant_departure_id' => $variant->departure_id
+            ]);
+            abort(404, 'Variant does not belong to this departure');
+        }
         try {
             DB::beginTransaction();
 
