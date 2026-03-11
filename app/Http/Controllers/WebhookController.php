@@ -44,28 +44,40 @@ class WebhookController extends Controller
                     if ($notification->fraud_status == 'challenge') {
                         $order->update(['status' => Order::STATUS_PENDING]);
                     } else {
-                        $order->update([
-                            'status' => Order::STATUS_PAID,
-                            'paid_at' => now(),
-                            'payment_method' => $paymentType
-                        ]);
+                        if ($order->status !== Order::STATUS_PAID) {
+                            $order->update([
+                                'status' => Order::STATUS_PAID,
+                                'paid_at' => now(),
+                                'payment_method' => $paymentType
+                            ]);
+                            $order->departure()->increment('booked_count', $order->pax_count);
+                            $order->variant()->increment('booked_count', $order->pax_count);
+                        }
                     }
                 }
             } else if ($transactionStatus == 'settlement') {
-                $order->update([
-                    'status' => Order::STATUS_PAID,
-                    'paid_at' => now(),
-                    'payment_method' => $paymentType
-                ]);
+                if ($order->status !== Order::STATUS_PAID) {
+                    $order->update([
+                        'status' => Order::STATUS_PAID,
+                        'paid_at' => now(),
+                        'payment_method' => $paymentType
+                    ]);
+                    $order->departure()->increment('booked_count', $order->pax_count);
+                    $order->variant()->increment('booked_count', $order->pax_count);
+                }
             } else if ($transactionStatus == 'pending') {
                 $order->update(['status' => Order::STATUS_PENDING]);
-            } else if ($transactionStatus == 'deny') {
-                $order->update(['status' => Order::STATUS_CANCELLED]);
-            } else if ($transactionStatus == 'expire') {
-                $order->update(['status' => Order::STATUS_CANCELLED]);
-            } else if ($transactionStatus == 'cancel') {
+            } else if ($transactionStatus == 'deny' || $transactionStatus == 'expire' || $transactionStatus == 'cancel') {
+                if ($order->status === Order::STATUS_PAID) { // Restore quota if it was already paid
+                     $order->departure()->decrement('booked_count', $order->pax_count);
+                     $order->variant()->decrement('booked_count', $order->pax_count);
+                }
                 $order->update(['status' => Order::STATUS_CANCELLED]);
             } else if ($transactionStatus == 'refund' || $transactionStatus == 'partial_refund') {
+                if ($order->status === Order::STATUS_PAID) {
+                     $order->departure()->decrement('booked_count', $order->pax_count);
+                     $order->variant()->decrement('booked_count', $order->pax_count);
+                }
                 $order->update(['status' => Order::STATUS_REFUNDED]);
             }
 
