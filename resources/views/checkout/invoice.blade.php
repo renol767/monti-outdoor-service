@@ -2,16 +2,75 @@
 
 @section('title', 'Invoice ' . $order->order_number)
 
+@section('page-style')
+<style>
+    body {
+        background-color: #151515 !important;
+    }
+    .invoice-header-text {
+        color: #ffffff !important;
+    }
+    .invoice-header-text .text-muted {
+        color: #a1a1aa !important;
+    }
+    .invoice-preview-card, .sidebar-participant-card {
+        background-color: #ffffff !important;
+        position: relative;
+        overflow: hidden;
+    }
+    .invoice-watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60%;
+        max-width: 450px;
+        opacity: 0.05;
+        z-index: 0;
+        pointer-events: none;
+    }
+    /* Memastikan teks tetap berada di atas watermark */
+    .invoice-preview-card > div, .invoice-preview-card > hr {
+        position: relative;
+        z-index: 1;
+    }
+
+    @media print {
+        body, html {
+            background-color: #ffffff !important;
+        }
+        .invoice-header-text, .col-lg-4 {
+            display: none !important;
+        }
+        .col-lg-8 {
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: 0 0 100% !important;
+        }
+        .invoice-preview-card {
+            box-shadow: none !important;
+            border: 1px solid #eee !important;
+        }
+        .invoice-watermark {
+            opacity: 0.05 !important;
+        }
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-<h4 class="py-3 mb-4">
+<h4 class="py-3 mb-4 invoice-header-text">
     <span class="text-muted fw-light">Booking /</span> Invoice
 </h4>
 
 <div class="row justify-content-center">
     <!-- Invoice Column -->
     <div class="col-12 col-lg-8">
-        <div class="card invoice-preview-card">
+        <div class="card invoice-preview-card shadow-lg border-0">
+            <!-- Center Watermark Logo -->
+            <img src="{{ asset(config('app.logo', 'images/logo/Untitled-2.png')) }}" alt="Monti Outdoor Watermark" class="invoice-watermark">
+            
             <div class="card-body">
                 <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column m-sm-3 m-0">
                     <div class="mb-xl-0 mb-4">
@@ -149,8 +208,8 @@
     
     <!-- Right Sidebar (Daftar Partisipan) -->
     <div class="col-12 col-lg-4 mt-4 mt-lg-0">
-        <div class="card">
-            <h5 class="card-header border-bottom">Daftar Partisipan</h5>
+        <div class="card sidebar-participant-card shadow-lg border-0">
+            <h5 class="card-header border-bottom bg-transparent">Daftar Partisipan</h5>
             <div class="card-body mt-4">
                 <ul class="list-unstyled mb-0">
                     @foreach($order->items as $index => $item)
@@ -176,6 +235,11 @@
         </div>
         
         <div class="mt-4">
+            @if($order->status == 'paid')
+            <a href="{{ route('checkout.invoice.pdf', $order->order_number) }}" target="_blank" class="btn w-100 d-flex align-items-center justify-content-center mb-3 fw-bold" style="background-color: #fbcaa5; color: #151515; border: none;">
+                <i class="ti tabler-file-type-pdf me-2"></i> Unduh PDF Invoice
+            </a>
+            @endif
             <a href="{{ route('user.dashboard') }}" class="btn btn-label-secondary w-100 mb-3">Kembali ke Dashboard</a>
             <a href="https://wa.me/6281196969119?text=Halo admin, saya ingin konfirmasi pesanan {{ $order->order_number }}" target="_blank" class="btn btn-success w-100 d-flex align-items-center justify-content-center">
                 <i class="ti tabler-brand-whatsapp me-2"></i> Konfirmasi Manual (WA)

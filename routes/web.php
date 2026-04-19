@@ -372,6 +372,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     // Admin Order Management
     Route::resource('/orders', App\Http\Controllers\Admin\OrderController::class, ['as' => 'admin'])->only(['index', 'show']);
     Route::post('/orders/{order}/cancel', [App\Http\Controllers\Admin\OrderController::class, 'cancel'])->name('admin.orders.cancel');
+    Route::get('/orders/{order}/pdf', [App\Http\Controllers\Admin\OrderController::class, 'downloadInvoicePdf'])->name('admin.orders.pdf');
 
     // Admin Customer CRM
     Route::resource('/customers', App\Http\Controllers\Admin\CustomerController::class, ['as' => 'admin'])->only(['index', 'show']);
@@ -448,8 +449,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::delete('/trip-types/{section}', [App\Http\Controllers\Admin\TripTypeSectionController::class, 'destroy'])->name('admin.trip-types.destroy');
 });
 
-// User Dashboard Routes (Requires session auth and role:user)
-Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
+// User Dashboard Routes (Requires session auth, verified email, and role:user)
+Route::middleware(['auth', 'verified', 'role:user'])->prefix('user')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\UserDashboardController::class, 'index'])->name('user.dashboard');
     Route::get('/profile', [\App\Http\Controllers\UserDashboardController::class, 'profile'])->name('user.profile');
     Route::post('/profile', [\App\Http\Controllers\UserDashboardController::class, 'updateProfile'])->name('user.profile.update');
@@ -465,6 +466,7 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
     Route::get('/checkout/{departure}/{variant}', [\App\Http\Controllers\User\CheckoutController::class, 'show'])->name('checkout.form');
     Route::post('/checkout/{departure}/{variant}', [\App\Http\Controllers\User\CheckoutController::class, 'process'])->name('checkout.process');
     Route::get('/invoice/{orderNumber}', [\App\Http\Controllers\User\CheckoutController::class, 'invoice'])->name('checkout.invoice');
+    Route::get('/invoice/{orderNumber}/pdf', [\App\Http\Controllers\User\CheckoutController::class, 'downloadInvoicePdf'])->name('checkout.invoice.pdf');
 });
 
 // User Wishlist Toggle (API logic, auth required but any role can technically add, though mostly it's for 'user')

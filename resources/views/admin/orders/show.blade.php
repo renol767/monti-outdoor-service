@@ -67,6 +67,16 @@
             </div>
         </div>
         @endif
+        
+        @if($order->status == 'paid')
+        <div class="card">
+            <div class="card-body text-center">
+                <a href="{{ route('admin.orders.pdf', $order) }}" target="_blank" class="btn btn-primary w-100">
+                    <i class="ti tabler-file-type-pdf me-2"></i> Download PDF Invoice
+                </a>
+            </div>
+        </div>
+        @endif
     </div>
 
     <!-- Detail Information -->

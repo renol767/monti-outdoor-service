@@ -1037,8 +1037,8 @@
                   <a href="{{ route('admin.dashboard') }}" class="dropdown-item">Admin Dashboard</a>
                 @else
                   <a href="{{ route('user.profile') }}" class="dropdown-item">My Profile</a>
-                  <a href="#" class="dropdown-item">My Invoice</a>
-                  <a href="#" class="dropdown-item">My Transaction</a>
+                  <a href="{{ route('user.invoice') }}" class="dropdown-item">My Invoice</a>
+                  <a href="{{ route('user.transaction') }}" class="dropdown-item">My Transaction</a>
                   <a href="{{ route('user.wishlist') }}" class="dropdown-item">My Wishlist</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}" style="margin: 0;">

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\TripTemplate;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -21,6 +23,26 @@ class OrderController extends Controller
             $query->where('status', $request->status);
         }
         
+        // Filter by Booking Date Range
+        if ($request->filled('booking_date_from')) {
+            $query->whereDate('created_at', '>=', $request->booking_date_from);
+        }
+        if ($request->filled('booking_date_to')) {
+            $query->whereDate('created_at', '<=', $request->booking_date_to);
+        }
+
+        // Filter by Trip Template ID and Departure
+        if ($request->filled('trip_id')) {
+            $tripId = $request->trip_id;
+            if ($request->filled('departure_id')) {
+                $query->where('departure_id', $request->departure_id);
+            } else {
+                $query->whereHas('departure', function($q) use ($tripId) {
+                    $q->where('trip_template_id', $tripId);
+                });
+            }
+        }
+
         // Filter by Search (Order Number or Customer Name)
         if ($request->filled('search')) {
             $search = $request->search;
@@ -34,8 +56,13 @@ class OrderController extends Controller
         }
 
         $orders = $query->paginate(15)->withQueryString();
+        
+        // Fetch trips with their departures for filter dropdown
+        $trips = TripTemplate::with(['departures' => function($q) {
+            $q->orderBy('start_date', 'asc');
+        }])->orderBy('title')->get(['id', 'title']);
 
-        return view('admin.orders.index', compact('orders'));
+        return view('admin.orders.index', compact('orders', 'trips'));
     }
 
     /**
@@ -58,5 +85,19 @@ class OrderController extends Controller
         }
 
         return redirect()->back()->with('error', 'Pesanan ini tidak dapat dibatalkan.');
+    }
+
+    public function downloadInvoicePdf(Order $order)
+    {
+        $order->load(['user', 'departure.tripTemplate', 'variant', 'items', 'addons']);
+        
+        // Ensure admin only downloads paid orders if following business rules,
+        // though admin technically could view any. Let's stick to 'paid'.
+        if ($order->status !== 'paid') {
+            return redirect()->back()->with('error', 'Invoice PDF hanya tersedia untuk pesanan yang sudah lunas (Paid).');
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.invoice', compact('order'));
+        return $pdf->download('Invoice-' . $order->order_number . '.pdf');
     }
 }

@@ -203,7 +203,7 @@
                                     </a>
                                 </div>
                                 <div class="col-6">
-                                    <a href="{{ route('admin.landing.settings.update') }}" class="card bg-label-warning text-center p-3 text-decoration-none h-100 d-flex flex-column align-items-center justify-content-center">
+                                    <a href="{{ route('landing-customization') }}" class="card bg-label-warning text-center p-3 text-decoration-none h-100 d-flex flex-column align-items-center justify-content-center">
                                         <div class="avatar mb-2">
                                             <span class="avatar-initial rounded bg-label-warning"><i class="ti tabler-settings"></i></span>
                                         </div>

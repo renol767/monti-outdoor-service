@@ -214,6 +214,22 @@ class CheckoutController extends Controller
 
         return view('checkout.invoice', compact('order', 'snapToken'));
     }
+
+    public function downloadInvoicePdf(string $orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)
+                      ->where('user_id', auth()->id())
+                      ->with(['departure.tripTemplate', 'variant', 'items', 'addons'])
+                      ->firstOrFail();
+
+        // PDF only for Paid tickets
+        if ($order->status !== 'paid') {
+            return redirect()->back()->with('error', 'Invoice can only be downloaded for paid orders.');
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.invoice', compact('order'));
+        return $pdf->download('Invoice-' . $order->order_number . '.pdf');
+    }
 }
 
 function limit_string($string, $limit) {

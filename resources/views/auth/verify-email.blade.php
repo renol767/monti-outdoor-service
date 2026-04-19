@@ -24,10 +24,21 @@ $customizerHidden = 'customizer-hide';
             </a>
           </div>
           <!-- /Logo -->
-          <h4 class="mb-1">Verify your email ✉️</h4>
-          <p class="mb-6 text-muted">
-            {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
-          </p>
+          <h4 class="mb-1">Verifikasi Email / Verify your email</h4>
+
+          <div class="mb-4 text-muted">
+            <h6 class="mb-1 mt-3">Indonesia</h6>
+            <p class="mb-0">
+              Terima kasih telah mendaftar! Sebelum memulai, mohon verifikasi alamat email Anda dengan mengklik tautan yang baru saja kami kirimkan. Jika email tidak masuk di kotak masuk (inbox), <strong>harap periksa folder spam Anda</strong>, atau klik tombol di bawah untuk mengirim ulang verifikasi.
+            </p>
+          </div>
+
+          <div class="mb-6 text-muted">
+            <h6 class="mb-1">English</h6>
+            <p class="mb-0">
+              Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email in your inbox, <strong>please check your spam folder</strong>, or click the button below to resend.
+            </p>
+          </div>
 
           @if (session('status') == 'verification-link-sent')
             <div class="alert alert-success mb-4 text-center" role="alert">
