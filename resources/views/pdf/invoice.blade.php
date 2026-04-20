@@ -201,9 +201,9 @@
                     <td style="width: 50%; vertical-align: top;">
                         <span style="font-size: 24px; font-weight: bold; color: #ea580c;">Monti Outdoor</span>
                         <div class="company-info" style="margin-top: 5px;">
-                            Jalan Example No 123, Jakarta<br>
-                            DKI Jakarta, Indonesia<br>
-                            +62 811-9696-9119
+                            {{ \App\Models\LandingSetting::where('key', 'contact_address')->value('value') ?? 'Jakarta, Indonesia' }}<br>
+                            {{ \App\Models\LandingSetting::where('key', 'contact_email')->value('value') ?? '-' }}<br>
+                            {{ \App\Models\LandingSetting::where('key', 'contact_phone')->value('value') ?? '-' }}
                         </div>
                     </td>
                     <td style="width: 50%; vertical-align: top;" class="invoice-details">

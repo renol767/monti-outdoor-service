@@ -78,9 +78,9 @@
                             <img src="{{ asset(config('app.logo', 'images/logo/Untitled-2.png')) }}" alt="Logo" width="32">
                             <span class="app-brand-text fw-bold fs-4">Monti Outdoor</span>
                         </div>
-                        <p class="mb-2">Jalan Example No 123, Jakarta</p>
-                        <p class="mb-2">DKI Jakarta, Indonesia</p>
-                        <p class="mb-0">+62 811-9696-9119</p>
+                        <p class="mb-2">{{ \App\Models\LandingSetting::where('key', 'contact_address')->value('value') ?? 'Jakarta, Indonesia' }}</p>
+                        <p class="mb-2">{{ \App\Models\LandingSetting::where('key', 'contact_email')->value('value') ?? '-' }}</p>
+                        <p class="mb-0">{{ \App\Models\LandingSetting::where('key', 'contact_phone')->value('value') ?? '-' }}</p>
                     </div>
                     <div>
                         <h4 class="fw-medium mb-2">INVOICE #{{ $order->order_number }}</h4>
